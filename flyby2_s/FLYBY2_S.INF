@@ -1,0 +1,25 @@
+FIELD fb2s_dat/airport.fld
+RIBBONSMOKE
+ALTITUDE 120.0F
+AIRCRAFT fb2s_dat/a6.srf
+AIRCRAFT fb2s_dat/angels.srf
+AIRCRAFT fb2s_dat/av8b.srf
+AIRCRAFT fb2s_dat/ea6b.srf
+AIRCRAFT fb2s_dat/f1.srf
+AIRCRAFT fb2s_dat/f117a.srf
+AIRCRAFT fb2s_dat/f14sprd.srf
+AIRCRAFT fb2s_dat/f14swbk.srf
+AIRCRAFT fb2s_dat/f15.srf
+AIRCRAFT fb2s_dat/f16.srf
+AIRCRAFT fb2s_dat/f18.srf
+AIRCRAFT fb2s_dat/f86blue.srf
+AIRCRAFT fb2s_dat/mig21.srf
+AIRCRAFT fb2s_dat/mig23spd.srf
+AIRCRAFT fb2s_dat/mig23wbk.srf
+AIRCRAFT fb2s_dat/mrg2000.srf
+AIRCRAFT fb2s_dat/su27.srf
+AIRCRAFT fb2s_dat/t2blue.srf
+AIRCRAFT fb2s_dat/t400.srf
+AIRCRAFT fb2s_dat/t4blue.srf
+AIRCRAFT fb2s_dat/thunder.srf
+AIRCRAFT fb2s_dat/viggen.srf

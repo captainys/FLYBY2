@@ -1,0 +1,167 @@
+----------
+NAME:BiOpenWindow2G
+DEFINITION:
+  int BiOpenWindow2G(int wid,int hei);
+DESCRIPTION:
+  ウィンドウを開きます。大きさは横方向にwidピクセル、縦方向にheiピクセル。
+  IPL2G拡張機能を使う場合は、BiOpenWindowの代わりにこの関数を使ってくだ
+  さい。
+REFERENCE:
+  BiOpenWindow
+----------
+NAME:BiUpdateDevice2G
+DEFINITION:
+  int BiUpdateDevice2G(void);
+DESCRIPTION:
+  基本的に、BiUpdateDevice関数と同じ機能です。IPL2G拡張機能を使う場合は
+  BiUpdateDeviceの代わりにこの関数を使ってください。メインループの先頭
+  で呼び出す必要があります。
+REFERENCE:
+  BiUpdateDevice
+----------
+NAME:BiMouse2G
+DEFINITION:
+  void BiMouse2G(int *lb,int *mb,int *rb,int *mx,int *my,int wait);
+DESCRIPTION:
+  マウスを読み取ります。lb,mb,rbはそれぞれ左、中、右ボタンに対応します。
+  例えば、lb==BI_ONのとき左ボタンを押した状態、lb==BI_OFFのとき、左ボタ
+  ンは押していない状態です。
+
+  IPL2G拡張機能を使う場合のみこのBiMouseの代わりにこの関数を使ってください。
+
+  waitにBI_ONを指定すると、ユーザがボタンを押すまで待ちます。BI_OFFを指定
+  すると、待ちません。
+
+  例)
+    int lb,mb,rb,mx,my;
+    BiMouse2G(&lb,&mb,&rb,&mx,&my,BI_ON);
+REFERENCE:
+  BiMouse
+----------
+NAME:BiKey2G
+DEFINITION:
+  int BiKey2G(void);
+DESCRIPTION:
+  キーをひとつ押すまで待って、キーコードを返します。代表的なキーコードは
+  次の通りです。IPL2G拡張機能を使う場合のみこの関数を利用することができ
+  ます。
+    BIKEY_A
+      :          A～Z
+    BIKEY_Z
+    BIKEY_SPACE  スペースキー
+    BIKEY_LEFT   左矢印
+    BIKEY_RIGHT  右矢印
+    BIKEY_UP     上矢印
+    BIKEY_DOWN   下矢印
+REFERENCE:
+  BIKEY_
+
+----------
+NAME:BiStartBuffer2G
+DEFINITION:
+  void BiStartBuffer2G(BIPOSATT *vp);
+DESCRIPTION:
+  BiStartBufferとほぼ同じです。ただし、vpにNULLを指定すると、IPL2G拡張機能
+  が自動的に視点を設定します。IPL2G拡張機能を使うときのみ、BiStartBuffer2G
+  の代わりにこの関数を利用してください。
+REFERENCE:
+  BiStartBuffer
+----------
+NAME:BiSwapBuffers2G
+DEFINITION:
+  void BiSwapBuffers2G(void);
+DESCRIPTION:
+  仮想画面(フレームバッファ)に描画したグラフィックスを実画面に転送し
+  ます。BiSwapBuffersとほぼ同じ機能です。IPL2G拡張機能を使うときのみ、
+  BiSwapBuffersの代わりにこの関数を利用してください。
+REFERENCE:
+  BiSwapBuffers
+----------
+NAME:BiOrbitViewer2G
+DEFINITION:
+  void BiOrbitViewer2G(void);
+DESCRIPTION:
+  マウス位置に応じて視点を回転します。whileループ内で呼び出すことによっ
+  て、右ボタンで視点の回転、左ボタンで拡大/縮小ができます。ただし、
+  BiStartBuffer2GでvpにNULLを指定した場合有功です。IPL2G拡張機能を使う
+  ときのみ、この関数を利用することができます。
+REFERENCE:
+  BiGetOrbitViewer2G,BiStartBuffer2G
+----------
+NAME:BiGetOrbitViewer2G
+DEFINITION:
+  void BiGetOrbitViewer2G(BIPOSATT *pos);
+DESCRIPTION:
+  BiOrbitViewer2Gで回転,拡大,縮小した結果の視点を得ます。
+REFERENCE:
+  BiOrbitViewer2G
+----------
+NAME:BiCube2G
+DEFINITION:
+  void BiCube2G(float x,float y,float z,float lx,float ly,float lz,BICOLOR *c);
+DESCRIPTION:
+  直方体を描画します。(x,y,z)は中心点、(lx,ly,lz)は辺の長さをX,Y,Zで
+  指定します。cに色を指定します。cには、次のPre-defined variableを
+  利用することもできます。
+    &BiBlack
+    &BiBlue
+    &BiRed
+    &BiMagenta
+    &BiGreen
+    &BiCyan
+    &BiYellow
+    &BiWhite
+  例)BiCube2G(0,0,0,2,2,2,&BiGreen);
+REFERENCE：
+  BiLine2G,BiFalcon2G,BiPlane2G
+----------
+NAME:BiLine2G
+DEFINITION:
+  void BiLine2G
+    (float x1,float y1,float z1,float x2,float y2,float z2,BICOLOR *c);
+DESCRIPTION:
+  3次元直線を描画します。cに色を指定します。cには、次のPre-defined variableを
+  利用することもできます。
+    &BiBlack
+    &BiBlue
+    &BiRed
+    &BiMagenta
+    &BiGreen
+    &BiCyan
+    &BiYellow
+    &BiWhite
+REFERENCE:
+  BiCube2G,BiFalcon2G,BiPlane2G
+----------
+NAME:BiPset2G
+DEFINITION:
+  void BiPset2G(float x,float y,float z,BICOLOR *c);
+DESCRIPTION:
+  (x,y,z)の位置に点を描画します。cに色を指定します。cには、次のPre-defined variableを
+  利用することもできます。
+    &BiBlack
+    &BiBlue
+    &BiRed
+    &BiMagenta
+    &BiGreen
+    &BiCyan
+    &BiYellow
+    &BiWhite
+REFERENCE:
+  BiCube2G,BiFalcon2G,BiPlane2G,BiLine2G
+----------
+NAME:BiFalcon2G
+DEFINITION:
+  void BiFalcon2G(BIPOSATT *pos);
+DESCRIPTION:
+  *posの位置にF-16を描画します。
+REFERENCE:
+  BiCube2G,BiPlane2G,BiLine2G,BiPset2G
+----------
+NAME:BiPlane2G
+DEFINITION:
+  void BiPlane2G(BIPOSATT *pos);
+DESCRIPTION:
+  *posの位置に飛行機っぽい(?)パターンを描画します。
+REFERENCE:
+  BiCube2G,BiFalcon2G,BiLine2G,BiPset2G

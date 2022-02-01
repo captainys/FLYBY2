@@ -1,0 +1,59 @@
+# Makefile for "Blue Impulse Cover Library for IPL2G"
+
+LIB = lib.exe
+LIBFLAGS = /NOLOGO
+
+CC = cl.exe
+
+
+PENTIUM=/G5
+
+#DEBUG MODE
+#CFLAGS=/nologo $(PENTIUM) /W3 /GX /YX /Z7 /O2 /D "WIN32" /D "_WINDOWS" /c
+
+#RELEASE MODE
+CFLAGS=/nologo $(PENTIUM) /W3 /GX /YX /O2 /D "WIN32" /D "_WINDOWS" /c /D "SATA"
+
+
+LISTFILE = nul
+
+MV = move
+CP = copy
+LIBINSTALLDIR = ..\framework\windows\lib
+INCINSTALLDIR = ..\framework\windows\include
+USERINCDIR = C:\MSDEV\INCLUDE
+USERLIBDIR = C:\MSDEV\LIB
+
+
+SRCS=impulse2g.c falcon2g.c
+
+OBJ1=$(SRCS:.cpp=.obj)
+OBJ2=$(OBJ1:.cxx=.obj)
+OBJ3=$(OBJ2:.cc=.obj)
+OBJS=$(OBJ3:.c=.obj)
+
+
+TARGET=impulse2g.lib
+
+
+all : $(TARGET)
+	$(CP) $(TARGET) $(USERLIBDIR)
+	$(CP) *.h $(USERINCDIR)
+	$(CP) $(TARGET) $(LIBINSTALLDIR)
+	$(CP) *.h $(INCINSTALLDIR)
+
+
+$(TARGET) : $(OBJS)
+		$(LIB) @<<
+	$(LIBFLAGS) /OUT:"$(TARGET)" $(OBJS)
+<<
+
+
+.c.obj :
+	$(CC) $*.c $(CFLAGS)
+
+.cpp.obj :
+	$(CC) $*.cpp $(CFLAGS)
+
+.cxx.obj :
+	$(CC) $*.cxx $(CFLAGS)

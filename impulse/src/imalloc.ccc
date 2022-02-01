@@ -1,0 +1,328 @@
+#include <stdio.h>
+
+/******************************************************************************
+
+このプログラムは、Windows3.1のmallocがあまりにもおろかなので作りました。いく
+らメモリが16MBまで取れると言っても高々8192個では何もできません。これでは、せ
+っかくの無段階UNDOとかの機能は現実的に使えなくなってしまうので、自前でヒープ
+を管理することにしました。
+
+なお、Hugeメモリモデルが前提です。こんなこと、386ネイティブを最初からサポー
+トしてればいらない話なのに、なんでここまで苦労する必要があるのか、なんでこん
+なバカなシステムが広まるのか僕にはさっぱり理解できない。
+
+でも、折角作ったんで、当分このメモリ管理ルーチンをBlue Impulse Libraryの標準
+にします。
+
+が、しかし、MS-Cはその予想を越える低性能振りを発揮して、どうやら、BiFree内で
+useフラグをBIMEMOFFにするとき変なことが起こるらしい。useフラグをBIMEMOFFにす
+る部分をカットするだけで正常に動きだす。仕方ないので、またまた仕様変更。こう
+なったら、仕方ないから、性能の低い方に合わせてライブラリ関数を変えることにす
+る。怨れマイクロソフト、いまに主君(何だろ?)の恨み果たさん。でも、せっかくつく
+ったし、今後の参考にこのソースだけ保存しときます。
+
+******************************************************************************/
+
+
+/* public */void BiMemoryInitialize(void);
+/* public */void *BiMalloc(unsigned long siz);
+/* public */void BiFree(void *ptr);
+/* public */void BiCheckMemory(char *fn);
+static char *BiSearchFreeArea(unsigned long siz);
+static void BiGetFreeArea(char *neo,unsigned long siz);
+static void BiDeleteMemArea(char *mem);
+static void BiGarbageCollection(void);
+
+
+
+enum {
+	BIMEMOFF,
+	BIMEMON
+};
+
+typedef struct {
+	int use;
+	unsigned long siz;
+} MEMTAG;
+
+#if defined(_WINDOWS)
+	#define MEMORY_SIZE (unsigned long)(1024L*1024L)
+#elif defined(__HIGHC__)
+	#define MEMORY_SIZE (unsigned long)(3072L*1024L)
+#else
+	#define MEMORY_SIZE (unsigned long)(2048L*1024L)
+#endif
+
+
+#define lsizeof(x) (unsigned long)sizeof(x)
+#define MTAGSIZE lsizeof(MEMTAG)
+
+char BiHeap[MEMORY_SIZE];
+
+
+
+#ifdef TESTER
+/****************************************************************************
+ここはテスター。コンパイル時に /DTESTER とつけると自動的にメイン関数ができる。
+****************************************************************************/
+#include <stdlib.h>
+#include <time.h>
+
+#define NUM 10
+#define LOGFILE "D:RESULT"
+
+void main(void)
+{
+	int i;
+	char *ptr[NUM];
+	FILE *fp;
+
+	fp=fopen(LOGFILE,"w");
+	fprintf(fp,"Begin Malloc Test.\n");
+	fclose(fp);
+
+	BiMemoryInitialize();
+
+	srand(clock());
+	for(i=0; i<NUM; i++)
+	{
+		ptr[i]=(char *)BiMalloc(rand()%65536);
+	}
+
+	BiCheckMemory(LOGFILE);
+
+	for(i=0; i<NUM; i++)
+	{
+		if((rand()%13)<9)
+		{
+			BiFree(ptr[i]);
+		}
+	}
+
+	BiCheckMemory(LOGFILE);
+
+	for(i=0; i<NUM; i++)
+	{
+		BiFree(ptr[i]);
+	}
+
+	BiCheckMemory(LOGFILE);
+
+	for(i=0; i<NUM; i++)
+	{
+		ptr[i]=(char *)BiMalloc(50000);
+	}
+	for(i=0; i<NUM; i++)
+	{
+		if(i%3>=1)
+		{
+			BiFree(ptr[i]);
+		}
+	}
+
+	BiCheckMemory(LOGFILE);
+
+	for(i=0; i<NUM; i++)
+	{
+		BiFree(ptr[i]);
+	}
+	for(i=0; i<6; i++)
+	{
+		ptr[i]=(char *)BiMalloc(128);
+	}
+	BiFree(ptr[0]);
+	ptr[0]=(char *)BiMalloc(128-MTAGSIZE);
+	BiFree(ptr[2]);
+	ptr[2]=(char *)BiMalloc(128);
+	BiFree(ptr[4]);
+	ptr[4]=(char *)BiMalloc(124);
+
+	BiCheckMemory(LOGFILE);
+}
+#endif
+
+
+
+
+
+/* public */void BiMemoryInitialize(void)
+{
+	/**************************************************************
+      |                    MEMORY_SIZE                          |
+      |MEMTAG|                 siz                              |
+	**************************************************************/
+	MEMTAG *tag;
+	tag=(MEMTAG *)BiHeap;
+	tag->use=BIMEMOFF;
+	tag->siz=MEMORY_SIZE-MTAGSIZE;
+}
+
+
+/* public */void *BiMalloc(unsigned long siz)
+{
+	char *neo;
+
+	siz=(siz+3)&~3;
+
+	neo=BiSearchFreeArea(siz);
+	if(neo!=NULL)
+	{
+		BiGetFreeArea(neo,siz);
+		return (void *)(neo+MTAGSIZE);
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+static char *BiSearchFreeArea(unsigned long siz)
+{
+	/**************************************************************
+      neo
+      |MEMTAG|　　　　siz          |MEMTAG|         siz         |
+                     siz>=siz?       →           siz>=siz?    →
+	**************************************************************/
+	char *seek;
+	MEMTAG *tag;
+
+	seek=BiHeap;
+	while(seek < BiHeap+MEMORY_SIZE)
+	{
+		tag=(MEMTAG *)seek;
+		if(tag->use==BIMEMOFF && tag->siz>=siz)
+		{
+			return seek;
+		}
+		seek=seek+MTAGSIZE+tag->siz;
+	}
+	return NULL;
+}
+
+static void BiGetFreeArea(char *neo,unsigned long siz)
+{
+	/**************************************************************
+      neo
+      |MEMTAG|                  org                             |
+                                 ↓
+      |MEMTAG|　　　　siz          |MEMTAG|    org-MEMTAG-siz   |
+                           or
+      |MEMTAG|　　　　siz                                  |    |
+                                                       |MTAGSIZE|
+	**************************************************************/
+	MEMTAG *tag1,*tag2;
+	unsigned long org;
+
+	tag1=(MEMTAG *)neo;
+	tag1->use=BIMEMON;
+	if(tag1->siz>siz+MTAGSIZE)
+	{
+		tag2=(MEMTAG *)(neo+MTAGSIZE+siz);
+		org=tag1->siz;
+
+		tag1->use=BIMEMON;
+		tag1->siz=siz;
+
+		tag2->use=BIMEMOFF;
+		tag2->siz=org-MTAGSIZE-siz;
+	}
+}
+
+
+/* public */void BiFree(void *ptr)
+{
+	MEMTAG *tag;
+	char *seek,*cptr;
+
+	cptr=(char *)ptr;
+	seek=BiHeap;
+	while(seek < BiHeap+MEMORY_SIZE)
+	{
+		tag=(MEMTAG *)seek;
+		if(cptr==(seek+MTAGSIZE))
+		{
+			BiDeleteMemArea(seek);
+			BiGarbageCollection();
+			return;
+		}
+		seek=seek+MTAGSIZE+tag->siz;
+	}
+}
+
+static void BiDeleteMemArea(char *mem)
+{
+	MEMTAG *tag;
+	tag=(MEMTAG *)mem;
+	tag->use=BIMEMOFF;
+}
+
+static void BiGarbageCollection(void)
+{
+	/**************************************************************************
+      neo
+       |MEMTAG|　　tag1->siz        |MEMTAG|    tag2->siz        |
+                                 ↓
+       |MEMTAG|                 org                              |
+	**************************************************************************/
+	char *seek,*chk;
+	MEMTAG *tag1,*tag2;
+
+	seek=BiHeap;
+	while(seek<BiHeap+MEMORY_SIZE)
+	{
+		tag1=(MEMTAG *)seek;
+		chk=seek+MTAGSIZE+tag1->siz;
+		if(chk>=BiHeap+MEMORY_SIZE)
+		{
+			return;
+		}
+
+		tag2=(MEMTAG *)chk;
+		if(tag1->use==BIMEMOFF && tag2->use==BIMEMOFF)
+		{
+			tag1->siz=tag1->siz+MTAGSIZE+tag2->siz;
+		}
+		else
+		{
+			seek=chk;
+		}
+	}
+}
+
+
+/* public */void BiCheckMemoryOffset(char *fn,void *ptr)
+{
+	char *cptr;
+	unsigned long siz;
+	FILE *fp;
+	cptr=ptr;
+	siz=(unsigned long)(cptr-BiHeap);
+	fp=fopen(fn,"a");
+	fprintf(fp,"OFFSET:%ld\n",siz);
+	fclose(fp);
+}
+
+/* public */void BiCheckMemory(char *fn)
+{
+	unsigned long siz,blk;
+	char *seek;
+	char *use[]={"UNUSED","USED"};
+	MEMTAG *tag;
+	FILE *fp;
+
+	fp=fopen(fn,"a");
+
+	fprintf(fp,"--------------------------------------------------------\n");
+
+	seek=BiHeap;
+	while(seek<BiHeap+MEMORY_SIZE)
+	{
+		tag=(MEMTAG *)seek;
+		siz=tag->siz;
+		blk=siz+MTAGSIZE;
+		fprintf(fp,"|%-8s|Alloc %16ld|Block %16ld|\n",use[tag->use],siz,blk);
+		seek=seek+MTAGSIZE+siz;
+	}
+
+	fclose(fp);
+}

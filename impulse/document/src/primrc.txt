@@ -1,0 +1,113 @@
+------------------------------------------------------------------------------
+NAME:BiOrgP
+CATEGORY:定義済構造体
+DEFINITION:
+  BIPOINT BiOrgP;
+DESCRIPTION:
+  座標(0,0,0)を表します。
+----------
+NAME:BiOrgA
+CATEGORY:定義済構造体
+DEFINITION:
+  BIATTITUDE BiOrgA;
+DESCRIPTION:
+  姿勢(0,0,0)を表します。
+----------
+NAME:BiOrgPA
+CATEGORY:定義済構造体
+DEFINITION:
+  BIPOSATT BiOrgPA;
+DESCRIPTION:
+  位置(0,0,0),姿勢(0,0,0)を表します。
+----------
+NAME:BiOrgAxs
+CATEGORY:定義済構造体
+DEFINITION:
+  BIAXIS BiOrgAxs;
+DESCRIPTION:
+  原点座標系を表します。位置(0,0,0),姿勢(0,0,0)から生成できる座標系の値です。
+----------
+NAME:BiOrgPln
+CATEGORY:定義済構造体
+DEFINITION:
+  BIPLANE BiOrgPln;
+DESCRIPTION:
+  XZ平面を表します。
+----------
+NAME:BiVecX
+CATEGORY:定義済構造体
+DEFINITION:
+  BIPOINT BiVecX;
+DESCRIPTION:
+  ベクトル(1,0,0)を表します。
+----------
+NAME:BiVecY
+CATEGORY:定義済構造体
+DEFINITION:
+  BIPOINT BiVecY;
+DESCRIPTION:
+  ベクトル(0,1,0)を表します。
+----------
+NAME:BiVecZ
+CATEGORY:定義済構造体
+DEFINITION:
+  BIPOINT BiVecZ;
+DESCRIPTION:
+  ベクトル(0,0,1)を表します。
+----------
+NAME:BiBlack
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiBlack;
+DESCRIPTION:
+  黒(R=0,G=0,B=0)を表します。
+----------
+NAME:BiBlue
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiBlue;
+DESCRIPTION:
+  青(R=0,G=0,B=255)を表します。
+----------
+NAME:BiRed
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiRed;
+DESCRIPTION:
+  赤(R=255,G=0,B=0)を表します。
+----------
+NAME:BiMagenta
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiMagenta;
+DESCRIPTION:
+  マゼンタ(R=255,G=0,B=255)を表します。
+----------
+NAME:BiGreen
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiGreen;
+DESCRIPTION:
+  グリーン(R=0,G=255,B=0)を表します。
+----------
+NAME:BiCyan
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiCyan;
+DESCRIPTION:
+  シアン(R=0,G=255,B=255)を表します。
+----------
+NAME:BiYellow
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiYellow;
+DESCRIPTION:
+  黄色(R=255,G=255,B=0)を表します。
+----------
+NAME:BiWhite
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiWhite;
+DESCRIPTION:
+  白(R=255,G=255,B=255)を表します。
+----------

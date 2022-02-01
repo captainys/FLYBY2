@@ -1,0 +1,49 @@
+D/depend////
+D/glx////
+D/mac////
+D/sgi////
+D/towns////
+D/win32////
+D/win32dib////
+D/win32ogl////
+D/winscsv////
+D/winscsvogl////
+D/xwin////
+/i2dg.c/1.1/Mon Nov 27 10:57:22 1995//
+/i2dpict.c/1.1/Fri Sep 03 15:56:12 1999//
+/i3dgbbox.c/1.1/Wed Oct 16 10:46:38 1996//
+/i3dtext.c/1.1/Sun Jan 30 22:09:06 2000//
+/ibmpfile.c/1.1/Thu Aug 29 08:20:40 1996//
+/icalc.c/1.1/Mon Aug 03 23:09:32 1998//
+/icalctab.c/1.1/Mon Aug 03 22:00:24 1998//
+/iclick.c/1.1/Fri Feb 14 20:48:12 1997//
+/iclock.c/1.1/Wed Dec 27 12:44:48 1995//
+/idevice.c/1.1/Fri Mar 15 18:46:12 1996//
+/iepsfile.c/1.1/Fri Jun 27 17:44:18 1997//
+/iepsfile.h/1.1/Sat Jun 24 20:53:46 1995//
+/iepslink.c/1.1/Mon Aug 25 11:50:52 1997//
+/ifield.c/1.1/Mon Aug 03 22:16:48 1998//
+/ilncross.c/1.1/Thu Oct 02 18:44:52 1997//
+/imodel.c/1.1/Thu Dec 19 14:29:09 2002//
+/ipolyg.c/1.1/Wed Dec 18 22:40:48 1996//
+/ippmfile.c/1.1/Thu Aug 29 08:21:52 1996//
+/iprimrc.c/1.1/Mon Jan 15 20:11:58 1996//
+/irender.c/1.1/Tue Aug 11 20:53:54 1998//
+/irender.h/1.1/Thu Aug 29 03:05:18 1996//
+/irendlnk.c/1.1/Mon Aug 03 22:16:52 1998//
+/irendplg.c/1.1/Sat May 04 19:01:18 1996//
+/irendtri.c/1.1/Thu Aug 29 03:05:02 1996//
+/iscrn.c/1.1/Thu Aug 15 02:47:24 2002//
+/istrrc.c/1.1/Mon May 26 15:23:10 1997//
+/iterrain.c/1.1/Thu May 09 23:45:22 2002//
+/itiffile.c/1.1/Thu Aug 29 08:22:20 1996//
+/itmpheap.c/1.1/Sun Dec 01 23:51:55 2002//
+/itwist.c/1.1/Thu Aug 29 03:05:12 1996//
+/iutil.c/1.1/Fri Sep 03 15:56:30 1999//
+/iutil.h/1.1/Sun May 25 15:26:04 1997//
+/ivrmfile.c/1.1/Sun Nov 28 06:46:32 1999//
+/ivrmfile.h/1.1/Tue Dec 17 21:27:14 1996//
+/i3dg.h/1.2/Mon May 31 03:29:25 2004//
+/i3dgobj.c/1.2/Mon May 31 04:13:43 2004//
+/impulse.h/1.2/Mon May 31 03:45:05 2004//
+/i3dg.c/1.4/Tue Jun 01 23:06:11 2004//

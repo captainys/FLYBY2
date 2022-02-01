@@ -1,0 +1,121 @@
+Blue Impulse 3DG-SDK IPL2G用インストール方法(SA/TA向け)
+
+UNIX環境用
+
+<< SUNのマシンにログインして(rloginでも可) >>
+
+(1)http://tristar.sfc.keio.ac.jp/~ys11/impulse/impulsej.htmlから、次の
+   ファイルを ~/pub にダウンロードする。
+
+     unixsource.tgz
+     unixipl2g.tgz
+
+(2)~/pub に移動する。
+
+    %cd ~/pub
+
+(3)次のようにタイプして解凍する。
+
+    %gzip -d unixsource.tgz
+    %gzip -d unixipl2g.tgz
+    %tar xvf unixsource.tar
+    %tar xvf unixipl2g.tar
+
+(4)~/pubの下に lib と include ディレクトリを作る。
+
+    %mkdir lib
+    %mkdir include
+
+(5)~/pub/include に移動する。
+
+    %cd include
+
+(6)ヘッダファイルをコピーする。
+
+    %cp ../impulse/impulse.h .
+    %cp ../impulse2g/impulse2g.h .
+
+#
+
+(7)~/pub/impulse/xwin に移動する。
+
+    %cd ../impulse/xwin
+
+(8)makefileの一部を次のように編集する。
+
+    LIBINST=/home/ys11/pub/lib
+    INCINST=/home/ys11/pub/include
+            ^^^^^^^^^^^^^^^
+            ↑ディレクトリ名が ~/pub の絶対パスと一致するように。
+
+(9)次のようにタイプする。
+
+    %make sun
+
+(10)~/pub/impulse2g に移動する。
+
+    %cd ~/pub/impulse2g
+
+(11)手順8と同様に makefile の一部を編集する。
+
+(12)次のようにタイプする。
+
+    %make sun
+
+(13)SGIマシンにrloginする。(indyなど)
+
+(14)~/pub/impulse/glx に移動する。
+
+    %cd ~/pub/impulse/glx
+
+(15)makefileの一部を次のように書きかえる。
+
+    HOME=/home/ys11
+         ^^^^^^^^^^
+         ↑自分のホームディレクトリの絶対パスを指定。
+
+(16)次のようにタイプする。
+
+    %make
+
+(17)~/pub/impulse2g に移動する。
+
+    %cd ~/pub/impulse2g
+
+(18)次のようにタイプする。
+
+    %make sgi
+
+ここまでの手順で、次のファイルができるはず。
+
+    ~/pub/include/impulse.h
+    ~/pub/include/impulse2g.h
+    ~/pub/lib/libimpulsesun.a
+    ~/pub/lib/libimpulsesgi.a
+    ~/pub/lib/libimpulse2gsun.a
+    ~/pub/lib/libimpulse2gsgi.a
+
+なお、違うマシン(SUN以外)でコンパイルすると libimpulsesun.a という名の
+SUNで利用できないライブラリができてしまうので注意。
+
+(16)~pub/bin に次の内容の bicc を作る。
+
+#!/bin/csh
+set libdir = -L/home/ys11/pub/lib
+set incdir = -I/home/ys11/pub/include
+
+switch($HOSTTYPE)
+case "news_mips":
+ gcc $incdir $* $libdir -limpulse2gccn -limpulseccn -lX11 -lm
+ breaksw
+case "iris4d":
+ gcc $incdir $* $libdir -limpulse2gsgi -limpulsesgi -lGLU -lGL -lX11 -lXext -lm
+ breaksw
+case "sun4":
+ gcc $incdir $* $libdir -limpulse2gsun -limpulsesun -lX11 -lm
+ breaksw
+default:
+ echo "Not Supported on this machine."
+ breaksw
+endsw
+

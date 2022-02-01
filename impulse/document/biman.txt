@@ -1,0 +1,62 @@
+Blue Impulse Online Manual
+
+
+ファイル構成
+  impulse.txt  Blue Impulse Libリファレンス 1996/12/06 バージョン
+  hotas.txt    HOTAS Libリファレンス 1996/02/08バージョン
+  biman.c      オンラインマニュアルソースコード
+  biman.exe    Windows MS-DOSプロンプト用実行ファイル
+  biman.exp    FM-TOWNS コマンドモード用実行ファイル
+
+
+Blue Impulse 3DG-DKの関数ライブラリ用のオンラインマニュアルです。コマンド
+モードで動きます。「3次元グラフィックス開発キット Blue Impulse」の中の
+TUTRIALを見ていて、「この関数はなんじゃ?」とか思ったとき、簡単に関数の
+仕様を参照することができます。
+
+例えば、BiInsPolyg を参照したいときは、
+
+  biman BiInsPolyg
+
+でOKです。また、関数名にSrfが入っているのはおぼえているが、フルスペルを
+忘れてしまったときは、
+
+  biman Polyg
+
+と指定すれば、候補一覧が出て、その中から選択することができます。
+
+なお、このプログラムを使用するには、使うマニュアルファイルを適当なディレ
+クトリにコピーして、環境変数でそれらのファイルを指定する必要があります。
+例えば、impulse.txtとhotas.txtをC:\docsにコピーしたとすると、AUTOEXEC.BAT
+の最終行あたりに、
+
+  SET BIMAN=C:\docs\impulse.txt;C:\docs\hotas.txt
+
+と書きます。「;」で区切って複数指定することができます。
+
+また、UNIXの方では、/home/ys11/pub にimpulse.txtとhotas.txtをコピーした
+とすると、
+
+  setenv BIMAN "/home/ys11/impulse.txt;/home/ys11/hotas.txt"
+
+のように指定します。なお、このプログラムには、1996/12/06バージョンの
+impulse.txtとhotas.txtがついています。biman VRML とかやると、VRML出力機
+能関係の関数が出てきますが、まだライブラリ本体をリリースしてません(^_^;)
+この変の新関数は年明けにサポートの予定です。
+
+なお、UNIX用として使うには、それぞれの環境で biman.c をコンパイルして使
+ってください。また、impulse.txt と hotas.txt は Shift-JIS コードなので、
+これも、それぞれの環境に応じて変換してください。
+
+
+なお、修論の逃避で1時間で作っちゃったプログラムなので、バグなどあるかも
+しれません。お気づきの点がありましたらメールください。
+
+
+        /***********************************************************
+         *  Captain S.Yamakawa / 山川総司                          *
+         *      Internet : ys11@sfc.keio.ac.jp                     *
+         *      Nifty    : PEB01130@niftyserve.or.jp               *
+         *      URL      : http://tristar.sfc.keio.ac.jp/~ys11     *
+         ***********************************************************/
+

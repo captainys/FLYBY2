@@ -1,0 +1,50 @@
+TARGET = flyby
+OBJ = flyby.o asmoke.o
+
+
+
+default :
+	echo SPECIFY A MACHINE TYPE sun or news or linux or sgi or solaris
+
+
+CC = gcc
+CFLAGS = -I..
+
+
+SUNLIB = ../impulse.sun ../hotas.sun ../skyhawk.sun -lX11 -lm
+NEWSLIB = ../impulse.nws ../hotas.nws ../skyhawk.nws -lX11 -lm
+LINUXLIB = ../impulse.lnx ../hotas.lnx ../skyhawk.lnx -lX11 -lm
+SGILIB = ../impulse.sgi ../hotas.sgi ../skyhawk.sgi -lgl -lm
+SOLARISLIB = ../impulse.sol ../hotas.sol ../skyhawk.sol -lX11 -lm
+
+SUN = $(TARGET).sun
+NEWS = $(TARGET).nws
+LINUX = $(TARGET).lnx
+SGI = $(TARGET).sgi
+SOLARIS = $(TARGET).sol
+
+sun : $(SUN)
+news : $(NEWS)
+linux : $(LINUX)
+sgi : $(SGI)
+solaris : $(SOLARIS)
+
+
+$(SUN) : $(OBJ)
+	$(CC) $(OBJ) -o $(SUN) $(SUNLIB)
+
+$(NEWS) : $(OBJ)
+	$(CC) $(OBJ) -o $(NEWS) $(NEWSLIB)
+
+$(LINUX) : $(OBJ)
+	$(CC) $(OBJ) -o $(LINUX) $(LINUXLIB)
+
+$(SGI) : $(OBJ)
+	$(CC) $(OBJ) -o $(SGI) $(SGILIB)
+
+$(SOLARIS) : $(OBJ)
+	$(CC) $(OBJ) -o $(SOLARIS) $(SOLARISLIB)
+
+
+.c.o :
+	$(CC) -c $*.c $(CFLAGS)

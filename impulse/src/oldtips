@@ -1,0 +1,608 @@
+
+#### iterrain.c  Old & Ugly Drawing Routine
+
+static void BiTmInsWall(BIAXIS *axs,int clp,int *sw);
+static void BiTmInsWallX(BIPOINT *sur[],BIAXIS *axs);
+static void BiTmInsWallZ(BIPOINT *sur[],BIAXIS *axs);
+static int BiTmInsWallSq(BIPOINT *p,BIPOINT *n,BICOLOR *col,int cli);
+static int BiTmInsTrgs(BIAXIS *axs,int cl);
+static int BiTmInsBlock(BIPOINT *tri,BITERRBLOCK *blk,BIAXIS *axs,int clp);
+static void BiTmMakePoints(BIAXIS *axs);
+static int BiTmNewTrg(BIPOINT *p,BIPOINT *c,BIPOINT *n,BICOLOR *col,int cli);
+static void BiTmMakeTrg(BIPOINT *tri,int x,int z);
+
+#define BiTmBlockPtr(x,z) (&ter->blk[(z)*(ter->xSiz+1)+(x)])
+#define BiTmPntPtr(x,z) (&terPntTab[(z)*(ter->xSiz+1)+(x)])
+
+static BITERRMESH *ter;
+static BIPOINT *terPntTab;
+static BIAXIS bypAxs;
+
+int BiInsTerrMesh(BITERRMESH *terr,BIPNTANG *pos)
+{
+	int i,clip,er;
+	BIAXIS axs;
+	BIPOINT bbox[8],*bboxP,*tbboxP;
+
+	ter=terr;
+
+	BiMakeAxis(&axs,pos);
+	BiConvAxisLtoG(&bypAxs,&axs,&BiCnvAxs);
+
+	bboxP=bbox;
+	tbboxP=ter->bbox;
+	for(i=0; i<8; i++)
+	{
+		BiConvLtoG(bboxP,tbboxP,&bypAxs);
+		bboxP++;
+		tbboxP++;
+	}
+
+	if(BiCheckInsideViewPort(&clip,8,bbox)!=BI_IN)
+	{
+		return BI3DG_NOERR;
+	}
+
+	terPntTab=(BIPOINT *)BiGetTmpStack(sizeof(BIPOINT)*(ter->xSiz+1)*(ter->zSiz+1));
+	if(terPntTab==NULL)
+	{
+		return BI3DG_STACKOVERFLOW;
+	}
+
+	if(BiRendLinkFlag==BI_ON)
+	{
+		BiRenderTerrMesh(terr,pos);
+	}
+
+#ifdef BIACCEL3D
+	BiAfterChangeMatrix(&bypAxs);
+#endif
+
+	BiTmMakePoints(&axs);
+	BiTmInsWall(&axs,clip,terr->side);
+	er=BiTmInsTrgs(&axs,clip);
+
+#ifdef BIACCEL3D
+	BiAfterChangeMatrix(&BiCnvAxs);
+#endif
+
+	return er;
+}
+
+static void BiTmInsWall(BIAXIS *axs,int clp,int *sw)
+{
+	static BIPOINT nomOrg[4]={{0.0F,0.0F,-1.0F},{0.0F,0.0F,1.0F},{-1.0F,0.0F,0.0F},{1.0F,0.0F,0.0F}};
+	int i,j;
+	BIPOINT *sur[4],*tmp,n;
+
+	tmp=(BIPOINT *)BiGetTmpStack(sizeof(BIPOINT)*(ter->xSiz+ter->zSiz)*8);
+	if(tmp==NULL)
+	{
+		return;
+	}
+
+	sur[0]=tmp;
+	sur[1]=sur[0]+(ter->xSiz)*4;
+	sur[2]=sur[1]+(ter->xSiz)*4;
+	sur[3]=sur[2]+(ter->zSiz)*4;
+	BiTmInsWallX(sur  ,axs);
+	BiTmInsWallZ(sur+2,axs);
+
+	for(i=0; i<2; i++)
+	{
+		if(sw[i]==BI_ON)
+		{
+			BiRotFastLtoG(&n,&nomOrg[i],&bypAxs.t);
+			if(BiInnerPoint(&n,&sur[i][0])<=0)
+			{
+				for(j=0; j<ter->xSiz; j++)
+				{
+					BiTmInsWallSq(&sur[i][j*4],&n,&ter->sdCol[i],clp);
+				}
+			}
+		}
+	}
+
+	for(i=2; i<4; i++)
+	{
+		if(sw[i]==BI_ON)
+		{
+			BiRotFastLtoG(&n,&nomOrg[i],&bypAxs.t);
+			if(BiInnerPoint(&n,&sur[i][0])<=0)
+			{
+				for(j=0; j<ter->zSiz; j++)
+				{
+					BiTmInsWallSq(&sur[i][j*4],&n,&ter->sdCol[i],clp);
+				}
+			}
+		}
+	}
+}
+
+static void BiTmInsWallX(BIPOINT *sur[],BIAXIS *axs)
+{
+	int x,z;
+	real zw;
+	zw=(real)ter->zSiz*ter->zWid;
+	for(z=0; z<=1; z++)
+	{
+		for(x=0; x<ter->xSiz; x++)
+		{
+			sur[z][x*4  ].x=(real)(x+1) * ter->xWid;
+			sur[z][x*4  ].y=0.0F;
+			sur[z][x*4  ].z=zw * (real)z;
+			sur[z][x*4+1].x=(real)x * ter->xWid;
+			sur[z][x*4+1].y=0.0F;
+			sur[z][x*4+1].z=zw * (real)z;
+
+#ifndef BIACCEL3D
+			BiConvLtoG(&sur[z][x*4  ],&sur[z][x*4  ],&bypAxs);
+			BiConvLtoG(&sur[z][x*4+1],&sur[z][x*4+1],&bypAxs);
+#else
+			if(BiEpsMode==BI_ON || BiRendLinkFlag==BI_ON)
+			{
+				BiConvLtoG(&sur[z][x*4  ],&sur[z][x*4  ],&bypAxs);
+				BiConvLtoG(&sur[z][x*4+1],&sur[z][x*4+1],&bypAxs);
+			}
+#endif
+
+			sur[z][x*4+2]=*BiTmPntPtr(x  ,z*ter->zSiz);
+			sur[z][x*4+3]=*BiTmPntPtr(x+1,z*ter->zSiz);
+		}
+	}
+}
+
+static void BiTmInsWallZ(BIPOINT *sur[],BIAXIS *axs)
+{
+	int x,z;
+	real xw;
+	xw=(real)ter->xSiz*ter->xWid;
+	for(x=0; x<=1; x++)
+	{
+		for(z=0; z<ter->zSiz; z++)
+		{
+			sur[x][z*4  ].x=xw * (real)x;
+			sur[x][z*4  ].y=0.0F;
+			sur[x][z*4  ].z=(real)(z+1) * ter->zWid;
+			sur[x][z*4+1].x=xw * (real)x;
+			sur[x][z*4+1].y=0.0F;
+			sur[x][z*4+1].z=(real)z * ter->zWid;
+
+#ifndef BIACCEL3D
+			BiConvLtoG(&sur[x][z*4  ],&sur[x][z*4  ],&bypAxs);
+			BiConvLtoG(&sur[x][z*4+1],&sur[x][z*4+1],&bypAxs);
+#else
+			if(BiEpsMode==BI_ON || BiRendLinkFlag==BI_ON)
+			{
+				BiConvLtoG(&sur[x][z*4  ],&sur[x][z*4  ],&bypAxs);
+				BiConvLtoG(&sur[x][z*4+1],&sur[x][z*4+1],&bypAxs);
+			}
+#endif
+
+			sur[x][z*4+2]=*BiTmPntPtr(x*ter->xSiz,z);
+			sur[x][z*4+3]=*BiTmPntPtr(x*ter->xSiz,z+1);
+		}
+	}
+}
+
+static int BiTmInsWallSq(BIPOINT *p,BIPOINT *n,BICOLOR *col,int cli)
+{
+	BIOBJECT *neo;
+	BIPOINT c;
+
+#ifdef BIACCEL3D
+	if(BiEpsMode==BI_OFF && BiRendLinkFlag==BI_OFF)
+	{
+		BiDrawPolyg3(4,p,n,col);
+		return BI3DG_NOERR;
+	}
+#endif
+
+	BiAddPoint(&c,&p[0],&p[1]);
+	BiAddPoint(&c,&c,&p[2]);
+	BiAddPoint(&c,&c,&p[3]);
+	BiDivPoint(&c,&c,4);
+
+	neo=BiNew3dObject(BIOBJ_POLYGON,c.z);
+	if(neo==NULL)
+	{
+		return BI3DG_STACKOVERFLOW;
+	}
+	neo->col=*col;
+	neo->attr.nPnt.clip=cli;
+	neo->attr.nPnt.cen=c;
+	neo->attr.nPnt.n=4;
+	neo->attr.nPnt.p=p;
+	neo->attr.nPnt.nom=*n;
+	neo->attr.nPnt.nomSw=BI_ON;
+	return BI3DG_NOERR;
+}
+
+#define BiTmInsOneBlock                                    \
+{                                                          \
+	tri=(BIPOINT *)BiGetTmpStack(sizeof(BIPOINT)*6);       \
+	if(tri==NULL)                                          \
+	{                                                      \
+		return BI3DG_STACKOVERFLOW;                        \
+	}                                                      \
+                                                           \
+	blk=BiTmBlockPtr(x,z);                                 \
+	BiTmMakeTrg(tri,x,z);                                  \
+	if((er=BiTmInsBlock(tri,blk,axs,cl))!=BI3DG_NOERR)     \
+	{                                                      \
+		return er;                                         \
+	}                                                      \
+}
+
+static int BiTmInsTrgs(BIAXIS *axs,int cl)
+{
+	int x,z,hx,hz,er;
+	BIPOINT *tri;
+	BITERRBLOCK *blk;
+
+	hx=ter->zSiz/2;
+	hz=ter->xSiz/2;
+
+	for(z=hz; z<ter->zSiz; z++)
+	{
+		for(x=hx; x<ter->xSiz; x++)
+		{
+			BiTmInsOneBlock;
+		}
+	}
+	for(z=hz-1; z>=0; z--)
+	{
+		for(x=hx-1; x>=0; x--)
+		{
+			BiTmInsOneBlock;
+		}
+	}
+	for(z=hz; z<ter->zSiz; z++)
+	{
+		for(x=hx-1; x>=0; x--)
+		{
+			BiTmInsOneBlock;
+		}
+	}
+	for(z=hz-1; z>=0; z--)
+	{
+		for(x=ter->xSiz/2; x<ter->xSiz; x++)
+		{
+			BiTmInsOneBlock;
+		}
+	}
+	return BI3DG_NOERR;
+}
+
+static int BiTmInsBlock(BIPOINT *tri,BITERRBLOCK *blk,BIAXIS *axs,int clp)
+{
+	int er;
+	BIPOINT n,c;
+
+	if(blk->vis[1]==BI_ON)
+	{
+		BiConvLtoG(&c,&blk->c[0],&bypAxs);
+		BiRotFastLtoG(&n,&blk->n[0],&bypAxs.t);
+		if(BiInnerPoint(&c,&n)<=0)
+		{
+			er=BiTmNewTrg(&tri[0],&c,&n,&blk->col[0],clp);
+			if(er!=BI3DG_NOERR)
+			{
+				return er;
+			}
+		}
+	}
+
+	if(blk->vis[0]==BI_ON)
+	{
+		BiConvLtoG(&c,&blk->c[1],&bypAxs);
+		BiRotFastLtoG(&n,&blk->n[1],&bypAxs.t);
+		if(BiInnerPoint(&c,&n)<=0)
+		{
+			er=BiTmNewTrg(&tri[3],&c,&n,&blk->col[1],clp);
+			if(er!=BI3DG_NOERR)
+			{
+				return er;
+			}
+		}
+	}
+	return BI3DG_NOERR;
+}
+
+static void BiTmMakePoints(BIAXIS *axs)
+{
+	int x,z;
+	BIPOINT *ptr;
+	for(z=0; z<=ter->zSiz; z++)
+	{
+		for(x=0; x<=ter->xSiz; x++)
+		{
+			ptr=BiTmPntPtr(x,z);
+			ptr->x = (real)x * ter->xWid;
+			ptr->y = (real)BiTmBlockPtr(x,z)->y;
+			ptr->z = (real)z * ter->zWid;
+#ifndef BIACCEL3D
+			BiConvLtoG(ptr,ptr,&bypAxs);
+#else
+			if(BiEpsMode==BI_ON || BiRendLinkFlag==BI_ON)
+			{
+				BiConvLtoG(ptr,ptr,&bypAxs);
+			}
+#endif
+		}
+	}
+}
+
+static int BiTmNewTrg(BIPOINT *p,BIPOINT *c,BIPOINT *n,BICOLOR *col,int cli)
+{
+	BIOBJECT *neo;
+
+#ifdef BIACCEL3D
+	if(BiEpsMode==BI_OFF && BiRendLinkFlag==BI_OFF)
+	{
+		BiDrawPolyg3(3,p,n,col);
+		return BI3DG_NOERR;
+	}
+#endif
+
+	neo=BiNew3dObject(BIOBJ_POLYGON,c->z);
+	if(neo==NULL)
+	{
+		return BI3DG_STACKOVERFLOW;
+	}
+	neo->col=*col;
+	neo->attr.nPnt.clip=cli;
+	neo->attr.nPnt.cen=*c;
+	neo->attr.nPnt.n=3;
+	neo->attr.nPnt.p=p;
+	neo->attr.nPnt.nom=*n;
+	neo->attr.nPnt.nomSw=BI_ON;
+	return BI3DG_NOERR;
+}
+
+static void BiTmMakeTrg(BIPOINT *tri,int x,int z)
+{
+	switch(BiTmBlockPtr(x,z)->lup)
+	{
+	default:
+	case BI_ON:
+		tri[0]=*BiTmPntPtr(x  ,z  );
+		tri[1]=*BiTmPntPtr(x+1,z  );
+		tri[2]=*BiTmPntPtr(x  ,z+1);
+		tri[3]=*BiTmPntPtr(x+1,z  );
+		tri[4]=*BiTmPntPtr(x+1,z+1);
+		tri[5]=*BiTmPntPtr(x  ,z+1);
+		break;
+	case BI_OFF:
+		tri[0]=*BiTmPntPtr(x  ,z  );
+		tri[1]=*BiTmPntPtr(x+1,z  );
+		tri[2]=*BiTmPntPtr(x+1,z+1);
+		tri[3]=*BiTmPntPtr(x  ,z  );
+		tri[4]=*BiTmPntPtr(x+1,z+1);
+		tri[5]=*BiTmPntPtr(x  ,z+1);
+		break;
+	}
+}
+
+
+
+static void BiRenderTmMakePoints(BIAXIS *axs);
+static void BiRenderTmDrawWall(BIAXIS *axs,int *sw);
+static void BiRenderTmWallX(BIPOINT *sur[],BIAXIS *axs);
+static void BiRenderTmWallZ(BIPOINT *sur[],BIAXIS *axs);
+static int BiRenderTmDrawTrgs(BIAXIS *axs);
+static int BiRenderTmDrawBlock(BIPOINT *tri,BITERRBLOCK *blk,BIAXIS *axs);
+
+static int BiRenderTerrMesh(BITERRMESH *terr,BIPNTANG *pos)
+{
+	BIAXIS axs;
+	BiMakeAxis(&axs,pos);
+	BiConvAxisLtoG(&axs,&axs,&BiCnvAxs);
+	BiRenderTmMakePoints(&axs);
+	BiRenderTmDrawWall(&axs,terr->side);
+	return BiRenderTmDrawTrgs(&axs);
+}
+
+static void BiRenderTmMakePoints(BIAXIS *axs)
+{
+	int x,z;
+	BIPOINT *ptr;
+	for(z=0; z<=ter->zSiz; z++)
+	{
+		for(x=0; x<=ter->xSiz; x++)
+		{
+			ptr=BiTmPntPtr(x,z);
+			ptr->x = (real)x * ter->xWid;
+			ptr->y = (real)BiTmBlockPtr(x,z)->y;
+			ptr->z = (real)z * ter->zWid;
+			BiConvLtoG(ptr,ptr,axs);
+		}
+	}
+}
+
+static void BiRenderTmDrawWall(BIAXIS *axs,int *sw)
+{
+	static BIPOINT nomOrg[4]={{0.0F,0.0F,-1.0F},{0.0F,0.0F,1.0F},{-1.0F,0.0F,0.0F},{1.0F,0.0F,0.0F}};
+	int i,j;
+	BIPOINT *sur[4],*tmp,nv;
+	BICOLOR c;
+	unsigned long stk;
+
+	tmp=(BIPOINT *)BiPushTmpStack(&stk,sizeof(BIPOINT)*(ter->xSiz+ter->zSiz)*8);
+	if(tmp==NULL)
+	{
+		return;
+	}
+
+	sur[0]=tmp;
+	sur[1]=sur[0]+(ter->xSiz)*4;
+	sur[2]=sur[1]+(ter->xSiz)*4;
+	sur[3]=sur[2]+(ter->zSiz)*4;
+	BiRenderTmWallX(sur  ,axs);
+	BiRenderTmWallZ(sur+2,axs);
+
+	for(i=0; i<2; i++)
+	{
+		if(sw[i]==BI_ON)
+		{
+			BiRotFastLtoG(&nv,&nomOrg[i],&axs->t);
+			if(BiInnerPoint(&nv,&sur[i][0])<=0)
+			{
+				c=ter->sdCol[i];
+				for(j=0; j<ter->xSiz; j++)
+				{
+					BiRenderLinkPolygonOneSide(4,&sur[i][j*4],&nv,&c);
+				}
+			}
+		}
+	}
+
+	for(i=2; i<4; i++)
+	{
+		if(sw[i]==BI_ON)
+		{
+			BiRotFastLtoG(&nv,&nomOrg[i],&axs->t);
+			if(BiInnerPoint(&nv,&sur[i][0])<=0)
+			{
+				c=ter->sdCol[i];
+				for(j=0; j<ter->zSiz; j++)
+				{
+					BiRenderLinkPolygonOneSide(4,&sur[i][j*4],&nv,&c);
+				}
+			}
+		}
+	}
+	BiPopTmpStack(stk);
+}
+
+static void BiRenderTmWallX(BIPOINT *sur[],BIAXIS *axs)
+{
+	int x,z,k;
+	real zw;
+	zw=(real)ter->zSiz*ter->zWid;
+	for(z=0; z<=1; z++)
+	{
+		for(x=0; x<ter->xSiz; x++)
+		{
+			sur[z][x*4  ].x=(real)(x+1) * ter->xWid;
+			sur[z][x*4  ].y=0.0F;
+			sur[z][x*4  ].z=zw * (real)z;
+			sur[z][x*4+1].x=(real)x * ter->xWid;
+			sur[z][x*4+1].y=0.0F;
+			sur[z][x*4+1].z=zw * (real)z;
+			for(k=0; k<2; k++)
+			{
+				BiConvLtoG(&sur[z][x*4+k],&sur[z][x*4+k],axs);
+			}
+			sur[z][x*4+2]=*BiTmPntPtr(x  ,z*ter->zSiz);
+			sur[z][x*4+3]=*BiTmPntPtr(x+1,z*ter->zSiz);
+		}
+	}
+}
+
+static void BiRenderTmWallZ(BIPOINT *sur[],BIAXIS *axs)
+{
+	int x,z,k;
+	real xw;
+	xw=(real)ter->xSiz*ter->xWid;
+	for(x=0; x<=1; x++)
+	{
+		for(z=0; z<ter->zSiz; z++)
+		{
+			sur[x][z*4  ].x=xw * (real)x;
+			sur[x][z*4  ].y=0.0F;
+			sur[x][z*4  ].z=(real)(z+1) * ter->zWid;
+			sur[x][z*4+1].x=xw * (real)x;
+			sur[x][z*4+1].y=0.0F;
+			sur[x][z*4+1].z=(real)z * ter->zWid;
+			for(k=0; k<2; k++)
+			{
+				BiConvLtoG(&sur[x][z*4+k],&sur[x][z*4+k],axs);
+			}
+			sur[x][z*4+2]=*BiTmPntPtr(x*ter->xSiz,z);
+			sur[x][z*4+3]=*BiTmPntPtr(x*ter->xSiz,z+1);
+		}
+	}
+}
+
+#define BiRenderTmDrawOneBlock                               \
+{                                                            \
+	blk=BiTmBlockPtr(x,z);                                   \
+	BiTmMakeTrg(tri,x,z);                                    \
+	if((er=BiRenderTmDrawBlock(tri,blk,axs))!=BI3DG_NOERR)   \
+	{                                                        \
+		return er;                                           \
+	}                                                        \
+}
+
+static int BiRenderTmDrawTrgs(BIAXIS *axs)
+{
+	int x,z,hx,hz,er;
+	BIPOINT tri[6];
+	BITERRBLOCK *blk;
+
+	hx=ter->zSiz/2;
+	hz=ter->xSiz/2;
+
+	for(z=hz; z<ter->zSiz; z++)
+	{
+		for(x=hx; x<ter->xSiz; x++)
+		{
+			BiRenderTmDrawOneBlock;
+		}
+	}
+	for(z=hz-1; z>=0; z--)
+	{
+		for(x=hx-1; x>=0; x--)
+		{
+			BiRenderTmDrawOneBlock;
+		}
+	}
+	for(z=hz; z<ter->zSiz; z++)
+	{
+		for(x=hx-1; x>=0; x--)
+		{
+			BiRenderTmDrawOneBlock;
+		}
+	}
+	for(z=hz-1; z>=0; z--)
+	{
+		for(x=ter->xSiz/2; x<ter->xSiz; x++)
+		{
+			BiRenderTmDrawOneBlock;
+		}
+	}
+	return BI3DG_NOERR;
+}
+
+static int BiRenderTmDrawBlock(BIPOINT *tri,BITERRBLOCK *blk,BIAXIS *axs)
+{
+	BIPOINT n,c;
+	BICOLOR col;
+
+	if(blk->vis[1]==BI_ON)
+	{
+		BiConvLtoG(&c,&blk->c[0],axs);
+		BiRotFastLtoG(&n,&blk->n[0],&axs->t);
+		if(BiInnerPoint(&c,&n)<=0)
+		{
+			col=blk->col[0];
+			BiRenderLinkPolygonOneSide(3,&tri[0],&n,&col);
+		}
+	}
+
+	if(blk->vis[0]==BI_ON)
+	{
+		BiConvLtoG(&c,&blk->c[1],axs);
+		BiRotFastLtoG(&n,&blk->n[1],&axs->t);
+		if(BiInnerPoint(&c,&n)<=0)
+		{
+			col=blk->col[1];
+			BiRenderLinkPolygonOneSide(3,&tri[3],&n,&col);
+		}
+	}
+	return BI3DG_NOERR;
+}
+
+
+

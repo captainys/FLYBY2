@@ -1,0 +1,308 @@
+------------------------------------------------------------------------------
+NAME:YSPI
+CATEGORY:MACRO
+DEFINITION:
+  #define YSPI 3.14159265
+DESCRIPTION:
+  Macro representing PI
+------------------------------------------------------------------------------
+NAME:YSEPS
+CATEGORY:MACRO
+DEFINITION:
+  #define YSEPS 0.001
+DESCRIPTION:
+  Macro representing tolerance
+------------------------------------------------------------------------------
+NAME:BI_TRUE
+NAME:BI_FALSE
+CATEGORY:MACRO
+DEFINITION:
+  enum { BI_TRUE,BI_FALSE };
+DESCRIPTION:
+  Macro representing boolean
+------------------------------------------------------------------------------
+NAME:BI_OFF
+NAME:BI_ON
+CATEGORY:MACRO
+DEFINITION:
+  enum { BI_OFF,BI_ON };
+DESCRIPTION:
+  Macro representing On/Off
+------------------------------------------------------------------------------
+NAME:BI_OUT
+NAME:BI_IN
+CATEGORY:MACRO
+DEFINITION:
+  enum { BI_OUT,BI_IN };
+DESCRIPTION:
+  Macro representing the result of inside/outside check
+REFERENCE:
+  BiClipLineScrn,BiClipPolygScrn,BiAboveTer,BiTerEyeVecUpVec,
+  BiTerHeight,BiSrfCollision
+------------------------------------------------------------------------------
+NAME:BI_OK
+NAME:BI_ERR
+CATEGORY:MACRO
+DEFINITION:
+  enum { BI_OK,BI_ERR };
+DESCRIPTION:
+  Macro representing the result of an operation
+------------------------------------------------------------------------------
+NAME:BI3DG_NOERR
+NAME:BI3DG_STACKOVERFLOW
+NAME:BI3DG_UNSUPPORTED
+CATEGORY:MACRO
+DEFINITION:
+  (ommited)
+DESCRIPTION:
+  Macro representing 3D Graphics Routines.
+    BI3DG_NOERR          No error
+    BI3DG_STACKOVERFLOW  Temporary stack overflow
+    BI3DG_UNSUPPORTED    Attempted to use unsupported function
+------------------------------------------------------------------------------
+NAME:BIPRJ_PERS
+NAME:BIPRJ_ORTHO
+CATEGORY:MACRO
+DEFINITION:
+  enum { BIPRJ_PERS,BIPRJ_ORTHO };
+DESCRIPTION:
+  Macro representing projection mode.
+    BIPRJ_PERS   Perspective View
+    BIPRJ_ORTHO  Orthogonal View
+REFERENCE:
+  BiSetProjectionMode
+------------------------------------------------------------------------------
+NAME:BITWIST_UNKNOWN
+NAME:BITWIST_RIGHT
+NAME:BITWIST_LEFT
+CATEGORY:MACRO
+DEFINITION:
+  enum {BITWIST_UNKNOWN,BITWIST_RIGHT,BITWIST_LEFT};
+DESCRIPTION:
+  Macro representing twist direction of a polygon.
+    BITWIST_UNKNOWN  Calculation failure (Eg. There's some self intersection)
+    BITWIST_RIGHT    Clockwise
+    BITWIST_LEFT     Counter Clockwise
+  (Assuming left handed coordinate system)
+REFERENCE:
+  BiTwist2,BiTwist3
+------------------------------------------------------------------------------
+NAME:BI_CRS_SAME
+NAME:BI_CRS_PARALLEL
+NAME:BI_CRS_ON_LINE
+NAME:BI_CRS_ONESIDE_SAME
+NAME:BI_CRS_CROSS
+NAME:BI_CRS_NOCROSS
+NAME:BI_CRS_LN1_TOUCH_LN2
+NAME:BI_CRS_LN2_TOUCH_LN1
+CATEGORY:MACRO
+DEFINITION:
+  (omitted)
+DESCRIPTION:
+  Macro representing relation between to line segments.
+    BI_CRS_SAME           Identical
+    BI_CRS_PARALLEL       Parallel
+    BI_CRS_ON_LINE        On the same straightline
+    BI_CRS_ONESIDE_SAME   Shareing one point
+    BI_CRS_CROSS          Crossing
+    BI_CRS_NOCROSS        Not parallel, Not crossing
+    BI_CRS_LN1_TOUCH_LN2  Line1 is touching Line2
+    BI_CRS_LN2_TOUCH_LN1  Line2 is touching Line1
+REFERENCE:
+  BiLine2CrossStatus
+------------------------------------------------------------------------------
+NAME:BIKEY_
+NAME:BIKEY_NULL
+NAME:BIKEY_STOP
+NAME:BIKEY_COPY
+NAME:BIKEY_F1
+NAME:BIKEY_F2
+NAME:BIKEY_F3
+NAME:BIKEY_F4
+NAME:BIKEY_F5
+NAME:BIKEY_F6
+NAME:BIKEY_F7
+NAME:BIKEY_F8
+NAME:BIKEY_F9
+NAME:BIKEY_F10
+NAME:BIKEY_ZERO
+NAME:BIKEY_ONE
+NAME:BIKEY_TWO
+NAME:BIKEY_THREE
+NAME:BIKEY_FOUR
+NAME:BIKEY_FIVE
+NAME:BIKEY_SIX
+NAME:BIKEY_SEVEN
+NAME:BIKEY_EIGHT
+NAME:BIKEY_NINE
+NAME:BIKEY_A
+NAME:BIKEY_B
+NAME:BIKEY_C
+NAME:BIKEY_D
+NAME:BIKEY_E
+NAME:BIKEY_F
+NAME:BIKEY_G
+NAME:BIKEY_H
+NAME:BIKEY_I
+NAME:BIKEY_J
+NAME:BIKEY_K
+NAME:BIKEY_L
+NAME:BIKEY_M
+NAME:BIKEY_N
+NAME:BIKEY_O
+NAME:BIKEY_P
+NAME:BIKEY_Q
+NAME:BIKEY_R
+NAME:BIKEY_S
+NAME:BIKEY_T
+NAME:BIKEY_U
+NAME:BIKEY_V
+NAME:BIKEY_W
+NAME:BIKEY_X
+NAME:BIKEY_Y
+NAME:BIKEY_Z
+NAME:BIKEY_SPACE
+NAME:BIKEY_ESC
+NAME:BIKEY_TAB
+NAME:BIKEY_CTRL
+NAME:BIKEY_SHIFT
+NAME:BIKEY_ALT
+NAME:BIKEY_BS
+NAME:BIKEY_RET
+NAME:BIKEY_HOME
+NAME:BIKEY_DEL
+NAME:BIKEY_UP
+NAME:BIKEY_DOWN
+NAME:BIKEY_LEFT
+NAME:BIKEY_RIGHT
+NAME:BIKEY_TEN0
+NAME:BIKEY_TEN1
+NAME:BIKEY_TEN2
+NAME:BIKEY_TEN3
+NAME:BIKEY_TEN4
+NAME:BIKEY_TEN5
+NAME:BIKEY_TEN6
+NAME:BIKEY_TEN7
+NAME:BIKEY_TEN8
+NAME:BIKEY_TEN9
+NAME:BIKEY_TENMUL
+NAME:BIKEY_TENDIV
+NAME:BIKEY_TENPLUS
+NAME:BIKEY_TENMINUS
+NAME:BIKEY_TENEQUAL
+NAME:BIKEY_TENDOT
+CATEGORY:MACRO
+DEFINITION:
+  (ommited)
+DESCRIPTION:
+  Blue Impulse SDK's keycode
+     BIKEY_NULL         No input
+     BIKEY_STOP         BREAK/STOP
+     BIKEY_COPY         COPY
+     BIKEY_F1           F1
+     BIKEY_F2           F2
+     BIKEY_F3           F3
+     BIKEY_F4           F4
+     BIKEY_F5           F5
+     BIKEY_F6           F6
+     BIKEY_F7           F7
+     BIKEY_F8           F8
+     BIKEY_F9           F9
+     BIKEY_F10          F10
+     BIKEY_ZERO         0(full key side)
+     BIKEY_ONE          1(full key side)
+     BIKEY_TWO          2(full key side)
+     BIKEY_THREE        3(full key side)
+     BIKEY_FOUR         4(full key side)
+     BIKEY_FIVE         5(full key side)
+     BIKEY_SIX          6(full key side)
+     BIKEY_SEVEN        7(full key side)
+     BIKEY_EIGHT        8(full key side)
+     BIKEY_NINE         9(full key side)
+     BIKEY_A            A
+     BIKEY_B            B
+     BIKEY_C            C
+     BIKEY_D            D
+     BIKEY_E            E
+     BIKEY_F            F
+     BIKEY_G            G
+     BIKEY_H            H
+     BIKEY_I            I
+     BIKEY_J            J
+     BIKEY_K            K
+     BIKEY_L            L
+     BIKEY_M            M
+     BIKEY_N            N
+     BIKEY_O            O
+     BIKEY_P            P
+     BIKEY_Q            Q
+     BIKEY_R            R
+     BIKEY_S            S
+     BIKEY_T            T
+     BIKEY_U            U
+     BIKEY_V            V
+     BIKEY_W            W
+     BIKEY_X            X
+     BIKEY_Y            Y
+     BIKEY_Z            Z
+     BIKEY_SPACE        SPACE
+     BIKEY_ESC          ESC
+     BIKEY_TAB          TAB
+     BIKEY_CTRL         CTRL
+     BIKEY_SHIFT        SHIFT
+     BIKEY_ALT          ALT (Usually unable to use due to OS overtaking)
+     BIKEY_BS           BACK SPACE
+     BIKEY_RET          ENTER
+     BIKEY_HOME         HOME
+     BIKEY_DEL          DEL
+     BIKEY_UP           UP ARROW
+     BIKEY_DOWN         DOWN ARROW
+     BIKEY_LEFT         LEFT ARROW
+     BIKEY_RIGHT        RIGHT ARROW
+     BIKEY_TEN0         0(Ten key side)
+     BIKEY_TEN1         1(Ten key side)
+     BIKEY_TEN2         2(Ten key side)
+     BIKEY_TEN3         3(Ten key side)
+     BIKEY_TEN4         4(Ten key side)
+     BIKEY_TEN5         5(Ten key side)
+     BIKEY_TEN6         6(Ten key side)
+     BIKEY_TEN7         7(Ten key side)
+     BIKEY_TEN8         8(Ten key side)
+     BIKEY_TEN9         9(Ten key side)
+     BIKEY_TENMUL       *(Ten key side)
+     BIKEY_TENDIV       /(Ten key side)
+     BIKEY_TENPLUS      +(Ten key side)
+     BIKEY_TENMINUS     -(Ten key side)
+     BIKEY_TENEQUAL     =(Ten key side)
+     BIKEY_TENDOT       .(Ten key side)
+CAUTION:
+  Some keys cannot be sensed. For example, ALT key and COPY key is
+  overtaken by Windows. So, Blue Impulse SDK cannot sense them on
+  Windows. I recommend not to use those keys.
+
+  Or, in some Window Managers of X-Window system, even SPACE key is
+  overtaken. In such case, please replace Window Manager. Blue Impulse SDK
+  cannot take care of those systems (^_^;)
+------------------------------------------------------------------------------
+NAME:BIAL_CENTER
+NAME:BIAL_LEFT
+NAME:BIAL_RIGHT
+NAME:BIAL_TOP
+NAME:BIAL_BOTTOM
+NAME:BIMG_CENTER
+NAME:BIMG_LEFT
+NAME:BIMG_RIGHT
+NAME:BIMG_TOP
+NAME:BIMG_BOTTOM
+CATEGORY:MACRO
+DEFINITION:
+  (omitted)
+DESCRIPTION:
+  Macros representing Text Alignment. BIMG_ was my wrongful use of
+  English in earlier version(^_^;) Now, you can use both BIAL_ and
+  BIMG_. (Never mind BIMG_??? and just use BIAL_????)(^_^;)
+REFERENCE:
+  BiDrawText2,BiInsString,BiInsText,BiOvwString,BiOvwText,
+  BiInsSolidString,BiInsSolidText
+------------------------------------------------------------------------------
+

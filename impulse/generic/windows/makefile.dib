@@ -1,0 +1,63 @@
+.SUFFIXES: .c .obj .exe .res .rc
+
+
+TARGET=
+OBJ=
+#OBJ= ./hotasrc.res
+
+
+CC=cl.exe
+RC=rc.exe
+LINK=link.exe
+
+
+CFLAGS=/nologo /W3 /GX /Z7 /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /Fo./ /c
+
+# Don't use Variable whose name is like LIB or PATH
+# "nmake" will use ENVIRONMENT-VARIABLE as make's variables.
+LIBFILE=kernel32.lib \
+        user32.lib \
+        gdi32.lib \
+        winspool.lib \
+        comdlg32.lib \
+        advapi32.lib \
+        shell32.lib \
+        ole32.lib \
+        oleaut32.lib \
+        uuid.lib \
+        odbc32.lib \
+        odbccp32.lib \
+        impls32d.lib \
+        hotas32.lib \
+        shawk32.lib 
+
+
+LINKFLAGS=/NOLOGO /SUBSYSTEM:windows /INCREMENTAL:yes /MACHINE:I386
+
+
+
+
+$(TARGET) : $(OBJ)
+	$(LINK) @<<
+  $(LIBFILE)
+  $(LINKFLAGS)
+  $(OBJ)
+  /OUT:$(TARGET)
+<<
+
+
+
+.rc.res :
+	$(RC) $*.rc
+
+
+.c.obj :
+	$(CC) $*.c $(CFLAGS)
+
+
+
+#
+# nmakeを使う場合、Makefileの中で  LIB や PATH のようにDOSの環境変数
+# と同じ名前を使ってはならない。nmakeはmakefile内の変数をDOSの環境変
+# 数と同じものとして扱う。他のでもそうなのかな?
+#

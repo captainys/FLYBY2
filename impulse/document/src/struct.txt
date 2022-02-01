@@ -1,0 +1,302 @@
+------------------------------------------------------------------------------
+NAME:real
+CATEGORY:型
+DEFINITION:
+  typedef float real;
+DESCRIPTION:
+  浮動小数点型を表す型です。正体はfloatです。
+------------------------------------------------------------------------------
+NAME:BIFLD
+NAME:BIFIELD
+CATEGORY:構造体
+DEFINITION:
+  省略
+DESCRIPTION:
+  フィールドデータを表す構造体です。
+REFERENCE:
+  BiGetFldElevation,BiGetFldGroundSky,BiGetFldRegion,
+  BiGetFldSrfCollision,BiInsFld,BiLoadFld,BiOvwFld
+------------------------------------------------------------------------------
+NAME:BIPC2
+NAME:BIPICT2
+CATEGORY:構造体
+DEFINITION:
+  省略
+DESCRIPTION:
+  図形オブジェクトを表す構造体です。
+REFERENCE:
+  BiDrawPc2,BiDrawPc2Zoom,BiLoadPc2,BiOvwPc2,
+  BiLoadPc2FromString,BiInsPc2
+------------------------------------------------------------------------------
+NAME:BIVECTOR
+CATEGORY:構造体
+DEFINITION:
+  typedef BIPOINT BIVECTOR;
+DESCRIPTION:
+  3次元ベクトルを表す構造体です。BIPOINTと同じものです。
+REFERENCE:
+  BIPOINT
+------------------------------------------------------------------------------
+NAME:BIATTITUDE
+CATEGORY:構造体
+DEFINITION:
+  typedef BIANGLE BIATTITUDE;
+DESCRIPTION:
+  姿勢(オイラー角)を表す構造体です。BIANGLEと同じものです。
+REFERENCE:
+  BIANGLE
+------------------------------------------------------------------------------
+NAME:BIPOSATT
+CATEGORY:構造体
+DEFINITION:
+  typedef BIPNTANG BIPOSATT;
+DESCRIPTION:
+  座標と姿勢を表す構造体です。BIPNTANGと同じものです。
+REFERENCE:
+  BIPNTANG
+------------------------------------------------------------------------------
+NAME:BIPOINT
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      double x,y,z;
+  } BIPOINT;
+DESCRIPTION:
+  ３次元座標またはベクトルを表す構造体です。
+REFERENCE:
+  BiSetPoint,BiAddPoint,BiSubPoint,BiMulPoint,BiDivPoint
+------------------------------------------------------------------------------
+NAME:BILINE
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+    BIPOINT o,v;
+  } BILINE;
+DESCRIPTION:
+  直線をあらわす構造体です。
+    o  :通過点
+    v  :方向ベクトル
+------------------------------------------------------------------------------
+NAME:BILIMLINE
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      BIPOINT p1,p2;
+  } BILIMLINE;
+DESCRIPTION:
+  線分をあらわす構造体です。
+    p1  :端点１
+    p2  :端点２
+------------------------------------------------------------------------------
+NAME:BILINE2
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      BIPOINT2 o,v;
+  } BILINE2;
+DESCRIPTION:
+  ２次元直線をあらわす構造体です。
+    o  :通過点
+    v  :方向ベクトル
+------------------------------------------------------------------------------
+NAME:BILIMLINE2
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      BIPOINT2 p1,p2;
+  } BILIMLINE2;
+DESCRIPTION:
+  ２次元線分をあらわす構造体です。
+    p1  :端点１
+    p2  :端点２
+------------------------------------------------------------------------------
+NAME:BIPOLYGON
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      int np;
+      BIPOINT *p;
+  } BIPOLYGON;
+DESCRIPTION:
+  ３次元ポリゴンを表す構造体です。
+------------------------------------------------------------------------------
+NAME:BIANGLE
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      long h,p,b;
+  } BIANGLE;
+DESCRIPTION:
+  姿勢(Attitude)を表す構造体です。
+REFERENCE:
+  BiSetAngle,BiSetAngleDeg
+------------------------------------------------------------------------------
+NAME:BIPNTANG
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      BIPOINT p;
+      BIANGLE a;
+  } BIPNTANG;
+DESCRIPTION:
+  座標と姿勢を表す構造体です。
+REFERENCE:
+  BiSetPoint,BiSetAngle,BiSetAngleDeg
+------------------------------------------------------------------------------
+NAME:BIPOINT2
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      double x,y;
+  } BIPOINT2;
+DESCRIPTION:
+  ２次元座標を表す構造体です。
+REFERENCE:
+  BiSetPoint2
+------------------------------------------------------------------------------
+NAME:BITRIGON
+CATEGORY:構造体
+DEFINITION:
+  省略
+DESCRIPTION:
+  姿勢(h,p,b)のsin,cosの値を保持する構造体です。
+REFERENCE:
+  BiMakeTrigonomy,BiRotFastLtoG,BiRotFastGtoL
+------------------------------------------------------------------------------
+NAME:BIPLANE
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      BIPOINT o,n;
+  } BIPLANE;
+DESCRIPTION:
+  無限平面を表す構造体です。
+REFERENCE:
+  BiAxisToPlane,BiMakePlane,BiCrossPoint
+------------------------------------------------------------------------------
+NAME:BIAXIS
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      BIPOINT p;      /* 原点座標 */
+      BIANGLE a;      /* 座標のAttitudeを規定するオイラー角 */
+      BITRIGON t;     /* メンバaに対するsin/cosの値 */
+  } BIAXIS;
+DESCRIPTION:
+  ローカル座標系を表す構造体です。
+  値をセットする方法は、BiMakeAxisを参照してください。
+REFERENCE:
+  BiMakeAxis,BiConvLtoG,BiConvGtoL,BiAxisToPlane
+------------------------------------------------------------------------------
+NAME:BIPROJ
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      long lx,ly;
+      long cx,cy;
+      double magx,magy;
+      double nearz,farz;
+  } BIPROJ;
+DESCRIPTION:
+  投影情報を表す構造体です。それぞれのメンバの意味は次の通りです。
+    lx,ly      : 描画画面サイズ
+    cx,cy      : 投影の中心点(消失点)の画面座標
+    magx,magy  : 縦横の倍率(これによって視野角度が決定)
+    nearz,farz : クリップ面までの距離(farzはカリングのためにのみ使用)
+REFERENCE:
+  BiGetStdProjection,BiSetProjection
+------------------------------------------------------------------------------
+NAME:BIPOINTS
+CATEGORY:構造体
+定義
+  typedef struct {
+      long x,y;
+  } BIPOINTS;
+DESCRIPTION:
+  画面座標を表す構造体です。
+REFERENCE:
+  BiSetPointS
+------------------------------------------------------------------------------
+NAME:BICOLOR
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      unsigned int g,r,b;
+  } BICOLOR;
+DESCRIPTION:
+  色を表す構造体です。r,g,bの値の範囲は0～255です。
+REFERENCE:
+  BiSetColorRGB
+------------------------------------------------------------------------------
+NAME:BISRF
+NAME:BISRFMODEL
+CATEGORY:構造体
+DEFINITION:
+  省略
+DESCRIPTION:
+  ポリゴンモデルを表す構造体です。
+  値をセットする方法は、BiLoadSrfを参照してください。
+REFERENCE:
+  BiLoadSrf,BiLoadSrfFromString,BiInsSrf,BiScaleSrf,BiGetSrfRadius
+------------------------------------------------------------------------------
+NAME:BITERRBLOCK
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      double y;        左下の点での高さ
+      int lup;         左上がりならBI_ON
+      BICOLOR col[2];  ポリゴンの色上側[0]と下側[1]
+          以下略
+  } BITERRBLOCK;
+DESCRIPTION:
+  地形オブジェクトのブロックを表す構造体です。
+REFERENCE:
+  BITERRMESH
+------------------------------------------------------------------------------
+NAME:BITER
+NAME:BITERRMESH
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      long xSiz,zSiz;    横ブロック数,縦ブロック数
+      double xWid,zWid;  横1ブロックあたりの長さ,縦1ブロックあたりの長さ
+      BITERRBLOCK *blk;  ブロックデータ([0]～[(xSiz+1)*(zSiz+1)]
+      int side[4];       側面にポリゴンを張るならBI_ON張らないならBI_OFF
+      BICOLOR sdCol[4];  側面の色(side==BI_ONのときのみ有効)
+        以下略
+  } BITERRMESH;
+DESCRIPTION:
+  地形オブジェクトを表す構造体です。プログラム中で新しい地形オブジェクトを
+  生成するには、上記のメンバに値をセットしてから必ずBiConstTerrMesh関数で
+  その他のメンバを初期化してください。
+
+  なお、side,sdColとBITERの各辺との対応は次の通りです。
+
+         [3]
+          Z
+          |
+     +----+----+
+     |    |    |
+  [2]|    +----|->X [1]
+     |         |
+     +---------+
+         [0]
+
+REFERENCE:
+  BiAboveTer,BiInsTer,BiConstTer,BiLoadTer,
+  BiLoadTerFromString,BiTerEyeVecUpVec,BiTerHeight
+------------------------------------------------------------------------------
+NAME:BI3DFONT
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      real wid;      1文字の幅
+      real hei;      1文字の高さ
+      BICOLOR col;   文字の色
+     (以下省略)
+  }BI3DFONT;
+DESCRIPTION:
+  ソリッドフォントを表す構造体です。
+REFERENCE:
+  BiMakeStdSolidFont,BiFreeSolidFont,BiInsSolidString,BiInsSolidText
+------------------------------------------------------------------------------

@@ -1,0 +1,8 @@
+while ( !endFlag )
+{
+　　MMI_iosense();
+
+　　if ( MMI_GetEvnt( mask, &pevent ) == 0 )
+　　　　 MMI_ExecEvnt( pevent );
+}
+

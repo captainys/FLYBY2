@@ -1,0 +1,312 @@
+------------------------------------------------------------------------------
+NAME:YSPI
+CATEGORY:マクロ
+DEFINITION:
+  #define YSPI 3.14159265
+DESCRIPTION:
+  πの値を表す定数です。
+------------------------------------------------------------------------------
+NAME:YSEPS
+CATEGORY:マクロ
+DEFINITION:
+  #define YSEPS 0.001
+DESCRIPTION:
+  誤差範囲を表す定数です。
+------------------------------------------------------------------------------
+NAME:BI_TRUE
+NAME:BI_FALSE
+CATEGORY:マクロ
+DEFINITION:
+  enum { BI_TRUE,BI_FALSE };
+DESCRIPTION:
+  真偽を表す定数です。
+------------------------------------------------------------------------------
+NAME:BI_OFF
+NAME:BI_ON
+CATEGORY:マクロ
+DEFINITION:
+  enum { BI_OFF,BI_ON };
+DESCRIPTION:
+  各種状態変数のオン/オフを表す定数です。
+------------------------------------------------------------------------------
+NAME:BI_OUT
+NAME:BI_IN
+CATEGORY:マクロ
+DEFINITION:
+  enum { BI_OUT,BI_IN };
+DESCRIPTION:
+  内外判定の結果を表す定数です。
+REFERENCE:
+  BiClipLineScrn,BiClipPolygScrn,BiAboveTer,BiTerEyeVecUpVec,
+  BiTerHeight,BiSrfCollision
+------------------------------------------------------------------------------
+NAME:BI_OK
+NAME:BI_ERR
+CATEGORY:マクロ
+DEFINITION:
+  enum { BI_OK,BI_ERR };
+DESCRIPTION:
+  エラー発生/正常終了判別のための定数です。
+------------------------------------------------------------------------------
+NAME:BI3DG_NOERR
+NAME:BI3DG_STACKOVERFLOW
+NAME:BI3DG_UNSUPPORTED
+CATEGORY:マクロ
+DEFINITION:
+  省略
+DESCRIPTION:
+  3Dグラフィックライブラリのエラーコードを表す定数です。
+    BI3DG_NOERR          正常終了
+    BI3DG_STACKOVERFLOW  テンポラリスタックがフルになった
+    BI3DG_UNSUPPORTED    未サポートの機能を使おうとした
+                         /* BiMdlAxsSw==YSON && BiInsSrf */
+------------------------------------------------------------------------------
+NAME:BIPRJ_PERS
+NAME:BIPRJ_ORTHO
+CATEGORY:マクロ
+DEFINITION:
+  enum { BIPRJ_PERS,BIPRJ_ORTHO };
+DESCRIPTION:
+  3Dグラフィックライブラリの投影モードを表す定数です。
+    BIPRJ_PERS   斜投影法
+    BIPRJ_ORTHO  正投影法
+REFERENCE:
+  BiSetProjectionMode
+------------------------------------------------------------------------------
+NAME:BITWIST_UNKNOWN
+NAME:BITWIST_RIGHT
+NAME:BITWIST_LEFT
+CATEGORY:マクロ
+DEFINITION:
+  enum {BITWIST_UNKNOWN,BITWIST_RIGHT,BITWIST_LEFT};
+DESCRIPTION:
+  面の回転の向きを表す定数です。
+    BITWIST_UNKNOWN  不明(計算できなかった。交差している辺があるなど。)
+    BITWIST_RIGHT    右回り
+    BITWIST_LEFT     左回り
+REFERENCE:
+  BiTwist2,BiTwist3
+------------------------------------------------------------------------------
+NAME:BI_CRS_SAME
+NAME:BI_CRS_PARALLEL
+NAME:BI_CRS_ON_LINE
+NAME:BI_CRS_ONESIDE_SAME
+NAME:BI_CRS_CROSS
+NAME:BI_CRS_NOCROSS
+NAME:BI_CRS_LN1_TOUCH_LN2
+NAME:BI_CRS_LN2_TOUCH_LN1
+CATEGORY:マクロ
+DEFINITION:
+  省略
+DESCRIPTION:
+  ２線分の関係をあらわす定数です。
+    BI_CRS_SAME           一致
+    BI_CRS_PARALLEL       平行
+    BI_CRS_ON_LINE        同一直線上
+    BI_CRS_ONESIDE_SAME   片側の頂点が一致
+    BI_CRS_CROSS          交差
+    BI_CRS_NOCROSS        平行でもないし交差もしない
+    BI_CRS_LN1_TOUCH_LN2  線分1の片方の点が線分2に接している
+    BI_CRS_LN2_TOUCH_LN1  線分2の片方の点が線分1に接している
+REFERENCE:
+  BiLine2CrossStatus
+------------------------------------------------------------------------------
+NAME:BIKEY_
+NAME:BIKEY_NULL
+NAME:BIKEY_STOP
+NAME:BIKEY_COPY
+NAME:BIKEY_F1
+NAME:BIKEY_F2
+NAME:BIKEY_F3
+NAME:BIKEY_F4
+NAME:BIKEY_F5
+NAME:BIKEY_F6
+NAME:BIKEY_F7
+NAME:BIKEY_F8
+NAME:BIKEY_F9
+NAME:BIKEY_F10
+NAME:BIKEY_ZERO
+NAME:BIKEY_ONE
+NAME:BIKEY_TWO
+NAME:BIKEY_THREE
+NAME:BIKEY_FOUR
+NAME:BIKEY_FIVE
+NAME:BIKEY_SIX
+NAME:BIKEY_SEVEN
+NAME:BIKEY_EIGHT
+NAME:BIKEY_NINE
+NAME:BIKEY_A
+NAME:BIKEY_B
+NAME:BIKEY_C
+NAME:BIKEY_D
+NAME:BIKEY_E
+NAME:BIKEY_F
+NAME:BIKEY_G
+NAME:BIKEY_H
+NAME:BIKEY_I
+NAME:BIKEY_J
+NAME:BIKEY_K
+NAME:BIKEY_L
+NAME:BIKEY_M
+NAME:BIKEY_N
+NAME:BIKEY_O
+NAME:BIKEY_P
+NAME:BIKEY_Q
+NAME:BIKEY_R
+NAME:BIKEY_S
+NAME:BIKEY_T
+NAME:BIKEY_U
+NAME:BIKEY_V
+NAME:BIKEY_W
+NAME:BIKEY_X
+NAME:BIKEY_Y
+NAME:BIKEY_Z
+NAME:BIKEY_SPACE
+NAME:BIKEY_ESC
+NAME:BIKEY_TAB
+NAME:BIKEY_CTRL
+NAME:BIKEY_SHIFT
+NAME:BIKEY_ALT
+NAME:BIKEY_BS
+NAME:BIKEY_RET
+NAME:BIKEY_HOME
+NAME:BIKEY_DEL
+NAME:BIKEY_UP
+NAME:BIKEY_DOWN
+NAME:BIKEY_LEFT
+NAME:BIKEY_RIGHT
+NAME:BIKEY_TEN0
+NAME:BIKEY_TEN1
+NAME:BIKEY_TEN2
+NAME:BIKEY_TEN3
+NAME:BIKEY_TEN4
+NAME:BIKEY_TEN5
+NAME:BIKEY_TEN6
+NAME:BIKEY_TEN7
+NAME:BIKEY_TEN8
+NAME:BIKEY_TEN9
+NAME:BIKEY_TENMUL
+NAME:BIKEY_TENDIV
+NAME:BIKEY_TENPLUS
+NAME:BIKEY_TENMINUS
+NAME:BIKEY_TENEQUAL
+NAME:BIKEY_TENDOT
+CATEGORY:マクロ
+DEFINITION:
+  省略
+DESCRIPTION:
+  Blue Impulse Library独自キーコードを表す定数です。それぞれの意味は
+  次の通りです。
+     BIKEY_NULL         キー入力が無いことを表す
+     BIKEY_STOP         BREAK/STOP
+     BIKEY_COPY         COPY
+     BIKEY_F1           F1
+     BIKEY_F2           F2
+     BIKEY_F3           F3
+     BIKEY_F4           F4
+     BIKEY_F5           F5
+     BIKEY_F6           F6
+     BIKEY_F7           F7
+     BIKEY_F8           F8
+     BIKEY_F9           F9
+     BIKEY_F10          F10
+     BIKEY_ZERO         フルキーの0
+     BIKEY_ONE          フルキーの1
+     BIKEY_TWO          フルキーの2
+     BIKEY_THREE        フルキーの3
+     BIKEY_FOUR         フルキーの4
+     BIKEY_FIVE         フルキーの5
+     BIKEY_SIX          フルキーの6
+     BIKEY_SEVEN        フルキーの7
+     BIKEY_EIGHT        フルキーの8
+     BIKEY_NINE         フルキーの9
+     BIKEY_A            A
+     BIKEY_B            B
+     BIKEY_C            C
+     BIKEY_D            D
+     BIKEY_E            E
+     BIKEY_F            F
+     BIKEY_G            G
+     BIKEY_H            H
+     BIKEY_I            I
+     BIKEY_J            J
+     BIKEY_K            K
+     BIKEY_L            L
+     BIKEY_M            M
+     BIKEY_N            N
+     BIKEY_O            O
+     BIKEY_P            P
+     BIKEY_Q            Q
+     BIKEY_R            R
+     BIKEY_S            S
+     BIKEY_T            T
+     BIKEY_U            U
+     BIKEY_V            V
+     BIKEY_W            W
+     BIKEY_X            X
+     BIKEY_Y            Y
+     BIKEY_Z            Z
+     BIKEY_SPACE        スペースキー
+     BIKEY_ESC          ESCキー
+     BIKEY_TAB          TABキー
+     BIKEY_CTRL         コントロールキー
+     BIKEY_SHIFT        シフトキー
+     BIKEY_ALT          ALTキー
+     BIKEY_BS           バックスペース
+     BIKEY_RET          リターンキー
+     BIKEY_HOME         HOMEキー
+     BIKEY_DEL          削除キー
+     BIKEY_UP           ↑キー
+     BIKEY_DOWN         ↓キー
+     BIKEY_LEFT         ←キー
+     BIKEY_RIGHT        →キー
+     BIKEY_TEN0         テンキーの0
+     BIKEY_TEN1         テンキーの1
+     BIKEY_TEN2         テンキーの2
+     BIKEY_TEN3         テンキーの3
+     BIKEY_TEN4         テンキーの4
+     BIKEY_TEN5         テンキーの5
+     BIKEY_TEN6         テンキーの6
+     BIKEY_TEN7         テンキーの7
+     BIKEY_TEN8         テンキーの8
+     BIKEY_TEN9         テンキーの9
+     BIKEY_TENMUL       テンキーの*
+     BIKEY_TENDIV       テンキーの/
+     BIKEY_TENPLUS      テンキーの+
+     BIKEY_TENMINUS     テンキーの-
+     BIKEY_TENEQUAL     テンキーの=
+     BIKEY_TENDOT       テンキーの.
+CAUTION:
+  プラットフォームによって、この中のキーのうちの一部をシステムでは
+  その構造上Blue Impulse Libraryでは検出できない場合があります。
+  とくに、以下のキーでその傾向が強いので使用は避けた方が良いでしょう。
+    テンキー
+    ALTキー
+    COPYキー
+
+  さらに、X-Windowではウィンドウマネージャによっては、スペースキーまでも
+  奪ってしまうものがあるようです。そのような場合はウィンドウマネージャを
+  変更してください。Blue Impulse Libraryではそこまで面倒は見切れません(^_^;)
+------------------------------------------------------------------------------
+NAME:BIAL_CENTER
+NAME:BIAL_LEFT
+NAME:BIAL_RIGHT
+NAME:BIAL_TOP
+NAME:BIAL_BOTTOM
+NAME:BIMG_CENTER
+NAME:BIMG_LEFT
+NAME:BIMG_RIGHT
+NAME:BIMG_TOP
+NAME:BIMG_BOTTOM
+CATEGORY:マクロ
+DEFINITION:
+  省略
+DESCRIPTION:
+  テキストのアラインメント(整列)を指定します。なお、BIMGというのは僕の
+  英語の誤用だったので、最新版ではBIALになりました。でも、マクロ登録で
+  旧ソースもそのままコンパイルできるようにしてあります。
+REFERENCE:
+  BiDrawText2,BiInsString,BiInsText,BiOvwString,BiOvwText,
+  BiInsSolidString,BiInsSolidText
+------------------------------------------------------------------------------
+

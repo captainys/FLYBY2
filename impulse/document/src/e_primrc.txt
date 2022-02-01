@@ -1,0 +1,114 @@
+------------------------------------------------------------------------------
+NAME:BiOrgP
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BIPOINT BiOrgP;
+DESCRIPTION:
+  Represents Origin (0,0,0)
+----------
+NAME:BiOrgA
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BIATTITUDE BiOrgA;
+DESCRIPTION:
+  Represents attitude (0,0,0)
+----------
+NAME:BiOrgPA
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BIPOSATT BiOrgPA;
+DESCRIPTION:
+  Represents position(0,0,0) and attitude(0,0,0)
+----------
+NAME:BiOrgAxs
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BIAXIS BiOrgAxs;
+DESCRIPTION:
+  Represents a coordinate system that is created from position(0,0,0) and
+  attitude(0,0,0)
+----------
+NAME:BiOrgPln
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BIPLANE BiOrgPln;
+DESCRIPTION:
+  Represents XZ plane
+----------
+NAME:BiVecX
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BIPOINT BiVecX;
+DESCRIPTION:
+  Represents a vector (1,0,0);
+----------
+NAME:BiVecY
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BIPOINT BiVecY;
+DESCRIPTION:
+  Represents a vector (0,1,0);
+----------
+NAME:BiVecZ
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BIPOINT BiVecZ;
+DESCRIPTION:
+  Represents a vector (0,0,1);
+----------
+NAME:BiBlack
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BICOLOR BiBlack;
+DESCRIPTION:
+  Black (R=0,G=0,B=0)
+----------
+NAME:BiBlue
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BICOLOR BiBlue;
+DESCRIPTION:
+  Blue (R=0,G=0,B=255)
+----------
+NAME:BiRed
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BICOLOR BiRed;
+DESCRIPTION:
+  Red(R=255,G=0,B=0)
+----------
+NAME:BiMagenta
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BICOLOR BiMagenta;
+DESCRIPTION:
+  Magenta(R=255,G=0,B=255)
+----------
+NAME:BiGreen
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BICOLOR BiGreen;
+DESCRIPTION:
+  Green(R=0,G=255,B=0)
+----------
+NAME:BiCyan
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BICOLOR BiCyan;
+DESCRIPTION:
+  Cyan(R=0,G=255,B=255)
+----------
+NAME:BiYellow
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BICOLOR BiYellow;
+DESCRIPTION:
+  Yellow(R=255,G=255,B=0)
+----------
+NAME:BiWhite
+CATEGORY:Pre-Defined Variable
+DEFINITION:
+  BICOLOR BiWhite;
+DESCRIPTION:
+  White(R=255,G=255,B=255)
+----------

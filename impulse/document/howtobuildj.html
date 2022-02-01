@@ -1,0 +1,275 @@
+<HTML>
+<TITLE>Blue Impulse 3DG SDK - How to build?</TITLE>
+<BODY bgcolor="#00A0F0"
+      text="#FFFFFF"
+      link="#80FF80"
+      vlink="#FF8080"
+      background="sky.jpg">
+
+<CENTER><BIG><BIG><FONT COLOR="#C0C0FF">
+<B>
+Blue Impulse 3DG SDK - How to build?
+</B><BR>
+</BIG></BIG></FONT></CENTER>
+
+<UL>
+
+
+<!---------------------------------------------------------->
+
+
+
+
+
+<BIG><B>- ライブラリとアプリケーションのコンパイル</B></BIG><BR>
+
+  このドキュメントは、<BR>
+  <UL>
+    <LI>ライブラリのコンパイルの仕方<BR>
+    <LI>アプリケーションのコンパイルの仕方<BR>
+  </UL>
+  をUNIX,GLXとWindows環境用に書いてあります。
+
+<BR><BR>
+
+  Macintoshは、CodeWarriorが頻繁に仕様を変更するのでもう相手にする気
+  になりません。CodeWarrior8用に説明を書いたらCodeWarrior9では既にそ
+  の説明では何もできなくなったりしました。Macintosh用ライブラリをコン
+  パイルしたい人は、CodeWarriorのマニュアルを参照してください。
+
+<BR><BR>
+
+  それから、もしもFM-TOWNSを使っていて、High-Cに詳しい人ならば、多分
+  どうやってライブラリやアプリケーションをコンパイルできるのか、自力
+  で解明することができるのではないかと思います。(自力で解明してほしい
+   ^_^;)。一応、TOWNS用のmakefileとか入っているので、そのへんを参照し
+   て解明してください(^_^;)
+
+<BR><BR>
+
+
+<HR>
+
+
+<B>For UNIX:</B><BR>
+<B><I> + Build libraries</I></B><BR>
+
+<OL TYPE='0'>
+ <LI>makefile@impulse/src/xwin/ を使って、libimpulse.aをmakeします。
+ <LI>libimpulse.aをライブラリパスにコピーします。
+ <LI>impulse.h (@impulse/src/)をインクルードパスにコピーします。
+
+<BR><BR>
+
+ <LI>makefile.unx@skyhawk/src/ を使って、libskyhawk.aをmakeします。
+ <LI>libskyhawk.aをライブラリパスにコピーします。
+ <LI>skyhawk.hをインクルードパスにコピーします。
+
+<BR><BR>
+
+ <LI>makefile@hotas/src/emulate/  (CFLAGS=-I____)を必要に応じて修正します。
+ <LI>makefile@hotas/src/emulateを使ってlibhotas.aをmakeします。
+ <LI>libhotas.aをライブラリパスにコピーします。
+ <LI>hotas.hをインクルードパスにコピーします。
+
+<BR><BR>
+
+ <LI>makefile.unx@aurora/src/  (CFLAGS=-I____)を必要に応じて修正します。
+ <LI>makefile.unx@aurora/src/makefile.unxを使って、libaurora.aをmakeします。
+ <LI>libaurora.aをライブラリパスにコピーします。
+ <LI>aurora.hをインクルードパスにコピーします。
+
+<BR><BR>
+
+ <LI>makefile.x@impulse/impulse2g/ (CFLAGS=-I____)を必要に応じて修正します。
+ <LI>makefile.x@impulse/impulse2g/を使って、libimpulse2g.aをmakeします。
+ <LI>libimpulse2g.aをライブラリパスにコピーします。
+ <LI>impulse2g.hをインクルードパスにコピーします。
+
+<BR><BR>
+ (gccがインストール済みであることを前提に書いてます。もしも、gccが入って
+  いない場合、makefile/makefile.unx/makefile.xの中の"CC=gcc"を修正してく
+  ださい。)
+</OL>
+
+
+
+
+
+<B><I> + Compile your programs</I></B><BR>
+ (1)すべてのライブラリ/ヘッダをコンパイラ標準のライブラリ/インクルードパス
+    にコピーした場合。
+
+    <BR><BR>
+    <SMALL>
+    gcc (your source) -limpulse -lskyhawk -lhotas -laurora -limpulse2g -X11 -lm
+    </SMALL>
+    <BR><BR>
+
+ (2)Root権限が無くて(さらにシステムアドミニストレータが不親切だった場合(^_^;))
+
+    <BR><BR>
+    <SMALL>
+    gcc (your source) -I(your include path) -L(your library path)-limpulse -lskyhawk -lhotas -laurora -limpulse2g -X11 -lm
+    </SMALL>
+    <BR><BR>
+
+  (ひょっとすると、いくつかの関数が欠けているというエラーが出るかもしれませ
+   ん。その場合、ライブラリを指定する順番を変えてみてください。なんでこんな
+   いわれの無いエラーが出るのかさっぱりわかりません。)
+
+    <BR><BR>
+
+
+<HR>
+
+
+
+<B>For GLX:</B><BR>
+<B><I>+ Build libraries</I></B><BR>
+<OL TYPE='0'>
+  <LI>makefile@impulse/src/glx/ を使って libimpulse.aをmakeします。
+  <LI>libimpulseglx.aをライブラリパスにコピーします。
+  <LI>impulse.h (@impulse/src/)をインクルードパスにコピーします。
+  <BR><BR>
+  ステップ4～11は、普通のUNIX用と同じです。
+</OL>
+
+
+<B><I>+Compile your program</I></B><BR>
+ (1)すべてのライブラリ/ヘッダをコンパイラ標準のライブラリ/インクルードパス
+    にコピーした場合。
+
+    <BR><BR>
+    <SMALL>
+    gcc (your source) -limpulse -lskyhawk -lhotas -laurora -limpulse2g -lX11 -lXext -lGL -lGLU -lm
+    </SMALL>
+    <BR><BR>
+
+ (2)Root権限が無くて(さらにシステムアドミニストレータが不親切だった場合(^_^;))
+
+    <BR><BR>
+    <SMALL>
+    gcc (your source) -I(your include path) -L(your library path)-limpulse -lskyhawk -lhotas -laurora -limpulse2g -lX11 -lXext -lGL -lGLU -lm
+    <BR><BR>
+    </SMALL>
+
+  (ひょっとすると、いくつかの関数が欠けているというエラーが出るかもしれませ
+   ん。その場合、ライブラリを指定する順番を変えてみてください。なんでこんな
+   いわれの無いエラーが出るのかさっぱりわかりません。)
+
+    <BR><BR>
+
+
+
+<HR>
+
+
+
+<B>For Windows:</B><BR>
+<B><I> +Build libraries</I></B><BR>
+   バイナリがうちのWebページからダウンロードできるので、そちらをお使いく
+   ださい(^_^;)
+
+   <BR><BR>
+
+   .libファイルは、VC++の標準ライブラリディレクトリにコピーしてください。
+   .hファイルは、VC++の標準インクルードディレクトリにコピーしてください。
+
+
+   <BR><BR>
+
+     (VC++5を標準設定でインストールした場合<BR>
+        Library ->  "C:\Program Files\DevStudio\VC\lib"<BR>
+        Include ->  "C:\Program Files\DevStudio\VC\include"<BR>
+   <BR><BR>
+
+
+<B><I> +Compiling your program</I></B><BR>
+  <I>From MS-DOS prompt (事前に環境変数を設定しておく必要があります).</I>
+
+  <BR><BR>
+  <SMALL>
+    cl /D "WIN32" /D "_WINDOWS" (your source) impls32d.lib impulse2g.lib hotas32.lib aurora32.lib shawk32.lib kernel32.lib user32.lib gdi32.lib
+  </SMALL>
+  <BR><BR>
+
+
+  <I>From Developer Studio</I>
+  <OL TYPE='0'>
+   <LI>hotasrc.rcとhotasrc.icoをプロジェクトディレクトリにコピーします。
+   <LI>新しいプロジェクトを作ります。
+   <LI>ソースファイルとhotasrc.rcをプロジェクトに追加します。
+   <LI>linkの設定で次のライブラリを追加します。
+         impls32d.lib impulse2g.lib hotas32.lib aurora32.lib shawk32.lib
+   <LI>Buildしましょう。.<BR><BR>
+
+  (* OpenGLインプリメントを使うには、impls32d.libをimpls32o.libに入れ替え、
+     opengl32.libとglu32.libを追加する必要があります。)
+   </OL>
+
+
+
+<HR>
+
+<UL>
+<A HREF="http://member.nifty.ne.jp/ysdynamics/index.html">
+RETURN TO TOP PAGE
+</A>
+</UL>
+
+<BR>
+
+<UL>
+Comments are welcome. Send E-Mail to<BR>
+  <UL>
+    <A HREF="mailto:PEB01130@nifty.ne.jp">
+    <ADDRESS>PEB01130@nifty.ne.jp</ADDRESS>
+    </A>
+  </UL>
+or
+  <UL>
+    <A HREF="mailto:Soji_Yamakawa@cmu.edu">
+    <ADDRESS>Soji_Yamakawa@cmu.edu</ADDRESS>
+    </A>
+  </UL>
+In both address, I can read E-Mail written in either Japanese or English.
+</UL>
+
+
+
+
+
+
+<!---------------------------------------------------------->
+
+<HR>
+
+<UL>
+<A HREF="http://member.nifty.ne.jp/ysdynamics/index.html">
+RETURN TO TOP PAGE
+</A>
+</UL>
+
+<BR>
+
+<UL>
+Comments are welcome. Send E-Mail to<BR>
+  <UL>
+    <A HREF="mailto:PEB01130@nifty.ne.jp">
+    <ADDRESS>PEB01130@nifty.ne.jp</ADDRESS>
+    </A>
+  </UL>
+or
+  <UL>
+    <A HREF="mailto:Soji_Yamakawa@cmu.edu">
+    <ADDRESS>Soji_Yamakawa@cmu.edu</ADDRESS>
+    </A>
+  </UL>
+In both address, I can read E-Mail written in either Japanese or English.
+</UL>
+
+</UL>
+</BODY>
+</HTML>
+

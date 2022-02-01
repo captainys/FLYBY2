@@ -1,0 +1,115 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stddef.h>
+
+#include <impulse.h>
+
+#define BIWORKSIZE 0xf000L
+char BiWork[BIWORKSIZE];
+char BiWork2[BIWORKSIZE];
+char BiWork3[BIWORKSIZE];
+
+void DrawCubeLoop(void);
+void DrawCube(BIPNTANG *eye,BIPNTANG *obj,BIPROJ *prj);
+void DrawLine
+    (BIPOINT *p1,BIPOINT *p2,
+     BIPNTANG *eye,BIPNTANG *obj,BICOLOR *col,BIPROJ *prj);
+
+int main(int ac,char *av[])
+{
+	BIPROJ prj;
+
+	BiMemoryInitialize();
+	BiCalcInitialize();
+	BiGraphInitialize(BiWork,BIWORKSIZE);
+	BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+	BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+	BiDeviceInitialize();
+
+	BiSetWindowName("screen");
+	BiOpenWindow(640,480);
+
+	BiGetStdProjection(&prj);
+	BiSetProjection(&prj);
+
+	DrawCubeLoop();
+
+	BiCloseWindow();
+	return 0;
+}
+
+void DrawCubeLoop(void)
+{
+	BIPNTANG eye,obj;
+	BIPROJ prj;
+
+	BiSetPoint(&eye.p,0,0,-20);
+	BiSetAngle(&eye.a,0,0,0);
+
+	BiSetPoint(&obj.p,0,0,0);
+	BiSetAngle(&obj.a,0,0,0);
+
+	while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+	{
+		BiUpdateDevice();
+
+		BiGetStdProjection(&prj);
+
+		BiClearScreen();
+		DrawCube(&eye,&obj,&prj);
+		BiSwapBuffers();
+
+		obj.a.h+=256;
+	}
+}
+
+static BIPOINT vtx[]=
+{
+	{ 5, 5, 5},{-5, 5, 5},{-5,-5, 5},{ 5,-5, 5},
+	{ 5, 5,-5},{-5, 5,-5},{-5,-5,-5},{ 5,-5,-5}
+};
+
+void DrawCube(BIPNTANG *eye,BIPNTANG *obj,BIPROJ *prj)
+{
+	BICOLOR col;
+	BiSetColorRGB(&col,255,255,255);
+
+	DrawLine(&vtx[0],&vtx[1],eye,obj,&col,prj);
+	DrawLine(&vtx[1],&vtx[2],eye,obj,&col,prj);
+	DrawLine(&vtx[2],&vtx[3],eye,obj,&col,prj);
+	DrawLine(&vtx[3],&vtx[0],eye,obj,&col,prj);
+
+	DrawLine(&vtx[4],&vtx[5],eye,obj,&col,prj);
+	DrawLine(&vtx[5],&vtx[6],eye,obj,&col,prj);
+	DrawLine(&vtx[6],&vtx[7],eye,obj,&col,prj);
+	DrawLine(&vtx[7],&vtx[4],eye,obj,&col,prj);
+
+	DrawLine(&vtx[0],&vtx[4],eye,obj,&col,prj);
+	DrawLine(&vtx[1],&vtx[5],eye,obj,&col,prj);
+	DrawLine(&vtx[2],&vtx[6],eye,obj,&col,prj);
+	DrawLine(&vtx[3],&vtx[7],eye,obj,&col,prj);
+}
+
+void DrawLine
+    (BIPOINT *p1,BIPOINT *p2,
+     BIPNTANG *eye,BIPNTANG *obj,BICOLOR *col,BIPROJ *prj)
+{
+	BIPOINTS s1,s2;
+	BIPOINT q1,q2;
+	BIAXIS eyeAxs,objAxs;
+
+	BiPntAngToAxis(&eyeAxs,eye);
+	BiPntAngToAxis(&objAxs,obj);
+
+	BiConvLtoG(&q1,p1,&objAxs);
+	BiConvLtoG(&q2,p2,&objAxs);
+
+	BiConvGtoL(&q1,&q1,&eyeAxs);
+	BiConvGtoL(&q2,&q2,&eyeAxs);
+
+	BiProject(&s1,&q1,prj);
+	BiProject(&s2,&q2,prj);
+
+	BiDrawLine2(&s1,&s2,col);
+}

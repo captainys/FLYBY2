@@ -1,0 +1,1345 @@
+開発開始日  1994/11/09
+
+<<アップデート>>
+1994/11/26
+・BI_TRUE,BI_FALSE追加
+・BiLoadSrfで各頂点単位にベクトルを設定するように仕様変更
+・BiSqr追加
+・BiStartInsertModel→BiSetLocalMatrixに名前変更
+・BiEndInsertModel→BiClearLocalMatrixに名前変更
+・新規追加関数
+      int BiAverageNormalVector(BIPOINT *nom,int np,BIPOINT p[]);
+      void BiOuterProduct(BIPOINT *ou,BIPOINT *a,BIPOINT *b);
+      void BiRightAngleVector(BIPOINT *ret,BIPOINT *src);
+      void BiVectorToHeadPitch(BIANGLE *an,BIPOINT *vec);
+      int BiMakePlane(BIPLANE *pln,int nPnt,BIPOINT *pnt)
+      void BiProjectToPlane(BIPOINT *pnt,BIPLANE *pln,BIPOINT *org)
+      void BiLineProjectionVector(BIPOINT *v,BIPOINT *org,BILINE *ln)
+      int BiCrossPoint(BIPOINT *out,BILINE *ln,BIPLANE *pl)
+      void BiAxisToPlane(BIPLANE *dst,BIAXIS *src)
+  [D] void BiDrawLine2(BIPOINTS *s1,BIPOINTS *s2,BICOLOR *c);
+  [D] void BiDrawPset2(BIPOINTS *s,BICOLOR *c);
+  [D] void BiDrawCircle2(BIPOINTS *s,int radx,int rady,BICOLOR *c);
+  [D] void BiDrawPolyg2(int ns,BIPOINTS *s,BICOLOR *c);
+
+1994/11/26
+・SGI実験版
+・新規追加関数
+      int BiTwist3(int np,BIPOINT *p,BIPOINT *nom);
+      int BiTwist2(int np,BIPOINT2 *p);
+
+1994/11/27
+・新規追加関数
+      void BiScaleSrfModel(BISRFMODEL *srf,double scl);
+      int BiInsTerrMesh(BITERRMESH *ter,BIPNTANG *pnt);
+      void BiConstTerrMesh(BITERRMESH *ter);
+
+1994/12/01
+・新規追加関数
+  [D] void BiOpenWindow(int reqX,int reqY);
+  [D] void BiCloseWindow(void);
+  [D] void BiGetWindowSize(int *wid,int *hei);
+  [D] void BiGetStdProjection(BIPROJ *prj);
+  [D] void BiSwapBuffers(void);
+
+1994/12/05
+・Mac実験版動作テスト成功
+・仕様変更
+  (旧) BiGraphInitialize(char *work,unsigned wSize);
+  (新) BiGraphInitialize(char *work,unsigned long wSize);
+・BiCheckInsideViewPort@i3dg.c 変数farは一部のCコンパイラで予約語なので、
+  faに修正
+・新規追加関数
+  [D] void BiDeviceInitialize(void);
+  [D] void BiUpdateDevice(void);
+  [D] void BiMouse(int *lbt,int *mbt,int *rbt,int *mx,int *my);
+  [D] int BiKey(int kcode);
+  [D] int BiInkey(void);
+  [D] void BiSetMouseOnFunc(void (*f)(int *,int *,int *,int *,int *));
+  [D] void BiSetMouseOffFunc(void (*f)(int *,int *,int *,int *,int *));
+  [D] void BiSetMouseDragFunc(void (*f)(int *,int *,int *,int *,int *));
+
+1994/12/06
+・新規追加関数
+  [D] void BiClearMouseOnFunc(void);
+  [D] void BiClearMouseOffFunc(void);
+  [D] void BiClearMouseDragFunc(void);
+
+1994/12/07
+・関数名&仕様変更
+  [D] BiSetMouseOnFunc → BiSetOnPressFunc
+  [D] BiSetMouseOffFunc → BiSetOnReleaseFunc
+  [D] BiSetMouseDargFunc → BiSetOnDragFunc
+  [D] BiClearMouseOnFunc → BiClearOnPressFunc
+  [D] BiClearMouseOffFunc → BiClearOnReleaseFunc
+  [D] BiClearMouseDragFunc → BiClearOnDragFunc
+・新規追加関数
+  [D] void BiClearScreen(void);
+・仕様変更
+  BiSwapBuffers
+    バッファを画面に転送して仮想VRAMをクリアしていたが、仮想VRAMのクリ
+    アにはBiClearScreenを使うことにした。
+
+1994/12/08
+・新規追加関数
+      int BiInsString(BIPOINT *p,char *str,BICOLOR *col,int indent);
+  [D] void BiDrawMarker2(BIPOINTS *s,int mkType,BICOLOR *col);
+  [D] void BiDrawRect2(BIPOINTS *s1,BIPOINTS *s2,BICOLOR *c)
+  [D] void BiDrawString2(BIPOINTS *s,char *str,BICOLOR *c)
+  [D] void BiDrawText2(BIPOINTS *s,char *str[],int h,int v,BICOLOR *c)
+・仕様変更
+      int BiInsMarker(BIPOINT *p,BICOLOR *col,int mkType);
+      int BiInsText(BIPOINT *p,char *str[],BICOLOR *col,int indent);
+
+1994/12/09
+・仕様変更
+  Visual C++の石器時代的な16bit-int仕様に対応するため、
+      ・フラッグ      ・個数
+      ・カラー        ・キーコード
+  以外で使用しているintをすべてlongに変更
+
+1994/12/12
+・廃止関数
+  void BiSetMemoryFunc(void *(*mal)(size_t),void (*fre)(void *));
+・プログラミングスタイル(シンプルアプリ版)
+    main(void) → BIAPPENTRY
+    main関数に入って直後 → BIINIT;
+・新規追加関数
+  [D]void *BiMalloc(unsigned long siz);
+  [D]void BiFree(void *ptr);
+  [D]int BiFatal(void);
+
+1994/12/16
+・実数を扱う型をdouble → real (typedef float real) に変更
+
+1994/12/18
+・新規追加マクロ
+  #define BiSetPointS(p,xx,yy) {(p)->x=(long)(xx);(p)->y=(long)(yy);}
+・新規追加関数
+  [D]void BiSetWireframeMode(int wfMode);
+  [D]void BiGetWireframeMode(int *wfMode);
+
+1994/12/22
+・新規追加関数
+  void BiGetClipScreenFrame(BIPOINTS *l,BIPOINTS *r)
+  void BiSetClipScreenFrame(BIPOINTS *l,BIPOINTS *r)
+  int BiClipPolygScrn(int *npNew,BIPOINTS *pNew,int np,BIPOINTS *p)
+  int BiClipLineScrn(BIPOINTS *p1New,BIPOINTS *p2New,BIPOINTS *p1,BIPOINTS *p2)
+
+1994/12/24
+・新規追加関数
+    void BiDrawGroundSky(BICOLOR *grd,BICOLOR *sky);
+
+1995/01/12
+・新規追加関数
+    int BiLine2CrossStatus(BILIMLINE *ln1,BILIMLINE *ln2);
+    int BiLine2CrossPoint(BIPOINT *o,BILINE *l1,BILINE *l2);
+・新規追加タイプ
+  BILIMLINE
+・新規追加定数
+  BI_CRS_????
+
+1995/01/13
+・新規追加関数
+    int BiKillCLoop(BIPOLYGON2 *dst,int nPl,BIPOLYGON2 *pl)
+    int BiPolyg2ToTris(int *nTr,BIPOINT2 *tr,int nPl,BIPOLYGON2 *pl)
+
+1995/01/15
+・新規追加マクロ
+    BiSame
+    BiSamePoint
+    BiSamePoint2
+
+1995/01/16
+・名前変更
+    BiKillCloop→BiKillCloop2
+・新規追加関数
+    int BiPolygToTris(int *nTr,BIPOINT *tr,int nPl,BIPOLYGON *pl)
+    int BiKillCloop(BIPOLYGON *dst,int nPl,BIPOLYGON *pl);
+
+1995/01/27
+・関数廃止(GUI関係は新たに HOTAS.LIB に任せるため)
+  [D] BiSetOnPressFunc
+  [D] BiSetOnReleaseFunc
+  [D] BiSetOnDragFunc
+  [D] BiClearOnPressFunc
+  [D] BiClearOnReleaseFunc
+  [D] BiClearOnDragFunc
+
+1995/02/08
+・モデル描画時、ポリゴンの中心点を計算する座標軸を間違ってた障害を修正
+
+1995/02/15
+・ワイヤーフレームモード廃止。もともとWindowsの遅さに対応するために作ってみた
+  けど、結局それでもWindows版は速くならなかったため。
+
+1995/02/16
+・新規追加関数
+  BiSetColorRGB
+・BiPlProjectをマクロに変更
+
+1995/02/18
+・i3dg.c,imodel.c
+  Z-Sortのアルゴリズムを、直前に追加したオブジェクトからリニアに探索する方
+  法をやめて、Binary TreeとLinear Chainを同時に作る新必殺アルゴリズムに変更。
+
+1995/02/25
+・新規追加関数
+  BiTerrMeshHeight
+  BiAboveTerrMesh
+
+1995/02/27
+・新規追加関数
+  BiSgn
+  BiTerrMeshEyeVecUpVec
+
+1995/03/08
+・.SRF形式に短縮表記を採用
+  VERTEX   → VER
+  FACE     → FAC
+  COLOR    → COL
+  NORMVECT → NOR
+  ENDFACE  → END
+  BASEAXIS → BAS
+
+1995/04/29
+・新規追加関数
+  void BiDrawPict2(BIPICT2 *pic,BIPOINTS *sc);
+  void BiDrawPict2Zoom(BIPICT2 *pic,BIPOINTS *s1,BIPOINTS *s2);
+
+1995/04/30
+・ディレクトリ構成変更
+・ソースリスト分割
+  i3dg.cが巨大化しすぎたため分割
+    i3dg.c ->  i3dg.c
+               i3dgobj.c
+               i3dgbbox.c
+
+1995/05/11
+・新規追加関数
+  void BiOvwMarker(BIPOINT *p,BICOLOR *col,int mkType);
+
+
+1995/05/19
+・バグレポート
+  ClipLineScrn関数
+    ClipLineScrn関数では、2頂点を受け取って、それを画面枠でクリップする。
+    このとき、片側を固定してもう片方の点を画面枠内に移動(しようとする)関
+    数を使っている。最初は受け取った2頂点P1,P2に対して、P1を固定して、P2
+    を移動する。そして、次にP2を固定してP1を移動する。このふたつの処理は
+    間に何も入れずに行っている。しかしながら、P1を固定してP2を移動した時
+    点で、移動がうまくできなかった場合は、両方の点が画面外に出てしまう。
+    この判定を入れていなかったためバグとなった。P2の移動とP1の移動の間に
+    画面外判定を入れることで、この障害を解決。(所要時間 一晩)
+
+・Windows高速化
+  カスタム描画ルーチン「WildCat」によって体感速度で多分30%は高速化に成功。
+
+
+1995/05/24
+・新規追加関数
+  void BiGraphSetBuffer2(char *work,unsigned long wSize)
+  void BiGraphSetBuffer3(char *work,unsigned long wSize)
+
+  Windows用にBufferSizeを64Kにおさえると、描画できる3Dオブジェクトの数が
+  極度に小さくなるため、Z-Sort用テンポラリスタックを追加できるようにした。
+
+
+1995/05/26
+・新規追加関数
+  void BiGetSrfRadius(real *rad,BISRFMODEL *srf);
+  void BiFreeSrfModel(BISRFMODEL *srf);
+
+
+1995/06/04
+・新規追加関数
+  void BiLoadTerrMesh(BITERRMESH *tm,char *fn);
+
+
+1995/06/16
+  imodel.c
+    deleted variable errno
+  iwin31
+    _halloc -> _falloc
+    _hfree -> _ffree
+
+1995/06/19
+  itmpheap.c
+    windows版が、_fallocで0xfff0バイト確保できなかったので、0xd000バイトに
+    変更。
+
+1995/06/22
+  追加ファイル : iepsfile.c
+    Corel Draw EPSファイルを吐き出すモジュール。だが、3D Accelerator版では
+    使用できない(必ずBI_ERRを返す)から、これは当分隠し機能。
+
+1995/06/23
+  iepsfile.c 一応独立したEPSファイルが吐けるように修正。
+  iepsfile.c
+    Blue Impulse libraryから独立して動作できる(Exportable)ように修正。
+    今までのDraw Routineとのやりとりは、新たにiepslink.cを追加して対応。
+
+1995/06/28
+  i3dg.c
+    OrthoモードでのPolygonの表裏判定が変になることがあったバグを修正。
+    また、InsPolygFastで中心点をNULL指定して、ライブラリが勝手に計算する
+    ことも可能にした。
+
+  機種依存モジュールに関数追加 (iu950628.c)
+    Windows版GetColor以外完了
+
+1995/06/29
+  iterrain.c
+    地形メッシュの中で非表示部分の設定を追加。ひとつの地形メッシュでふた
+    つの山を作ったり、入り組んだ地形を作るときに使える。
+
+  icalc.c  バグ撃破
+    BiAtan関数で、BiAtan(1.0)と呼び出したとき、0が返っていたバグを修正。
+    Blue Impulse Libraryでは、atan計算用テーブルを0～45度と45～90度用のふ
+    たつ用意していた。これにアクセスするには、0～45度の場合、1.0を0x10000
+    に伸ばして、下位6ビットを線型補完用、上位10ビットをテーブルインデック
+    スにあてていた。バグの原因は、上位10ビットのインデックスを計算するため
+    に、次のように記述していた点にあった。
+        idx=(a>>6)&0x3ff;
+    これでは、45度になる場合(パラメータ1.0→0x10000に引き伸ばしてある)
+        (0x10000>>6)&0x3ff==0
+    なので、インデックス0番になってしまう。当然、0を返す。バグを解消する
+    ために、この記述を次のように変更した。
+        idx=(a>>6)%1025;
+
+1995/07/01
+  i3dg.c
+    BiInsPolygFast 中心点計算が間違ってたからなおした。
+
+1995/07/08
+  idevice.c 追加
+  BiKeyToAscii関数追加
+
+1995/10/20
+  新規追加関数
+    int BiInsSrfModelDivide(BISRFMODEL *mdl,BIPNTANG *pos);
+
+
+<< この間忙しさにかまけてアップデートを書くのを忘れてたぞ。困ったものだ >>
+
+1996/07/21
+  レンダリング機能のバグを修正
+  i3dg.c
+    BiRenderLinkCircle(p,r,col);
+                        ↓
+    BiRenderLinkCircle(&tmp,r,col);
+
+    BiRenderLinkPset(p,col);
+                      ↓
+    BiRenderLinkPset(&tmp,col);
+  iepslink.c
+    return BiEpsDrawRect(&s1,&s2,&col);
+              ↓
+    return BiDrawEpsRect(ep,s1.x,s1.y,s2.x,s2.y,col.r,col.g,col.b);
+    我ながらEPS関数のネーミングは失敗したと思った
+
+
+
+1996/08/10
+  アクセラレータサポートの強化
+  関数追加
+    void BiAfterStartBuffer(BIPOSATT *eye);
+    void BiAfterChangeMatrix(BIAXIS *cnvaxs);
+    void BiDrawMarker3(BIPOINT *p,BICOLOR *col,int type);
+  今日のところは Windows OpenGL 用のみ
+
+  void BiConstTerrMesh(BITERRMESH *ter);
+       ↓
+  int BiConstTerrMesh(BITERRMESH *ter);
+
+  iterrain.c
+    描画ルーチンを無理して高速化しようとしてたやつをやめ。BiPushMatrix
+    を利用したから多分そんなに速度は落ちない。あと、地形のポリゴンをあ
+    らかじめメモリにストアしておくことで、描画のたびにポリゴンを用意し
+    なおさなくした。メモリは食うけど、その方が絶対速いし。
+
+
+
+1996/08/12
+  関数追加  アクセラサポートの一環
+    void BiOverWriteMarker3(BIPOINT *p,BICOLOR *col,int type);
+    void BiOverWriteText3(BIPOINT *p,char *tx[],int hori,int vert,BICOLOR *col);
+
+
+
+1996/08/14
+  SGI版アクセラレータサポート強化に対応
+
+
+
+1996/08/27
+  BiLoadXXX(XXX=拡張子) を BiLoadXxx に統一。なおせないものは#defineで対抗。
+  要するに、次のような関数と構造体が増えた。
+        BIPC2
+        BiLoadPc2
+        BiLoadPc2FromString
+        BiInsPc2
+        BiOvwPc2
+        BiDrawPc2
+        BiDrawPc2Zoom
+
+        BITER
+        BiLoadTer
+        BiLoadTerFromString
+        BiInsTer
+        BiConstTer
+        BiAboveTer
+        BiTerHeight
+        BiTerEyeVecUpVec
+
+        BISRF
+        BiInsSrf
+        BiInsSrfDivide
+        BiFreeSrf
+
+        BIFLD
+        BiFldNumObj
+        BiFldObjPosition
+        BiFldObjId
+        BiOvwFld
+        BiInsFld
+        BiGetFldRegion
+        BiGetFldElevation
+        BiGetFldSrfCollision
+        BiGetFldGroundSky
+
+  実験的に BiConstrainFileName を導入
+
+1996/08/28
+  BiConstrainFileNameでディレクトリを分けて開発したプログラムでもかなりMac
+  でそのまま実行できるようにした。
+
+  Follow:
+    当初の予定では、相対パスもそのまま / や \ を : に変えて動かそうと試み
+    たが、Macの相対パス指定の方法がわからず(手元の資料では一言も出てなか
+    った)、仕方なく unistd.h を include して getcwd を使って常に絶対パス
+    を生成するようにした。
+
+    また、BiConstrainFileNameが受け取ったパラメータが絶対パスなのか相対パ
+    スなのかを判定することも現段階では不可能なので、ファイル名中最初に /
+    か \ が現れたら相対パス、: があらわれたらMacの流儀に従った絶対パスで
+    あると判定することにした。
+
+    また、AcroEditでは、MPAファイルとその他のデータファイルのパスを分離
+    できるが、これは、skyhawk.lib の SkMakeRelativePath で相対パスを生成
+    するとき : を '/' に変換するようにして対応した。
+
+    この方法により、Windows/UNIX等からの移植はほぼ完全になったが、Macで
+    開発したものをDOSに移植するにはまだ不安が残る。
+
+
+1996/08/29
+  複数ファイルに分かれたファイルをパックするために、BiSetFp,BiSetStringList
+  (内部関数)を階層化。BiPushStringFunc,BiPopStringFuncを追加。
+
+  ifield.c : fcloseしてなかった。間抜けなバグ。修正。
+
+
+1996/09/06
+  imodel.cの1321行
+
+    plNm[j]=nom;
+      ↓
+    plNm[j]=spl->normal;
+
+  に変更。もとのやつでは、頂点に対応する法線がないとき、ポリゴンの法線を使
+  うつもりで、いったんモデル座標に変換したポリゴンの法線を使ってたもんだか
+  ら、3Dアクセラレーションの方での変換とダブって変換していた。二重変換にな
+  っていた。
+
+
+1996/09/08
+  影をつける大作戦開始。関数追加。
+    int BiSetShadowPlane(BIPOSATT *pos);
+    int BiOvwSrfShadow(BISRF *mdl,BIPOSATT *pos);
+
+
+1996/09/09
+  影の大作戦の続き。関数追加。
+    int BiOvwPolygShadow(int np,BIPOINT p[],BICOLOR *col);
+    int BiOvwLineShadow(BIPOINT *p1,BIPOINT *p2,BICOLOR *col);
+  こうしないと、DNMに正しく影がつかないということがわかった。
+
+  レンダリング機能で、下の滑走路とかまで光ってしまう問題を解消。
+    RnPolygPaintPset@irender.c
+  の中で、シェーディング計算をするかしないかを変数 shadMode==BI_ON だけで
+  見ていたのを、shadMode==BI_ON && BiZBuffer==BI_ON に変更。
+
+
+1996/09/19
+  Windows DIB用、ウィンドウの大きさを0にすると落ちるという障害を回避する
+  ために、iwin95di.cの BiResizeDrawBufferを次のように書き換え。
+   (旧)
+    static void BiResizeDrawBuffer(int w,int h)
+    {
+        winX=w;
+        winY=h;
+        WcDeleteBmp(&dBuf);
+        WcCreateBmp(&dBuf,BiWndDc,w,h);
+    }
+
+   (新)
+    static void BiResizeDrawBuffer(int w,int h)
+    {
+        w=BiLarger(16,w);
+        h=BiLarger(16,h);
+
+        winX=w;
+        winY=h;
+        WcDeleteBmp(&dBuf);
+        WcCreateBmp(&dBuf,BiWndDc,w,h);
+    }
+
+
+1996/09/26
+  iutil.c
+  Code Warrior9で、
+    static BISTRFUNCLIST Fixed;
+  だと、どこで何が使ってるんだか知らないが、Fixedはすでに使ってると言わ
+  れたので、
+    static BISTRFUNCLIST BiFixed;
+  と修正。staticというのはMac文化には難しすぎて理解できなかったらしい。
+
+
+1996/09/30
+  iwin32di.c  iwin32og.c
+  BiConstWindowSize 何もしないように変更。
+
+
+
+1996/10/13
+  irendlnk.c
+  ファイル名が80文字までになってたので256文字に変更。
+
+
+1996/10/15
+  i3dg.c i3dgbbox.c
+    BiPrjFovX,BiPrjFovY
+     -> BiPrjFovLeft,BiPrjFovRight,BiPrjFovUp,BiPrjFovDown
+    BiSetProjection,BiCheckInsideViewPortOrtho,BiCheckInsideViewPortPers
+  Fovの判定で、画面の中心が投影中心と過程していたのを修正。投影中心が画面
+  の中心でないときでも正しくカリングするように修正。
+
+
+1996/11/17
+  impulse.h
+    Cの強引インライン展開部分を、#ifdef __cplusplusを使って、C++から利用
+    の場合は正式インライン関数として扱うように修正してみた。まだバグが混
+    入してるかもしんない。
+
+1996/11/27
+  itmpheap.c
+    大きなファイルにも対抗できるように、128KB単位で128個までのテンポラリ
+    ヒープが取れるように修正。これに伴い、imodel.c,i2dpict.cにも若干の修
+    正。
+  imodel.c
+    shiyaさんのBLK～EBKコマンドに対応、というか、あっても単に無視するよ
+    うに修正。
+
+1996/11/28
+  ivrmfile.c
+    このモジュールを追加。VRML出力機能。視点(0,0,0)(0,0,0)を設定して描画
+    すれば、そのままVRMLでウォークスルーできる空間ができる。
+    int BiVrmlOpen(char fn[]);
+    int BiVrmlSetOffset(BIVECTOR *v);
+    int BiVrmlClose(void);
+
+
+
+1996/11/29
+  ivrmfile.c
+    VRML出力機能で、ポリゴン一枚ごとに全部ノードを切ってたのをやめ。あと、
+    ワイヤーの色をambientColorで指定してみたが、真っ白になっちゃうから
+    diffuseColorに戻した。
+
+    ついでに、IE3.01のVRMLビューアでは、vertexOrderingがUNKNOWNなポリゴンを
+    勝手に右か左だと思ってしまうらしいので、両面ポリゴンは表裏二枚に分けて
+    VRMLに書き出すように修正。オリジナル版はソース末尾にコメントアウト。
+
+
+1996/11/30
+  ixwin.c
+    Gキーがきかなかったのを修正。BIKEY_Gに対してXK_fをバインドしてあった。な
+    んで今まで気づかんかったんだか(^_^;)
+  iwildcat.c,iwcpolyg.c
+    High Colorに対応。
+
+
+1996/12/01
+  HOTAS & IMPULSE統合推進プロジェクト。詳しくはHOTAS libのdocument/update.txt
+  参照
+
+  昨日High Colorに対応したはいいけれど、Gatewayでやったらぜんぜん速度が落
+  ちなかったのに、長屋のマシンでやったら速度ががた落ちだったので、色数選択
+  機能を追加。と、いってもメニューを持たないBlue Impulseアプリでも対応する
+  ために、システムメニューに細工。これをつかって選べるようにした。
+  WM_SYSCOMMANDメッセージで処理している。
+
+  サブライブラリ WildCatの WcPset で 16bpp と 8bppを逆にしてたから修正。
+  あと、WildCat Exportプロジェクト。これも原稿書いて金にする。
+
+1996/12/02
+  ドキュメントをネーミング統一後版に修正。もちろん、前のネームも残してある。
+  あと、以下の関数のドキュメントを書いた。
+    BiSetShadowPlane,BiOvwSrfShadow,BiOvwPolygShadow,BiOvwLineShadow,
+    BiVrmlOpen,BiVrmlSetOffset,BiVrmlClose
+
+1996/12/03
+  iwin95di.c,iwin32og.c,iwinscsv.c
+    BiConstrainFileNameで、ネットワークファイル名が来たとき、最初の\\
+    を//に変えちゃって、ネットワークファイルが読めなかった障害を修正。
+
+  icalc.c
+    Shiyaさんのご指摘により、BiAngle2に(0,0)を入れたときに落ちること
+    が判明。
+
+        ax=BiAbs(vec->x);
+        ay=BiAbs(vec->y);
+        if(ax>=ay)
+
+    というのを、
+
+        ax=BiAbs(vec->x);
+        ay=BiAbs(vec->y);
+        if(ax<YSEPS && ay<YSEPS)
+        {
+            return 0;
+        }
+        else if(ax>=ay)
+
+    こんな感じに修正。
+
+1996/12/04
+オブジェクトのクリックをライブラリで判定できるように機能を追加。
+iclick.c
+  int BiInitClickable(int nTab);  ←プログラムの最初に呼ぶ
+  int BiTerminateClickable(void);  ←プログラムが終わる前に呼ぶ
+  int BiClearClickable(void);  ←BiClearScreen直後に呼ぶ
+  int BiInsClickable ←Clickableなオブジェクトを表示するのと一緒に呼ぶ
+        (BIPOINT *p,real rad,int pix,int i1,int i2,int i3,void *extra);
+  int BiCheckClicked ←マウス座標を入れて判定 (ctr番目の候補をGetする)
+        (int *i1,int *i2,int *i3,void **ext,BIPOINTS *sc,int ctr);
+
+
+
+1996/12/05
+ドキュメントのBiRenderOpenのファイル形式の指定が間違っていたので修正
+  誤)
+    BISHAD_TIFF
+    BISHAD_BMP
+  正)
+    BIRENDER_TIFF
+    BIRENDER_BMP
+    BIRENDER_PPM
+
+なお、BIRENDER_PPMは新しく増えた形式。
+
+
+1996/12/07
+SGI版スロー現象との格闘の続き。Materialを最初に512個Allocateするのを
+やめ。まじめに1番から必要な個数だけAllocateするように修正。これで結構
+スピードが上がったように見える。しかし、まだ次の問題がある。
+
+  1.まだ遅い
+    あのポリゴン数ならIndigo2なら秒20フレームは出してほしい
+  2.たまにDiffuseがオーバーフローする?
+    たまにDiffuseカラーが変になるようである。急にオブジェクトがみな
+    明るくなる。が、色は変わってない。また、スムーズシェーディングも
+    かかっているようだから、ライトがオフになったわけでもなさそう。こ
+    れが遅い原因?
+
+
+1996/12/08
+iclick.cひとつもクリッカブルオブジェクトが無いのにクリックチェックし
+ようとしたら落ちるバグを修正。
+
+
+1996/12/13
+ipolyg.c
+  int BiCheckInsidePolyg2(BIPOLYGON2 *plg,BIPOINT2 *pnt);
+iclick.c
+  int BiSetClickablePolygBuffer(int siz,unsigned char *buf)
+  int BiInsClickablePolyg(int np,BIPOINT p[],BIVECTOR *n,int i1,int i2,int i3,void *extra)
+
+関数追加。
+
+
+1996/12/14
+関数やっぱしやめ
+  int BiSetClickablePolygBuffer(int siz,unsigned char *buf)
+  int BiInitClickable(int nTab);  ←プログラムの最初に呼ぶ
+  int BiTerminateClickable(void);  ←プログラムが終わる前に呼ぶ
+
+その代わり
+  int BiSetClickableBuffer(char buf[],int nbuf)
+
+1996/12/15
+関数追加
+int BiCheckClickedPoint(int *i1,int *i2,int *i3,void **ext,BIPOINTS *sc,int ctr);
+int BiCheckClickedPolyg(int *i1,int *i2,int *i3,void **ext,BIPOINTS *sc,int ctr);
+
+1996/12/16
+関数追加
+  int BiSrfClose(void);
+  int BiSrfOpen(char fn[]);
+  int BiSrfSetOffset(BIVECTOR *v);
+
+  VRML出力機能をちょっと拝借してSRFが吐けるようにしたつもり。SRFで丸め
+  を判定するために、丸と丸くないでVertexを区別するようにした。
+
+
+1996/12/17
+  BiCheckClicked()
+    カウンタはポインタわたしすべきであったからそのように修正。
+  BiCheckInsidePolyg2()
+    縮退した辺があったら計算不能(->外側扱い)だったのを修正。
+
+1996/12/18
+  SGI版
+    concaveを解除、ライティングを点光源から平行光源に変更でかなりフレーム
+    レートが上がったけど、結構いい加減に描画するから改善の必要あり。
+
+
+1996/12/20
+  YSEPS(誤差範囲)が0.001だったのを0.0001に変更、しようと思ったらいつのま
+  にかやった後だった。
+
+
+1996/12/23
+  FM-TOWNS版、ウィンドウを大きくするとき、MM_SHOWを受け取るタイミングが
+  悪くてダウンする障害を修正。ついでに、デフォルトウィンドウサイズを
+  400,300に広げた。
+
+1996/12/26
+関数追加
+  void BiInsClickableLine
+  real BiLineDistance2(BILINE2 *ln,BIPOINT2 *p);
+  real BiLineDistance(BILINE *ln,BIPOINT *p);
+  int BiCheckClickedLine(int *i1,int *i2,int *i3,void **ext,BIPOINTS *sc,int ctr);
+  int BiInsClickableLine(BIPOINT *p1,BIPOINT *p2,int i1,int i2,int i3,void *extra);
+
+
+1996/01/27
+関数追加  現在:Win & Mac用のみ
+  BiOpenWindowEx
+
+
+1996/01/29
+Windows MFC対応に向けて、Windows専用ヘッダと関数を追加
+
+  ヘッダ
+    wimpulse.h
+  関数
+    void BiWinPlug(HDC dc,long wid,long hei,int bitPerPix);
+    void BiWinUnplug(void);
+    HPALETTE BiWinCreatePalette(HDC dc);
+
+作戦としては、HDCはCWnd派生クラスの中でずっと持ってて、最初に
+BiWinCreatePaletteしておく。途中でOnPalette???では適当にパレット設定して、
+OnSizeとかOnDraw / OnPaintの中では、まずBiWinPlugしてから描画する。
+
+多分、DCとパレットはOnCreateの中でGetしておくのがいいと思う。
+
+
+
+1996/02/14
+  BiCheckClicked
+    直線のクリック判定。直線 X=n または Y=n の場合、バウンディングボックス
+    の横幅または縦幅が０になってしまうため、クリックできる太さが１ピクセル
+    になってしまっていたので、バウンディングボックスに２ピクセル幅を持たせ
+    ることにした。
+
+
+1997/05/24
+  久しぶりのアップデート。AYAME文字ずれ対策。
+  istrrc.c ワイヤーフォントを追加
+  i3dtext.c BiMakeStdWireFontおよび関連関数を追加
+  imodel.c BiGetStringFuncExをiutil.cに移動
+  i2dpict.c BiGetStringFuncExを使ってファイルを読むように変更
+
+
+1997/05/25
+  小文字フォントをちょっとまともにした。
+
+
+1997/06/03
+  stderrを使ってるとCW11でコンパイルに通らないらしいんで、全部カット。
+
+1997/06/04
+  iwin95di.c
+    面積0のポリゴン/長さ0の直線も目に見えるように、ポリゴンをペイントした
+    後で頂点0の位置にPsetをうつように修正。
+
+1997/06/27
+  iepsfile.c
+    漢字入り文字列のとき、Ryumin-Lightフォントで書きだすように修正して
+    みた。漢字プリンタが対応してれば出るらしい。
+    あと、文字列に"("または")"が入ってたときPS出力が変になる障害を修正。
+
+1997/07/15
+  makefile(win32ogl,winscsv)
+    CP = cp としていたところ、ファイルを全部コピーしないうちにプログラム
+    が終わっちゃうらしく、コンパイルしても落ちるという障害に悩んだので、
+    CP = copy に戻した。何時間つぶしたと思ってんだ、GNUのどアホウ。
+
+1997/08/27
+  iwin95di.c,iwin32og.c
+    HINSTANCE BiCInst;をGetModuleHandle(NULL);を使って置き換え。やっと
+    WinMainの呪縛から解放。Window管理を完全にBlue Impulseに移管
+    Letsでは問題無し。ただ、OpenGL用は引き続きテストの必要あり。
+
+1997/08/28
+  iwinapi.c iwin32og.c iwin95di.c
+    DIB版、OpenGL版でWindow管理部分を統一。WM_CLOSEメッセージに対応。
+    WindowClassからWC_NOCLOSEを削除。Windows版では、リアルタイムプログ
+    ラムからメニューを呼ぶことが可能に。
+
+1997/08/29
+  iwinapi.c
+    WM_PAINTメッセージに対して自分でBiSwapBuffers();を呼ぶように修正。
+    HOTASの方でHtRepaintAll();したときは、BiExtraWindowFuncがBI_OKを
+    返すので二重にSwapBuffersはしない(と思う)。
+
+
+1997/09/02
+  Windows版
+    試しに、/G5オプション(Pentium用最適化)をつけてみた。あんまり変わ
+    んない。
+
+
+1997/09/10
+  Windows版
+    Window Callback Functionで、WM_SIZEに対して、
+      RedrawWindow(w,NULL,NULL,RDW_INTERNALPAINT);
+    を呼び出すように修正。
+
+1997/09/11
+  Windows Screen Saver版
+    HMENU BiMenu;
+    void BiSetExtraWindowFunc();
+    を追加。HOTASとリンクするためだけ。実質何もしない。
+
+
+1997/09/19
+  IPL2G対策第一弾（2段はあるのか?)
+    VRML 2.0出力可能に修正。BiVrml2Open,BiVrml2Closeを追加。
+  imodel.c
+    BiRenderSrf
+    あんまりにも露骨に逆向きの法線を持つポリゴンは、スムーズシェーデ
+    ィングの対象としないように修正。でも、時間食う。ぐっすし。
+
+            // Not treat as smooth shaded if the polygon has
+            // opposing normals.
+            for(j=0; j<nVt; j++)
+            {
+                for(k=j; k<nVt; k++)
+                {
+                    if(BiInnerPoint(&nom[j],&nom[k])<0.9F)
+                    {
+                        round=BI_OFF;
+                        break;
+                    }
+                }
+            }
+
+1997/10/02
+  OpenGLでConvexなポリゴンを避けるため、高速にConvex/Concaveをチェック
+  するルーチンを追加。
+    BiQuickCheckConvex
+    BiQuickCheckConvex2
+  ただ、旧CheckConvexだとConcaveと検出できた巻き巻きのポリゴンをConvex
+  だと言い張る(巻方向のみで判定しているため)ので、従来のCheckConvexと
+  両方装備することにした。
+
+  iwin32og.c
+    上の拡張に伴って、GL_POLYGONを描画しているところで、QuickCheckConvex
+    の適用により、不要なTessellationをしないように変更。ただし、よく
+    ある☆を描こうとすると、線がクロスする個所があるにもかかわらず、
+    QuickCheckConvexはConvexなポリゴンであると主張するので、正しく描画
+    できない。
+
+
+1997/10/03
+  SGIのGLX+OpenGLに対応。一応、SGIのGL対応版もそのまま残っている。また、
+  win32oglの下のiwin32og.cをWindows DependentなモジュールとOpenGL共通
+  のモジュールとに分割。iwin32og.cとiopengl.c。iopengl.cは今日新開発の
+  glxの方でも共有。
+
+
+1997/10/05
+  ifield.c,impulse.h
+    BIFLDのメンバ fld が void * になっていて、キャストが大発生していた
+    ので、struct BiFldFldTag * に変更。それに伴って、BIFLDFLDを
+    typedef BiFldFldTag { .... } BIFLDFLD; に修正。
+
+  ifield.c
+    BiReadFld
+      case文の番号が違っているバグを発見。なんで今まで気付かなかったん
+      だろう(^_^;)
+
+  ifield.c
+    FLDファイルの構文に"LOD"を追加
+
+  icalc.c
+    BiSin,BiCos,BiAtanテーブル利用をためしにやめてみた。
+    どっちが速いか実験中。(あと、精度の問題も)
+
+  i2dpict.c
+    巨大PC2ファイルを地図として表示するときで、高さが低いと、少し下
+    を見ると地面が上空に見えてしまう障害が発生。原因は、地図の大きさ
+    200000mに対して、高さ1～2メートルが誤差の範囲になってしまうため。
+    BiConvAxisLtoG/BiConvAxisGtoLで座標系をひとつにまとめるところで、
+    この誤差の範囲がつぶれてしまう。
+
+    誤差の範囲がつぶれるというのは、巨大なポリゴン(この場合は宮城県
+    の輪郭線)を視点からすごく遠いところを基準に回転するので、回転に
+    よる誤差が視点の高さに対して大きくなってしまう。
+
+    ひとつの対策は、座標変換を2段階に分ける方法。この方法では、回転
+    の中心は視点ということになるので、誤差が小さくなる(ようだ)。
+
+    というわけで、現在、PC2表示のための座標変換を二段階に分けること
+    で対応。100kmとか200kmとかいう巨大なオブジェクトは多分PC2以外に
+    は考えられないので、当分有効な対策とおもえる。
+
+
+1997/10/06
+  ifield.c
+    lodDistの判定に大きなバグがあったので修正。
+
+
+1997/10/07
+  GLX版
+    なにやらResizeを検出しない。よくよく見ると、BiInitOpenGL以外で
+    glViewportを設定してないので、iglx.c内BiResize関数で
+        glViewport(0,0,wWid,wHei);
+    をセットするようにしてみた。コンパイルは通ったが、これでリサイズ
+    がうまくできるかは今の段階では未確認。
+
+
+1997/10/13
+  iwin95di.c
+    void BiDrawPset2D(BIPOINTS *s,BICOLOR *c)
+    今まで、一個点書いても4ピクセル書いていたけど、やっぱし1ピクセル
+    にする。と、思ったけどやっぱしやめ。
+
+
+1997/10/23
+  ivrmfile.cのVRML2.0出力。
+    なにやら、SGIのCosmoPlayerは、Transformの外にCoordinateノードとか
+    Colorノードを書くと機嫌が悪いので、ダミーのIndexedFaceSetで頂点、
+    法線、カラーを定義するように修正。
+
+
+1997/10/26
+  X-Window用makefileを修正
+    プラットフォームを指定すると、かってに/home/ys11/pub/libの下に
+    そのプラットフォーム用の名前をつけてインストールするようにした。
+    あと、前に別のプラットフォームでmakeしていた場合はそれに自動的
+    に.oを消してmakeしなおすようにした。
+
+
+1997/11/12
+  i2dpict.c
+    前回の修正で、変換にBiMdlAxsとBiEyeAxsを使うようにしてしまった
+    影響で、FlushDrawPc2が正しくオブジェクトを描画しなくなってしま
+    った。というわけで、どうしょうかと悩んだあげく、フラッグUseOvAxs
+    を導入してしまった。
+
+      BiInsPc2,BiOvwPc2の中では、BI_OFF
+      BiFlushDrawPc2の中ではBI_ON
+
+    あんまり美しくない。(というか、すごく美しくない)
+
+
+1997/11/30
+  iwildcat.h
+  iwcpolyg.c
+    WcClearRegion()セットする領域の大きさにかかわらず、0<y<heightま
+    での範囲の交点バッファ数を0にしていたので、3角～16角形までだった
+    ら、必要な範囲だけクリアするように修正。16角形というのは単なる勘。
+    ちょっと速くなった、ような気もする。
+
+    また、領域のyの範囲を得るために、iwildcat.hにWcLargerとWcSmaller
+    を追加。
+
+
+1997/12/02
+  i2dpict.c
+    BiOvwPc2
+      BiPopMatrix()が早すぎた。BiEpsPc2より後にしないといけなかったの
+      で、そのように修正。うー、いつまで続くこのバグ。
+
+
+1997/12/10
+  imodel.c
+    BiRenderSrf
+    あんまりにも露骨に逆向きの法線を持つポリゴンは、スムーズシェーデ
+    ィングの対象としないように修正しようとして、互いの内積が0.9より
+    小さかったらフラットシェーディングの対象外にしていたもんだから、
+    ほとんど全部のポリゴンがふらっとになっちゃってた障害を修正。0より
+    小さかったらフラットシェーディング。
+
+                    if(BiInnerPoint(&nom[j],&nom[k])<0.9F)
+                    {
+                        round=BI_OFF;
+                        break;
+                    }
+
+
+1997/12/31
+  iwinapi.c
+    今年最後のアップデート。BiCloseWindowでウィンドウを閉じるとき、
+    DestroyWindowを使っちゃうとプログラムが終了しちゃうし、CloseWindow
+    だとウィンドウが閉じる前に最小化して格好悪いから、どうしようかと
+    思って、ShowWindow(SW_HIDE);を入れて、ひとつ下のウィンドウをアク
+    ティブにするように修正。DOS窓から起動して終わったら元どおりDOS窓
+    がアクティブになる。
+
+    PeekMessageでBiWnd以外へのメッセージを取らないように修正。
+
+
+1998/01/09
+  iwinapi.c
+    smoke.exeでなにやらスタート時にいきなりXキーが押しっぱなし打と思い
+    込む現象が発生。GetKeyboardStateでBiUpdateDeviceのたびにキーボード
+    状態を更新しているつもりだったんで、予期せぬエラーだったけど、とり
+    あえず、iwinapi.cでBiDeviceUpdateの中でキーボードステートの配列を
+    0で初期化するように書き換えて対応。
+
+
+1998/01/20
+  iwinscsv.c
+    起動時ボリュームを保存、終了時ボリュームを復帰するように修正。
+    ただし、リンク時に winmm.lib を指定しなければならないことになった。
+    (従来は指定しても可)
+
+
+1998/04/21
+  i2dpict.c
+    BiOvwPc2
+      VRML出力のときMatrixをPushしてなかったのを修正。
+      if(BiVrmlMode==BI_ON)
+      {
+          BiRenderPc2(pic,BI_OFF);
+      }
+           ↓
+      if(BiVrmlMode==BI_ON)
+      {
+          BiPushMatrix(pnt);
+          BiRenderPc2(pic,BI_OFF);
+          BiPopMatrix();
+      }
+  ivrmfile.c
+    VRML 2.0出力方式を少し変更。Transform一個にした。
+
+
+1998/07/16
+  BiAsin BiAtan BiAcos
+    ためしに asin,acos,atan をそのまま使ってみた。
+
+
+1998/08/03
+  sin,cos,tanその他をテーブルを使ってどの程度速いのか(Pentiumの場合)非常
+  に疑問が出てきたので、テーブル参照をやめる。これにより、tanで落ちる場
+  合が発生するかもしれない。
+
+  BiLength2 も sqrt を使うように変更。多分 PowerPC では目も当てられない
+  遅さになったはずだが、PentiumのFPUは速い。
+
+  松平さんからの要望の多分原因と思われる BIANGLE 型をなんとかするべく、
+    BIANGLEF
+    BIAXISF
+  を追加。ライブラリ内の座標系の階層構造をこの型で持つことにする。
+
+  BiMakeAxisFを追加。BiSin,BiCos,BiTanをマクロに変更(floatを入れればその
+  精度で計算するように)。
+
+    void BiConvAxisGtoLF(BIAXISF *neo,BIAXISF *src,BIAXISF *bas)
+    void BiConvAxisLtoGF(BIAXISF *neo,BIAXISF *src,BIAXISF *bas)
+    void BiAngleToVectorF(BIPOINT *eye,BIPOINT *up,BIANGLE *an)
+    void BiVectorToAngleF(BIANGLE *an,BIPOINT *eye,BIPOINT *up)
+    void BiVectorToHeadPitchF(BIANGLE *an,BIPOINT *eye)
+    real BiAngle2F(BIPOINT2 *vec); /* Ret : -0x8000 -> +0x8000 */
+
+  修正後のテスト内容。
+
+    Formation Aerobatic - DIB/OpenGL
+    AcroEdit - F-86 Low Pass - Render to Tif/PS
+    AcroEdit - T-2 Blue Delta Loop - Render to Tif/PS
+    Flyby3 - DIB/OpenGL
+
+
+  未テスト
+    Formation Aerobatic - X-Window
+    Formation Aerobatic - SGI
+
+
+
+
+
+1998/08/11
+  win32dib/makefile,win32ogl/makefile
+    VC++5.0にしたら、 irender.c をコンパイルしようとすると、
+    コンパイラが永遠に終わらなくなったので、 irender.c だけに
+    ついて、 Optimize Option をカット。
+
+
+
+1998/12/25
+  ivrmfile.c
+    これは気がつかなかった。次の点を修正。
+		for(i=0; i<np; i++)
+		{
+			if(BiTwist3(np,p,&a)==BITWIST_LEFT)
+			{
+				vidx1[i     ]=BiGetVtxIndex(&p[i],BI_ON);
+				nidx1[i     ]=BiGetNomIndex(&n[i]);
+			}
+			else
+			{
+				vidx1[np-1-i]=BiGetVtxIndex(&p[i],BI_ON);
+				nidx1[np-1-i]=BiGetNomIndex(&n[i]);
+			}
+
+			if(vidx1[i]<0 || nidx1[i]<0)
+			{
+				goto ERREND;
+			}
+		}
+
+         ↓
+
+		for(i=0; i<np; i++)
+		{
+			if(BiTwist3(np,p,&a)==BITWIST_LEFT)
+			{
+				vidx1[i     ]=BiGetVtxIndex(&p[i],BI_ON);
+				nidx1[i     ]=BiGetNomIndex(&n[i]);
+				if(vidx1[i]<0 || nidx1[i]<0)
+				{
+					goto ERREND;
+				}
+			}
+			else
+			{
+				vidx1[np-1-i]=BiGetVtxIndex(&p[i],BI_ON);
+				nidx1[np-1-i]=BiGetNomIndex(&n[i]);
+				if(vidx1[np-1-i]<0 || nidx1[np-1-i]<0)
+				{
+					goto ERREND;
+				}
+			}
+		}
+
+
+1999/01/19
+  iwinapi.c
+    追加
+    int BiWinRegisterDialog(HWND dlg)
+    int BiWinUnregisterDialog(HWND dlg)
+
+
+
+1999/01/25
+  imodel.c
+  i2dpict.c
+    文字列 80 文字しか確保してなかったやつを全部256文字に修正。
+    ああ、Windows3.1時代のセコいメモリの使い方のツケ。
+
+
+
+1999/02/01
+  i3dgobj.c
+    一直線のツリーをある程度防止する Refine 機構を追加。なんぼか
+    効果があるつもり。
+
+
+1999/04/02
+  iterrain.c
+    ポリゴンが、できるだけ手前のものを隠さないようにしたつもり。
+
+    static void BiTmGetTrg(BIPOINT *t,real locx,real locz,BITER *ter)
+      この行と
+		tri=(ibz/ter->zWid > 1.0-ibx/ter->xWid ? tris : tris+3);
+      この行。
+		tri=(ibz/ter->zWid >     ibx/ter->xWid ? tris : tris+3);
+      不等号が逆になってた。なんで今まで気づかなかったんだ!?
+
+
+1999/05/14
+  祝・Qualify Exam突破
+  i2dpict.c
+    VISIDISTDEFAULTが8kmになってたんで、8000kmに変更。
+
+
+1999/05/24
+  BIMG_???? -> BIAL_????
+    BIMGというのは僕の英語の間違いだったので、BIAL(Alignment)に修正。
+    マクロで旧表記もそのまま使えるようにした。
+
+
+1999/09/03
+  BiLoadSrf
+    せっかくそれぞれのStringのサイズを256に増やしたのに、
+    BiGetStringFuncのパラメータが79とかになっていて長い
+    行を含むSRFファイルが読めなかったので全部255にした。
+
+  BiWndDC
+    グローバルバリアブルに変更。フォントが変更したかった。
+
+    と、思ったけどやっぱりやめた。
+
+  BiWinFont
+    これを追加。これに値がセットしてあったらこれを使う。ただしOpenGL版
+    はコンパイルは通るけど未対応。
+
+
+1999/09/13
+  iopengl.c
+    とうとうOpenGLの片面暗くなっちゃう問題を解決。強引な方法だけど、
+    同じNormalを使って、glEnable(GL_CULL_FACE);で暗くなるサイドの面を
+    描画しないことにした。だけど、2度面を描いていることになるから、あ
+    まり効率は良くない。ただし、50%はCullられることは確実。
+
+
+1999/11/10
+  ivrmfile.c
+    int BiVrmlPolygon(int np,BIPOINT p[],BICOLOR *c)
+      Modified so that it does not create double mapped polygon.
+
+
+1999/11/27
+  ivrmfile.c
+    VRML1の出力で、ポリゴン1枚ごとに1Separater作っていた問題を解決した
+    つもり。あと、VRML1/2ともに両面ポリゴンと片面ポリゴンをきちんと区別
+    するようにしたつもり。本当だろうか....YSVRML20とGepolyxで試した限り
+    ではうまく動いているようだった。
+
+2000/01/09
+  iwildcat.c @ winscsv
+    なぜかPsetがバグっていた。なんで今まで気づかなかったんだろう。誰か
+    気づけよ。って、やっぱ使われてないのかなあ。。。。
+
+2000/01/30
+  i3dg.c
+    BiInsPolyg
+    BiInsPolygFast
+      These functions were consuming graphics stack buffer even when
+      BIACCEL3D was defined and BiEpsMode was not BI_ON. Now it is
+      fixed.
+
+2000/05/16
+  imodel.c
+    BiInsSrfDivideLowPriority
+      Newly added. This function is specially (?) designed to draw
+      aircraft carrier. Polygons are sorted by deepmost point
+      not to hide airplanes on the flight deck.
+
+2000/05/23
+  iopengl.c in win32ogl;glx
+    Changed the way of building matrix. Search by keyword "(*20000523)"
+
+2001/06/09
+  iterrain.c
+    BiInsTer
+
+	if(BiCheckInsideViewPort(&clip,8,ter->bbox)!=BI_IN)
+	{
+		BiPopMatrix();    // 2001/06/09
+		return BI3DG_NOERR;
+	}
+
+
+2001/06/09
+  iwin32og.c
+    Modified BiWinPlug & BiWinUnplug so that it can use
+    full-screen mode of DirectDraw.
+
+
+2001/06/24
+  iwin95di.c
+    Added
+      HDC BiWinGetDrawBufferDC(void);
+
+
+2001/06/26
+  impulse.h
+    real  float->double
+
+
+2002/05/09
+  win32/iopengl.c
+    in function BiGlEndDrawMode
+    Added
+	BiPrevColor=-1;
+  This problem is found during debugging YSFLIGHT.  When
+  some white mark is drawn on the radar, white dots on the
+  sea disappeared.
+
+  iterrain.c
+    in function BiInsTer
+	// 2002/05/09  Correct visibility check
+	for(i=0; i<8; i++)
+	{
+		BiConvLtoG(&bbx[i],&ter->bbox[i],&BiCnvAxs);
+	}
+	if(BiCheckInsideViewPort(&clip,8,bbx)!=BI_IN)
+	{
+		BiPopMatrix();    // 2001/06/09
+		return BI3DG_NOERR;
+	}
+
+
+2002/08/14
+  impulse.h
+  typedef float real; -> typedef double real;
+
+
+2002/10/26
+  BiLoadSrfSetVertexNorm
+    If polygon is a bright (no-shading) polygon, it shouldn't affect vertex normals.
+
+
+2002/12/05
+  itmpheap.c
+    Bug fixed.  BiNextHeap is eliminated.
+
+
+2003/01/04
+  iopengl.c
+    glShadeModelを頻繁に切替えていたのをやめ。InitOpenGLの中でGL_SMOOTHにしたまま固定。
+
+2003/02/04
+  Added the following keycodes.
+	BIKEY_INS,     BIKEY_END,     BIKEY_PGUP    ,BIKEY_PGDOWN,
+	BIKEY_COMMA,   BIKEY_DOT,     BIKEY_SLASH,   BIKEY_BSLASH,
+	BIKEY_LBRACKET,BIKEY_RBRACKET
+  Enabled windows numpad keys
+
+
+2003/04/26
+  iwin32og.c iwinscsvogl.c
+    	glListBase(BI_GL_FONT_BITMAP_BASE); is inserted after wglUseFontBitmaps(glDC,0,255,BI_GL_FONT_BITMAP_BASE);
+2005/01/03
+  iwin95di.c
+    in BiDrawRect2D
+		int x1,y1,x2,y2;  // 2005/01/03
+		x1=BiSmaller(s1->x,s2->x);  // 2005/01/03
+		y1=BiSmaller(s1->y,s2->y);  // 2005/01/03
+		x2=BiLarger(s1->x,s2->x);  // 2005/01/03
+		y2=BiLarger(s1->y,s2->y);  // 2005/01/03
+
+2008/07/22
+  iwildcat.cpp
+    SetTextAlign
+    TA_BOTTOM -> TA_BASELINE
+
+2010/07/14
+  DIB版 自家製フォント使用のための穴あけ。
+    int WcDrawBitmapFont(WCBMP *bm,int bottomLeftX,int bottomLeftY,const char str[],WCCOLOR *col,unsigned char *fontPtr[],int fontWid,int fontHei)

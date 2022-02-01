@@ -1,0 +1,72 @@
+1998/01/08
+
+アップデート情報
+  Windows用 UtilityにGepolyLT,AcroXを追加
+  Windows用ライブラリにimpls32s.lib(スクリーンセーバー仕様)を追加
+
+
+winutil.exe    .... GepolyLT.exe,GefilLT.exe,AcroX.exeを追加
+                    Walkview.exe,Gepoly.exe,Gepic.exe,Gegeo.exe,Gefil.exe,
+                    Surfview.exe,Surfviewo.exe,Walkviewo.exe,mpaplay.exe
+winlib.exe     .... impls32d.lib
+                    impls32o.lib
+                    impls32s.lib
+                    impulse2g.lib
+                    shawk32.lib
+                    hotas32.lib
+                    aurora32.lib
+                    hotasrc.rc
+                    hotasrc.ico
+                    impulse.h
+                    impulse2g.h
+                    skyhawk.h
+                    hotas.h
+                    aurora.h
+wintmplate.exe .... vc40.mdp  (構成からDIB,OpenGL,ScreenSaverを選んで使う)
+                    vc40.mak
+                    hotasrc.rc
+                    hotasrc.ico
+                    generic.c
+                    hotasapp.c
+                    hotaspls.c
+winsamples.exe .... tutrial\*.*
+winradicon.exe .... ラジコンT4
+
+fmtutil.exe    .... Walkview.exg,Gepoly.exg,Gepic.exg,Gegeo.exg,Gefil.exg,
+                    Surfview.exg,MPAPlay.exg
+fmtlib.exe     .... impulse.lib
+                    hotas.lib
+                    skyhawk.lib
+                    aurora.lib
+                    impulse.h
+                    hotas.h
+                    skyhawk.h
+                    aurora.h
+fmtsamples.exe .... tutrial\*.*
+fmtradicon.exe .... ラジコンT4
+
+sgilib         .... libimpulse.a libhotas.a libskyhawk.a libaurora.a
+                    libimpulse2g.a
+                    impulse.h impulse2g.h hotas.h skyhawk.h aurora.h
+sgisamples     .... tutrial/*.*
+sgiradicon     .... ラジコンT4
+
+macutil        .... Walkview,Gepoly,Gepic,Gegeo,Gefil,Surfview,Mpaplay
+maclib         .... impulse.ppc
+                    skyhawk.ppc
+                    hotas.ppc
+                    aurora.ppc
+                    impulse.h
+                    skyhawk.h
+                    hotas.h
+                    aurora.h
+mactemplate    .... cw9.prj
+                    hotasmac.rc
+macsamples     .... tutrial\*.*
+macradicon     .... ラジコンT4
+
+
+
+source.zip     .... walkview,gepoly,gepic,gegeo,gefil,surfview
+                    impulse hotas skyhawk aurora
+

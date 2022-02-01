@@ -1,0 +1,170 @@
+----------
+NAME:BiOpenWindow2G
+DEFINITION:
+  int BiOpenWindow2G(int wid,int hei);
+DESCRIPTION:
+  Open a window. Use this function instead of BiOpenWindow only when
+  you want to use IPL2G extension. Otherwise, use BiOpenWindow.
+REFERENCE:
+  BiOpenWindow
+----------
+NAME:BiUpdateDevice2G
+DEFINITION:
+  int BiUpdateDevice2G(void);
+DESCRIPTION:
+  Almost identical to BiUpdateDevice function. Use 2G extension
+  use this function instead of BiUpdateDevice only when you want to
+  use IPL2G extension. Call this function at the beginning of the
+  main loop.
+REFERENCE:
+  BiUpdateDevice
+----------
+NAME:BiMouse2G
+DEFINITION:
+  void BiMouse2G(int *lb,int *mb,int *rb,int *mx,int *my,int wait);
+DESCRIPTION:
+  Read mouse button state and position. For example, lb==BI_ON
+  means left button is pressed, lb==BI_OFF means left button is
+  not pressed.
+
+  Use this function instead of BiMouse only when you want to use
+  IPL2G extension.
+
+  If you specify BI_ON as wait, this function will wait until a
+  user presses a button. Otherwise, does not wait.
+
+  Eg)
+    int lb,mb,rb,mx,my;
+    BiMouse2G(&lb,&mb,&rb,&mx,&my,BI_ON);
+
+
+----------
+NAME:BiKey2G
+DEFINITION:
+  int BiKey2G(void);
+DESCRIPTION:
+  Return key code after waiting for key press. Typical Key codes are
+  as follows
+    BIKEY_A
+      :          AÅ`Z
+    BIKEY_Z
+    BIKEY_SPACE  SPACE
+    BIKEY_LEFT   Left Arrow
+    BIKEY_RIGHT  Right arrow
+    BIKEY_UP     Up arrow
+    BIKEY_DOWN   Down Arrow
+REFERENCE:
+  BIKEY_
+----------
+NAME:BiStartBuffer2G
+DEFINITION:
+  void BiStartBuffer2G(BIPOSATT *vp);
+DESCRIPTION:
+  Clear Z-Soft buffer. Specify viewpoint. This function is almost
+  identical to BiStartBuffer. One difference is that vp can be NULL
+  for this function. If vp is NULL, IPL2G extension will automatically
+  take care of viewpoint.
+
+  Use this function instead of BiStartBuffer only when you use IPL2G
+  extension.
+REFERENCE:
+  BiStartBuffer
+----------
+NAME:BiSwapBuffers2G
+DEFINITION:
+  void BiSwapBuffers2G(void);
+DESCRIPTION:
+  Transfer Frame buffer into real screen. Almost identical to
+  BiSwapBuffers. Use this function instead of BiSwapBuffers only
+  when you use IPL2G extension.
+REFERENCE:
+  BiSwapBuffers
+----------
+NAME:BiOrbitViewer2G
+DEFINITION:
+  void BiOrbitViewer2G(void);
+DESCRIPTION:
+  Rotate/Move viewpoint. Call this function inside main loop.
+  Viewpoint will rotate by mouse right button. Zoom and unzoom by
+  mouse right button. This viewpoint control is valid when you
+  specify NULL to vp of BiStartBuffer2G.
+REFERENCE:
+  BiStartBuffer2G
+----------
+NAME:BiGetOrbitViewer2G
+DEFINITION:
+  void BiGetOrbitViewer2G(BIPOSATT *pos);
+DESCRIPTION:
+  Get a current viewpoint controled by BiOrbitViewer2G
+REFERENCE:
+  BiOrbitViewer2G
+----------
+NAME:BiCube2G
+DEFINITION:
+  void BiCube2G(float x,float y,float z,float lx,float ly,float lz,BICOLOR *c);
+DESCRIPTION:
+  Draw a 3D block. (x,y,z) is center of the block. (lx,ly,lz) is the size
+  of the block. You can specify color by c. Or you can use pre-defined
+  variable for c. Available pre-defined variables are as follows.
+    &BiBlack
+    &BiBlue
+    &BiRed
+    &BiMagenta
+    &BiGreen
+    &BiCyan
+    &BiYellow
+    &BiWhite
+  Eg)BiCube2G(0,0,0,2,2,2,&BiGreen);
+REFERENCEÅF
+  BiLine2G,BiFalcon2G,BiPlane2G,BiPset2G
+----------
+NAME:BiLine2G
+DEFINITION:
+  void BiLine2G
+    (float x1,float y1,float z1,float x2,float y2,float z2,BICOLOR *c);
+DESCRIPTION:
+  Draw a 3D line. You can specify color by c. Or you can use pre-defined
+  variable for c. Available pre-defined variables are as follows.
+    &BiBlack
+    &BiBlue
+    &BiRed
+    &BiMagenta
+    &BiGreen
+    &BiCyan
+    &BiYellow
+    &BiWhite
+REFERENCE:
+  BiCube2G,BiFalcon2G,BiPlane2G,BiPset2G
+----------
+NAME:BiPset2G
+DEFINITION:
+  void BiPset2G(float x,float y,float z,BICOLOR *c);
+DESCRIPTION:
+  Draw a dot. You can specify color by c. Or you can use pre-defined
+  variable for c. Available pre-defined variables are as follows.
+    &BiBlack
+    &BiBlue
+    &BiRed
+    &BiMagenta
+    &BiGreen
+    &BiCyan
+    &BiYellow
+    &BiWhite
+REFERENCE:
+  BiCube2G,BiFalcon2G,BiPlane2G,BiLine2G
+----------
+NAME:BiFalcon2G
+DEFINITION:
+  void BiFalcon2G(BIPOSATT *pos);
+DESCRIPTION:
+  Draw a F-16 at *pos.
+REFERENCE:
+  BiCube2G,BiPlane2G,BiLine2G,BiPset2G
+----------
+NAME:BiPlane2G
+DEFINITION:
+  void BiPlane2G(BIPOSATT *pos);
+DESCRIPTION:
+  Draw a airplane-like(?) shape at *pos.
+REFERENCE:
+  BiCube2G,BiFalcon2G,BiLine2G,BiPset2G

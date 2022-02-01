@@ -1,0 +1,2053 @@
+異機種間互換３Ｄグラフィックライブラリ "BlueImpulse"
+
+    TUTRIAL  written by YS11
+
+
+[Abstract]
+  これは、Blue Impulse LibraryのTUTRIALです。TUTRIALだけに、最初は何も考
+えずにこの書いてある通りやっていけばサンプルプログラムがコンパイルできて
+実行できるのが望ましいのですが、いかんせん、Blue Impulse Libraryは、対応
+しているプラットフォームが多いので、全部共通のインストール～コンパイル方
+法をフォローすると膨大な文章になってしまいます。と、いうわけなので、イン
+ストール～コンパイルについては、リファレンスマニュアル impulse.doc を参照
+してください。
+
+  また、このTUTRIALでは、各関数のこまかい説明はしません。わからない関数が
+あったら、impulse.docを参照してください。(本当はもっとこまかく説明したく
+ても時間と人海がない)
+
+  TUTRIAL内の図版ですが、adobe EPS形式と、Corel Draw CDR形式の二通りを提
+供しますので、あとはなんとか見てください。
+
+  このTUTRIALの構成は、次の通りです。
+
+    [1]GENERIC.C
+    [2]描画
+    [3]キーボード/マウス
+    [4]3次元演算
+    [5]Flight View
+
+  第1章 GENERIC.Cでは、Blue Impulse Libraryのアプリケーションを開発する
+とき、スケルトンとなるソースコードGENERIC.Cについて解説します。
+
+  第2章では、Blue Impulse Libraryを使った描画について解説します。Blue Impulse
+Libraryは、3Dグラフィックス描画を前提としたライブラリなので、ここで3Dグラ
+フィックスの基礎的な知識についても触れます。
+
+  第3章では、キーボード/マウスといったデバイス関係の扱いについて説明しま
+す。
+
+  第4章では、Blue Impulse Libraryの持つ3次元演算機能のうちの基礎的なもの
+を解説します。
+
+  第5章では、外部モデリングツール
+    BIGEPIC
+    BIGEPOLY
+    BIGEGEO
+などを利用して作ったデータの扱い方について説明します。
+
+  第6章では、1～4章のまとめを兼ねて、簡単なフライスルーアプリケーション
+の開発について解説します。
+
+  なお、これらのサンプルプログラムの中で利用するデータファイルを以下に
+挙げておきます。
+
+  "t2blue.srf"   T-2 Blue Impulse機のモデル
+  "t4blue.srf"   T-4 Blue Impulse機のモデル
+  "map.pc2"      架空の地図
+  "hills.ter"    架空の地形
+
+  ついでに、このTUTRIALのサンプルプログラムを作りつつ、あの機能も説明し
+たい、この機能も説明したい、と思いつつ結局TUTRIALに盛り込まなかった機能
+がたくさんあります。難しすぎる、というより時間的問題で、あれもこれもと
+やっていたらきりがなくなったというのが正しいです。なんか困ったとき、試
+しにリファレンスの関数を探してみてください。結構欲しい機能を持った関数
+があるかもしれません。かつて作った3次元ポリゴンの三角形分割ルーチンなん
+てのまで装備してますんで。(しかも、穴空きポリゴン対応)。
+
+  また、すべてのサンプルプログラムは、generic.cを書き換えて作ったもので
+す。だから、全リストを書かなくても、generic.cから書き換えた箇所だけ挙げ
+ればそれでもいいのですが、敢えて全てのリストを出しました。だから、若干
+プリントアウトするときの紙の枚数が多くなってしまいました。しかし、サン
+プルプログラムを読むとき、細切れのリストよりは流れのわかるつながったリ
+ストの方が読みやすいので、このようにしました。
+
+
+
+
+[GENERAL INFORMATION]
+  以下は、impulse.docにも書いた内容ですが、重要な点なので、ここにも抜粋
+します。
+    1)プログラムはmain関数から始まりません。記述方法は、下に挙げるgeneric.c
+      を参照してください。
+    2)標準入出力関係の関数は使用できません。
+    3)各メインループは、BiFatal()==BI_TRUE になったら必ず終了してください。
+    4)int型は16bitである可能性も考慮してください。まだWindows3.1は現役なので。
+    5)malloc/freeの代わりに、BiMalloc,BiFreeを使ってください。また、mallocは
+          malloc(バイト数);
+      と使うのに対して、BiMallocは、
+          BiMalloc(要素個数,要素1個のバイト数);
+      と使います。詳しくは、リファレンスのBiMallocを参照してください。
+        例)malloc(5*sizeof(int)) → BiMalloc(5,sizeof(int));
+
+
+
+
+
+[1]GENERIC.C
+<< generic.c フレームワーク>>
+  このサンプルプログラムは、ウィンドウを一枚開いて、ひとつキーを押すまで
+止まっているだけのプログラムです。Blue Impulse Libraryでアプリケーション
+を作るときの枠組みとなります。
+
+ 1:#include <stdio.h>             ┐
+ 2:#include <stdlib.h>            ├→最低限必要なヘッダ
+ 3:#include <string.h>            │
+ 4:#include <stddef.h>            ┘
+ 5:
+ 6:#include <impulse.h>             →Blue Impulse Libraryヘッダ
+ 7:
+ 8:#define BIWORKSIZE 0xf000L     ┐
+ 9:char BiWork[BIWORKSIZE];       ├→Blue Impulse Libraryが内部で
+10:char BiWork2[BIWORKSIZE];      │  利用するワークエリア。
+11:char BiWork3[BIWORKSIZE];      ┘
+12:
+13:BIAPPENTRY                       →プログラム開始。
+14:{
+15:    BIPROJ prj;                               ┐
+16:                                              │
+17:    BIAPPINIT;                                │
+18:    BiMemoryInitialize();                     │
+19:    BiCalcInitialize();                       │
+20:    BiGraphInitialize(BiWork,BIWORKSIZE);     ├→初期化の定番
+21:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);    │
+22:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);    │
+23:    BiDeviceInitialize();                     │
+24:                                              │
+25:    BiOpenWindow(640,480);                    │
+26:                                              │
+27:    BiGetStdProjection(&prj);                 │
+28:    BiSetProjection(&prj);                    ┘
+29:
+30:    /* Main Procedure Here */     →ここにユーザプログラムのメインを書く
+31:
+32:    while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)┐
+33:    {                                                  ├→キー待ち。他
+34:        BiUpdateDevice();                              │  のプログラム
+35:    }                                                  ┘  では不要。
+36:
+37:    BiCloseWindow();              →必ずWindowを閉じる。
+38:    return 0;                     →終わりは必ずreturn 0;
+39:}
+
+
+
+
+
+
+[2]描画
+<< lattice.c 格子模様を描く >>
+  Blue Impulse Libraryは、3Dグラフィックスを前提としたライブラリですが、い
+きなり3Dグラフィックスの描画について書く前に、簡単な2Dの描画機能を説明しま
+す。lattice.cは、generic.cに少し手を加えて格子模様を描くようにしたプログラ
+ムです。リストには、generic.cから変更のあった部分にのみ説明書きをつけました。
+
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0x8000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void DrawLattice(void);        →格子模様を描く関数のプロトタイプ宣言
+14:
+15:BIAPPENTRY
+16:{
+17:    BIPROJ prj;
+18:
+19:    BIAPPINIT;
+20:    BiMemoryInitialize();
+21:    BiCalcInitialize();
+22:    BiGraphInitialize(BiWork,BIWORKSIZE);
+23:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+24:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+25:    BiDeviceInitialize();
+26:
+27:    BiOpenWindow(640,480);
+28:
+29:    BiGetStdProjection(&prj);
+30:    BiSetProjection(&prj);
+31:
+32:    while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+33:    {
+34:        BiUpdateDevice();
+35:        DrawLattice();        →格子模様を描く関数を呼出す
+36:    }
+37:
+38:    BiCloseWindow();
+39:    return 0;
+40:}
+41:
+42:void DrawLattice(void)
+43:{
+44:    long x,y,wx,wy;
+45:    BIPOINTS p1,p2;   →直線を描画するので画面座標を表す変数をふたつ用意
+46:    BICOLOR col;      →直線の色を指定するための変数を用意
+47:
+48:    BiClearScreen();                →フレームバッファクリア
+49:
+50:    BiSetColorRGB(&col,0,0,255);    →色の設定:青(R=0,G=0,B=255)
+51:
+52:    BiGetWindowSize(&wx,&wy);       →ウィンドウの大きさをwx,wyに取得
+53:    for(y=0; y<wy; y+=20)           →20ピクセル感覚で横線を描く
+54:    {
+55:        BiSetPointS(&p1,0 ,y);      ┬→横線の端点をセット
+56:        BiSetPointS(&p2,wx,y);      ┘
+57:        BiDrawLine2(&p1,&p2,&col);  →描画
+58:    }
+59:    for(x=0; x<wx; x+=20)           →20ピクセル感覚で縦線を描く
+60:    {
+61:        BiSetPointS(&p1,x,0 );      ┬→縦線の端点をセット
+62:        BiSetPointS(&p2,x,wy);      ┘
+63:        BiDrawLine2(&p1,&p2,&col);  →描画
+64:    }
+65:
+66:    BiSwapBuffers();                →フレームバッファを表示画面に転送
+67:}
+
+
+32～36行
+  このプログラムでは、キー入力待ちのループの中でDrawLatticeをコールしてい
+ます。これは、Windowのリサイズに対応するためです。DrawLattice内では、毎回
+BiGetWindowSizeを使ってウィンドウの大きさを取得しています。一方、呼出し元
+のループでは、毎回BiUpdateDevice関数をコールします。ループ内で毎回
+BiUpdateDeviceをコールしている限り、BiGetWindowSizeで常に最新のウィンドウ
+サイズを取得することができます。このため、Windowの大きさが変わっても、
+DrawLatticeは常に画面一杯の格子模様を描きます。
+
+
+48～66行
+  DrawLatticeの48～66行が格子模様を描いている部分の本体です。ここのforル
+ープの意味が分からない人は、Blue Impulse Library以前にC言語の勉強をやりな
+おした方がいいでしょう。
+
+  この部分で、ひとつ注意することは、48行のBiClearScreenと66行のBiSwapBuffers
+です。上に書いた通り、このプログラムは、キー入力待ちのループの中で、
+DrawLatticeをコールしています。そのDrawLattice内で毎回画面を消去(ClearScreen)
+しているのだから、一見するとWindowが激しくチラつくかのように見えます。
+
+  ところが、このプログラムを実行しても、画面のチラツキはありません。それ
+は、Blue Impulse Libraryが、フレームバッファという画面に表示しない仮想的
+な画面に対して描画しているからです。BiClearScreenというのは、目に見えて
+いる画面を消去するのではなく、目に見えないフレームバッファを消去している
+だけなのです。これは、BiDrawLine2も同じです。
+
+  しかし、それだけでは、画面に何も見えません。ある程度描画したら、フレー
+ムバッファを表示画面に転送しなくてはなりません。フレームバッファを表示画
+面に転送するのが、BiSwapBuffersです。
+
+  Blue Impulse Libraryのプログラムでは、描画処理は、48～66行のように、
+BiClearScreen～BiSwapBuffersの間に記述するのが規則です。このようにフレー
+ムバッファを使った描画機能のことを「ダブルバッファ」と言います。ダブルバ
+ッファは、アニメーション処理では一般的な技法です。
+
+  2D図形の描画には、BiDrawLine2の他に、次の関数があります。それぞれの意味
+は、impulse.docを参照してください。(BiDraw???2の「2」というのは、2番目と
+いう意味ではなく、2Dという意味です)
+
+    BiDrawLine2
+    BiDrawMarker2
+    BiDrawPset2
+    BiDrawCircle2
+    BiDrawEmptyRect2
+    BiDrawEmptyPolyg2
+    BiDrawEmptyCircle2
+    BiDrawPict2
+    BiDrawPict2Zoom
+    BiDrawPolyg2
+    BiDrawPolyline2
+    BiDrawRect2
+    BiDrawString2
+    BiDrawText2
+
+
+
+
+<< wirecube.c  ワイヤーフレームのキューブ >>
+  このサンプルプログラムは、ワイヤーフレームのキューブを描画するプログラム
+です。コンパイルして実行すると、画面にキューブを描画して、ひとつキーを押す
+まで待って終了します。
+
+  このサンプルでは、まだWindowのResizeには対応していません。対応の仕方は、
+次のplgcube.cで説明します。(たった3行追加するだけだけど)。
+
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0xf000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void DrawCubeLoop(void);    ┬→プロトタイプ宣言
+14:void DrawCube(void);        ┘
+15:
+16:BIAPPENTRY
+17:{
+18:    BIPROJ prj;
+19:
+20:    BIAPPINIT;
+21:    BiMemoryInitialize();
+22:    BiCalcInitialize();
+23:    BiGraphInitialize(BiWork,BIWORKSIZE);
+24:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+25:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+26:    BiDeviceInitialize();
+27:
+28:    BiOpenWindow(640,480);
+29:
+30:    BiGetStdProjection(&prj);
+31:    BiSetProjection(&prj);
+32:
+33:    DrawCubeLoop();          →Cubeを描くループ
+34:
+35:    BiCloseWindow();
+36:    return 0;
+37:}
+38:
+39:void DrawCubeLoop(void)
+40:{
+41:    BIPNTANG eye;      →3D空間内での目の位置/姿勢をセットするために使う
+42:
+43:    BiSetPoint(&eye.p,0,0,-20);  →視点は(0,0,-20)=後ろに20だけ引いた位置
+44:    BiSetAngle(&eye.a,0,0,0);    →視線は(0,0,0)=真っ直ぐ前を見ている
+45:
+46:    while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+47:    {
+48:        BiUpdateDevice();     →ループの先頭で必ずBiUpdateDevice
+49:        BiClearScreen();      →フレームバッファクリア
+50:        BiStartBuffer(&eye);  →視点をBlue Impulse Libraryに指示する
+51:        DrawCube();           →Cubeをオブジェクトバッファに追加する
+52:        BiFlushBuffer();      →オブジェクトバッファを掃き出す
+53:        BiSwapBuffers();      →フレームバッファを表示画面に転送
+54:    }
+55:}
+56:
+57:static BIPOINT vtx[]=                            ┐
+58:{                                                │
+59:    { 5, 5, 5},{-5, 5, 5},{-5,-5, 5},{ 5,-5, 5}, ├→Cubeの頂点
+60:    { 5, 5,-5},{-5, 5,-5},{-5,-5,-5},{ 5,-5,-5}  │
+61:};                                               ┘
+62:
+63:void DrawCube(void)
+64:{
+65:    BICOLOR col;
+66:    BiSetColorRGB(&col,255,255,255);  →Color : White (255,255,255)
+67:
+68:    BiInsLine(&vtx[0],&vtx[1],&col);   ┐
+69:    BiInsLine(&vtx[1],&vtx[2],&col);   ├→手前の辺4本
+70:    BiInsLine(&vtx[2],&vtx[3],&col);   │
+71:    BiInsLine(&vtx[3],&vtx[0],&col);   ┘
+72:
+73:    BiInsLine(&vtx[4],&vtx[5],&col);   ┐
+74:    BiInsLine(&vtx[5],&vtx[6],&col);   ├→奥の辺4本
+75:    BiInsLine(&vtx[6],&vtx[7],&col);   │
+76:    BiInsLine(&vtx[7],&vtx[4],&col);   ┘
+77:
+78:    BiInsLine(&vtx[0],&vtx[4],&col);   ┐
+79:    BiInsLine(&vtx[1],&vtx[5],&col);   ├→手前と奥を結ぶ4本
+80:    BiInsLine(&vtx[2],&vtx[6],&col);   │
+81:    BiInsLine(&vtx[3],&vtx[7],&col);   ┘
+82:}
+
+
+43～44行
+  43～44行では視点の位置と姿勢をセットしています。位置は(x,y,z)の値で、
+姿勢は(h,p,b)の値です。hはHeading Angleといい、水平方向の向きを表します。
+pはPitching Angleといい、垂直方向の角度を表します。bはBank Angleと言い、
+横転方向の角度をあらわします。
+
+  より簡単に言えば、Heading Angleは東西南北を表し、Pitching Angleは高度
+(高さではなく天文学で言う高度)を表します。このふたつの角度で視線の方向が
+決まります。最後の、Bank Angleは左右に首を傾げる角度と考えることができま
+す。
+
+  それぞれの値の範囲は、Heading Angleが0～360°ですが、オーバーしてもか
+まいません。Pitching Angleは-90～+90°の範囲です。オーバーしても、一応
+描画できますが、どういう姿勢になるかは保証しません。Bank Angleも0～360°
+の範囲で、これもオーバーしてもかまいません。また、角度は360°を65536と
+する系を使っているので、姿勢を(°)で設定したいときは、BiSetAngleDegを使
+います。変換は次の式でできます。
+
+    x°をBlue Impulse Library角度系に変換してyにセット
+     y=x*8192/45;
+    Blue Impulse Library角度系のxを°に変換してyにセット
+     y=x*45/8192;
+
+  その他、詳しい定義については、attitude.epsまたはattitude.cdrを参照して
+ください。
+
+  この例では、視点位置(0,0,-20),姿勢(0,0,0)にセットしています。姿勢が
+(0,0,0)の場合、視線はZのプラス方向を向きます。描くキューブは中心が原点
+にあり、一辺の長さは10です。このキューブの全体を見るには、視点の位置を
+後ろに引かなくてはなりません。と、いうわけで、視点の位置は(0,0,-20)で、
+原点から後ろに20だけ引いた位置にしています。
+
+
+49～53行
+  49～53行でキューブを描画しています。Blue Impulse Libraryで3Dオブジェク
+トを描画するには、次のようにリストを記述します。
+
+      フレームバッファクリア
+              ↓
+      視点をライブラリに登録
+              ↓
+      アンダーレイを描画
+              ↓
+      3Dオブジェクトをオブジェクトバッファに登録
+              ↓
+      オブジェクトバッファの内容をフレームバッファに描画
+              ↓
+      オーバーレイを描画
+              ↓
+      フレームバッファを表示画面に転送
+
+このサンプルではアンダーレイとオーバーレイはありませんので、それ以外の処
+理のみ記述しています。(アンダーレイ、3Dオブジェクト、オーバーレイについ
+ては、layer.eps または layer.cdr 参照)
+
+  50行のBiStartBufferが視点の登録です。51行でDrawCube関数を呼び出して、
+キューブの各辺をオブジェクトバッファに登録しています。52行のBiFlushBuffer
+でオブジェクトバッファの内容をフレームバッファに掃き出します。最後に、53
+行のBiSwapBuffersでフレームバッファを表示画面に転送します。
+
+
+63～82行
+  DrawCubeは、ワイヤーフレームのキューブの各辺をオブジェクトバッファに
+追加します。オブジェクトバッファへに3Dオブジェクトを追加するには、BiIns****
+という名前の関数を使います。このサンプルでは、オブジェクトの種類が直線
+(LINE)なので、BiInsLineを使っています。
+
+  オブジェクトバッファに3Dオブジェクトを追加する関数には、この他次の種
+類があります。
+
+    BiInsCircle
+    BiInsMarker
+    BiInsPolyg
+    BiInsPolygFast
+    BiInsPset
+    BiInsSrfModel
+    BiInsSrfModelDivide
+    BiInsString
+    BiInsTerrMesh
+    BiInsText
+
+
+
+
+
+
+<< plgcube.c  ポリゴンのキューブ >>
+  plgcube.cは、ポリゴンを張ったキューブを回転するサンプルです。実行する
+と、ウィンドウ上でポリゴンのキューブが水平に回転します。何かキーを押すと
+終了します。
+
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0xf000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void DrawCubeLoop(void);           ┬→プロトタイプ宣言
+14:void DrawCube(BIPNTANG *pos);      ┘
+15:
+16:BIAPPENTRY
+17:{
+18:    BIPROJ prj;
+19:
+20:    BIAPPINIT;
+21:    BiMemoryInitialize();
+22:    BiCalcInitialize();
+23:    BiGraphInitialize(BiWork,BIWORKSIZE);
+24:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+25:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+26:    BiDeviceInitialize();
+27:
+28:    BiOpenWindow(640,480);
+29:
+30:    BiGetStdProjection(&prj);
+31:    BiSetProjection(&prj);
+32:
+33:    DrawCubeLoop();          →メインルーチンの呼出し
+34:
+35:    BiCloseWindow();
+36:    return 0;
+37:}
+38:
+39:void DrawCubeLoop(void)
+40:{
+41:    BIPROJ prj;
+42:    BIPNTANG eye,cub;
+43:
+44:    BiSetPoint(&eye.p,0,0,0);  →視点(0,0,0)=原点
+45:    BiSetAngle(&eye.a,0,0,0);  →視線(0,0,0)=真っ直ぐ前方
+46:
+47:    BiSetPoint(&cub.p,0,0,20); →キューブ位置(0,0,20)=20だけ前方
+48:    BiSetAngle(&cub.a,0,0,0);  →キューブ姿勢(0,0,0)
+49:
+50:    while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+51:    {
+52:        BiUpdateDevice();          →ループの先頭では忘れずBiUpdateDevice
+53:
+54:        BiGetStdProjection(&prj);  ┬→Windowリサイズに対応
+55:        BiSetProjection(&prj);     ┘
+56:
+57:        BiClearScreen();           →フレームバッファクリア
+58:        BiStartBuffer(&eye);       →視点をセット
+59:        DrawCube(&cub);            →キューブをオブジェクトバッファに登録
+60:        BiFlushBuffer();           →オブジェクトバッファ掃き出す
+61:        BiSwapBuffers();           →フレームバッファを表示バッファに転送
+62:
+63:        cub.a.h+=512;              →キューブを回転
+64:    }
+65:}
+66:
+67:BIPOINT vtx[6][4]=                                   ┐
+68:{                                                    ├→Cubeの6面分の
+69:    {{ 5, 5, 5},{-5, 5, 5},{-5,-5, 5},{ 5,-5, 5}},   │  頂点
+70:    {{ 5, 5,-5},{-5, 5,-5},{-5,-5,-5},{ 5,-5,-5}},   │
+71:    {{ 5, 5, 5},{ 5,-5, 5},{ 5,-5,-5},{ 5, 5,-5}},   │
+72:    {{-5, 5, 5},{-5,-5, 5},{-5,-5,-5},{-5, 5,-5}},   │
+73:    {{ 5, 5, 5},{-5, 5, 5},{-5, 5,-5},{ 5, 5,-5}},   │
+74:    {{ 5,-5, 5},{-5,-5, 5},{-5,-5,-5},{ 5,-5,-5}}    │
+75:};                                                   ┘
+76:
+77:BICOLOR col[6]=                                             ┐
+78:{                                                           ├→各面の
+79:    {  0,  0,255},{  0,255,  0},{  0,255,255},{255,  0,  0},│  色(適当)
+80:    {255,  0,255},{255,255,  0}                             │
+81:};                                                          ┘
+82:
+83:void DrawCube(BIPNTANG *pos)
+84:{
+85:    int i;
+86:    BiSetLocalMatrix(pos);           →ローカル座標の設定
+87:    for(i=0; i<6; i++)               ┐
+88:    {                                ├→キューブ6面を描画
+89:        BiInsPolyg(4,vtx[i],&col[i]);│
+90:    }                                ┘
+91:    BiClearLocalMatrix();            →ローカル座標の解除
+92:}
+
+44～48行
+  44～48行では、視点の位置/姿勢とオブジェクト(キューブ)の位置/姿勢を定義し
+ています。このサンプルではキューブを回転します。オブジェクトを回転/移動す
+るには、そのオブジェクトの位置と姿勢の定義が必要です。このため、wirecube.c
+に比べてオブジェクト位置/姿勢の設定が増えています。
+
+  視点は原点(0,0,0)でZのプラス方向:姿勢(0,0,0)を向いています。この位置か
+らこの姿勢で見える位置にキューブを表示するために、キューブの位置をZのプラ
+ス方向に20だけ移動して、(0,0,20)にセットしています。
+
+
+57～61行
+  フレームバッファクリア～フレームバッファを表示画面に転送までのプロセス
+を記述しています。wirecube.cと同じです。
+
+
+63行
+  obj.a.hは、オブジェクトのHeading Angleです。これを毎回加算しているので、
+キューブが回ります。
+
+
+83～92行
+  DrawCube内でキューブの各面(ポリゴン)をオブジェクトバッファに追加してい
+ます。67～75行がポリゴンの頂点座標です。それをもとに、87～90行で6面をバッ
+ファに登録しています。
+
+  DrawCubeは引数として、キューブの位置/姿勢を受け取りますが、87～90行では、
+回転を何も考えずにキューブをオブジェクトバッファに登録しています。が、実
+行すると、間違いなくキューブは回転します。これは、86行のBiSetLocalMatrix
+に仕掛けがあります。
+
+  BiSetLocalMatrixは、オブジェクトの位置と姿勢をライブラリに登録する関数
+です。この関数を使って位置と姿勢を登録すると、ライブラリは、以降 BiIns****
+または BiOvw**** で描画するオブジェクトを、登録した位置/姿勢にあるものと
+して扱います。これは、次にBiClearLocalMatrixを呼び出すまで有効です。ただ
+し、以下の関数に対しては無効です。
+
+    BiInsSrfModel
+    BiInsSrfModelDivide
+    BiOvwPict2
+
+
+
+
+
+
+<< check.c  チェック模様の地面 >>
+  このサンプルは、チェック模様の床を描きます。ただ描くのではおもしろく
+ないので、視点の姿勢を水平回転してアニメーションします。
+
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0xf000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void DrawCheckFloorMain(void);
+14:void DrawCheckFloor(void);
+15:
+16:BIAPPENTRY
+17:{
+18:    BIPROJ prj;
+19:
+20:    BIAPPINIT;
+21:    BiMemoryInitialize();
+22:    BiCalcInitialize();
+23:    BiGraphInitialize(BiWork,BIWORKSIZE);
+24:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+25:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+26:    BiDeviceInitialize();
+27:
+28:    BiOpenWindow(640,480);
+29:
+30:    BiGetStdProjection(&prj);
+31:    BiSetProjection(&prj);
+32:
+
+33:    DrawCheckFloorMain();
+34:
+35:    BiCloseWindow();
+36:    return 0;
+37:}
+38:
+39:void DrawCheckFloorMain(void)
+40:{
+41:    BIPROJ prj;
+42:    BIPNTANG eye;
+43:
+44:    BiSetPoint(&eye.p,0,10,0);  →視点(0,10,0)┬→原点から少し浮いた状態
+45:    BiSetAngle(&eye.a,0,0,0);   →視線(0,0,0) ┘
+46:
+47:    while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+48:    {
+49:        BiUpdateDevice();
+50:
+51:        BiGetStdProjection(&prj);
+52:        BiSetProjection(&prj);
+53:
+54:        BiClearScreen();
+55:        BiStartBuffer(&eye);
+56:        DrawCheckFloor();       →チェック模様を描く
+57:        BiFlushBuffer();
+58:        BiSwapBuffers();
+59:
+60:        eye.a.h+=256;
+61:    }
+62:}
+63:
+64:void DrawCheckFloor(void)
+65:{
+66:    int c,x,z;
+67:    BIPOINT plg[4];
+68:    BICOLOR col[2];
+69:
+70:    BiSetColorRGB(&col[0],255,0,0);  →col[0]:赤
+71:    BiSetColorRGB(&col[1],0,0,255);  →col[1]:青
+72:
+73:    for(x=-10; x<=10; x++)
+74:    {
+75:        for(z=-10; z<=10; z++)
+76:        {
+77:            BiSetPoint(&plg[0],x*10   ,0,z*10   );  ┐格子1区画の座標
+78:            BiSetPoint(&plg[1],x*10+10,0,z*10   );  │をセット
+79:            BiSetPoint(&plg[2],x*10+10,0,z*10+10);  │
+80:            BiSetPoint(&plg[3],x*10   ,0,z*10+10);  ┘
+81:            c=BiAbs(x-z)%2;                         →交互に色を選ぶ
+82:            BiOvwPolyg(4,plg,&col[c]);              →格子を描画
+83:        }
+84:    }
+85:}
+
+64～85行
+  DrawCheckFloorでチェック模様の床を描きます。73～84行で、xとzを-10～+10
+までインクリメントしながら交互に色を赤と青に変えて3Dの矩形を描画します。
+矩形の一辺の長さを10にしてあるので、床は一辺が200になります。
+
+  この例では、3Dオブジェクトはアンダーレイしかありません。解釈によっては、
+オーバーレイだけだと言うこともできますが、ほとんどの場合、床を描いたあと
+で他の3Dオブジェクトを描画すると思うので、床はアンダーレイと考えた方が自
+然でしょう。
+
+  この例では、82行で、BiOvwPolygという関数で床を描いています。アンダーレ
+イ、オーバーレイに3Dオブジェクトを描画するとき、この BiOvw**** という関数
+を使います。オーバーレイ/アンダーレイに3Dオブジェクトを描画する関数には、
+この他に、以下の種類があります。
+
+    BiOvwLine
+    BiOvwMarker
+    BiOvwPict2
+    BiOvwPset
+
+
+
+
+
+
+<< srfmodel.c  .SRFファイル表示 >>
+  このサンプルでは、BIGEPOLY等を利用して作成した.SRF形式のオブジェクトデ
+ータファイルを読み込んで表示します。.SRF形式ファイルの作り方は、BIGEPOLY
+のマニュアルを参照してください。
+
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0xf000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void T2BlueMain(void);
+14:
+15:BIAPPENTRY
+16:{
+17:    BIPROJ prj;
+18:
+19:    BIAPPINIT;
+20:    BiMemoryInitialize();
+21:    BiCalcInitialize();
+22:    BiGraphInitialize(BiWork,BIWORKSIZE);
+23:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+24:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+25:    BiDeviceInitialize();
+26:
+27:    BiOpenWindow(640,480);
+28:
+29:    BiGetStdProjection(&prj);
+30:    BiSetProjection(&prj);
+31:
+32:    T2BlueMain();
+33:
+34:    BiCloseWindow();
+35:    return 0;
+36:}
+37:
+38:void T2BlueMain(void)
+39:{
+40:    BIPROJ prj;
+41:    BIPNTANG eye,obj;
+42:    BISRFMODEL srf;
+43:    BIPOINTS s1,s2;
+44:    BICOLOR bkg;
+45:
+46:    BiSetShadMode(BI_ON);                  →陰影モードON
+47:
+48:    BiSetColorRGB(&bkg,120,120,120);       →背景色用グレー
+49:
+50:    if(BiLoadSrf(&srf,"t2blue.srf")==BI_OK)  →.srf読み込み成功?
+51:    {
+52:        BiSetPoint(&eye.p,0,0,0);          ┬→視点 原点
+53:        BiSetAngle(&eye.a,0,0,0);          ┘
+54:
+55:        BiSetPoint(&obj.p,0,0,20);         ┬→オブジェクト (0,0,20)
+56:        BiSetAngleDeg(&obj.a,130,-30,30);  ┘     (130°,-30°,30°)
+57:
+58:        while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+59:        {
+60:            BiUpdateDevice();            →ループに入ったらBiUpdateDevice
+61:
+62:            BiSetPointS(&s1,0,0);          ┬→背景を塗りつぶすために画面
+63:            BiGetWindowSize(&s2.x,&s2.y);  ┘  左上と右下座標をセット
+64:
+65:            BiGetStdProjection(&prj);    ┬→画面リサイズ対応
+66:            BiSetProjection(&prj);       ┘
+67:
+68:            BiClearScreen();
+69:            BiDrawRect2(&s1,&s2,&bkg);   →画面を背景色で塗りつぶす
+70:            BiStartBuffer(&eye);         →視点をセット
+71:            BiInsSrfModel(&srf,&obj);    →オブジェクトをバッファに追加
+72:            BiFlushBuffer();             →バッファの掃き出し
+73:            BiSwapBuffers();             →フレームバッファを表示画面へ
+74:        }
+75:    }
+76:}
+
+48行
+  このサンプルでは、背景の色をグレーにしています。48行で背景色をbkgにセット
+しています。
+
+50行
+  BiLoadSrfを使って"t2blue.srf"を読み込みます。
+
+62～63行
+  背景をグレーで塗りつぶすために画面の左上端と右下端の座標をそれぞれs1,s2
+にセットします。
+
+55～56行
+  オブジェクトの位置と姿勢をセットしています。
+
+69行
+  背景を48行でセットした色(グレー)で塗りつぶします。これは、アンダーレイ
+にあたります。
+
+70～72行
+  視点eyeをセットして、50行で読み込んだデータをobjの位置/姿勢でオブジェク
+トバッファに登録します。そして、72行でオブジェクトバッファを掃き出してい
+ます。
+
+
+
+
+
+
+<< pict2.c  .PC2ファイル表示 >>
+  このサンプルでは、Blue Impulse Libraryが扱う2DドローデータPC2形式のファ
+イルを読み込んで表示します。なお、PC2形式のデータは地上絵(地図)として使う
+こともできますが、それは、最後のサンプル flight.c にあります。このサンプル
+はPC2形式のデータを画面一杯に伸ばして表示します。
+
+  PC2形式のデータは、BIGEPICを使って作ります。使い方は、BIGEPICのドキュメ
+ントを参照してください。
+
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0xf000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void DrawPict2Main(void);
+14:void DrawPict2(BIPICT2 *pc2);
+15:
+16:BIAPPENTRY
+17:{
+18:    BIPROJ prj;
+19:
+20:    BIAPPINIT;
+21:    BiMemoryInitialize();
+22:    BiCalcInitialize();
+23:    BiGraphInitialize(BiWork,BIWORKSIZE);
+24:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+25:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+26:    BiDeviceInitialize();
+27:
+28:    BiOpenWindow(640,480);
+29:
+30:    BiGetStdProjection(&prj);
+31:    BiSetProjection(&prj);
+32:
+33:    DrawPict2Main();
+34:
+35:    BiCloseWindow();
+36:    return 0;
+37:}
+38:
+39:void DrawPict2Main(void)
+40:{
+41:    BIPICT2 pc2;
+42:
+43:    if(BiLoadPict2(&pc2,"title.pc2")==BI_OK)            →読み込み成功か?
+44:    {
+45:        while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+46:        {
+47:            BiUpdateDevice();  →ループに入ったらBiUpdateDevice
+48:
+49:            BiClearScreen();
+50:            DrawPict2(&pc2);   →PC2データを画面一杯に伸ばして描画する
+51:            BiSwapBuffers();
+52:        }
+53:    }
+54:}
+55:
+56:void DrawPict2(BIPICT2 *pc2)
+57:{
+58:    BIPOINTS s1,s2;
+59:
+60:    BiSetPointS(&s1,0,0);          ┬→画面の左上と右下をセット
+61:    BiGetWindowSize(&s2.x,&s2.y);  ┘
+62:    BiDrawPict2Zoom(pc2,&s1,&s2);  →PC2データを描画
+63:}
+
+56～63行
+  s1,s2に画面の左上端と右下端の座標をセットして、BiDrawPict2ZoomでPC2形式
+データをs1～s2に引き延ばして表示します。
+
+  PC2形式データの表示には、この他に次の関数があります。
+    BiOvwPict2
+    BiDrawPict2
+    BiInsPict2(予定)
+
+
+
+
+
+
+<< terrain.c  .TERファイル表示 >>
+  このサンプルでは、Blue Impulse Library用地形データのTER形式ファイルを読
+み込んで表示します。なお、TER形式データは、墜落判定や上を沿って歩くときの
+姿勢の計算などができます。墜落判定については、このファイルの最後にあるサ
+ンプル flight.c を参照してください。姿勢の計算については、impulse.docの、
+BiTerrMeshEyeVecUpVec および BiVectorToAngle を参照してください。
+
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0xf000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void DrawTerrainMain(void);
+14:
+15:BIAPPENTRY
+16:{
+17:    BIPROJ prj;
+18:
+19:    BIAPPINIT;
+20:    BiMemoryInitialize();
+21:    BiCalcInitialize();
+22:    BiGraphInitialize(BiWork,BIWORKSIZE);
+23:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+24:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+25:    BiDeviceInitialize();
+26:
+27:    BiOpenWindow(640,480);
+28:
+29:    BiGetStdProjection(&prj);
+30:    BiSetProjection(&prj);
+31:
+32:    DrawTerrainMain();
+33:
+34:    BiCloseWindow();
+35:    return 0;
+36:}
+37:
+38:void DrawTerrainMain(void)
+39:{
+40:    BIPNTANG eye,obj;
+41:    BITERRMESH ter;
+42:
+43:    BiSetShadMode(BI_ON);       →陰影モードON
+44:
+45:    if(BiLoadTerrMesh(&ter,"demo.ter")==BI_OK)    →読み込み成功?
+46:    {
+47:        BiSetPoint(&eye.p,300,600,-600);
+48:        BiSetAngleDeg(&eye.a,0,-30,0);
+49:
+50:        BiSetPoint(&obj.p,0,0,0);
+51:        BiSetAngle(&obj.a,0,0,0);
+52:
+53:        while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+54:        {
+55:            BiUpdateDevice();
+56:
+57:            BiClearScreen();
+58:            BiStartBuffer(&eye);
+59:            BiInsTerrMesh(&ter,&obj); →TERデータをオブジェクトバッファへ
+60:            BiFlushBuffer();          →オブジェクトバッファ掃き出し
+61:            BiSwapBuffers();          →フレームバッファを表示画面へ転送
+62:        }
+63:    }
+64:}
+
+45行
+  .TER形式ファイルを読み込みます。
+
+59行
+  45行で読み込んだTER形式データ(BITERRMESH)をオブジェクトバッファに登録し
+ます。
+
+
+
+
+
+
+[3]キーボード/マウス
+  このサンプルでは、キーボードの読み取りについて解説します。画面にカーソル
+を表示して、矢印キーで上下左右に移動することができます。Xキーを押すと終了
+します。
+
+<< key.c >>
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0xf000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void KeyBoardMain(void);
+14:void DrawCursor(long x,long y);
+15:void ClearKeyBuffer(void);
+16:
+17:BIAPPENTRY
+18:{
+19:    BIPROJ prj;
+20:
+21:    BIAPPINIT;
+22:    BiMemoryInitialize();
+23:    BiCalcInitialize();
+24:    BiGraphInitialize(BiWork,BIWORKSIZE);
+25:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+26:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+27:    BiDeviceInitialize();
+28:
+29:    BiOpenWindow(640,480);
+30:
+31:    BiGetStdProjection(&prj);
+32:    BiSetProjection(&prj);
+33:
+34:    KeyBoardMain();
+35:
+36:    BiCloseWindow();
+37:    return 0;
+38:}
+39:
+40:void KeyBoardMain(void)
+41:{
+42:    int key;
+43:    long x,y;    →カーソル位置
+44:
+45:    x=0;         ┬→カーソル初期位置(0,0)
+46:    y=0;         ┘
+47:    while((key=BiInkey())!=BIKEY_X && BiFatal()==BI_FALSE)
+48:    {
+49:        BiUpdateDevice();
+50:
+51:        if(BiKey(BIKEY_LEFT)==BI_ON)      ┐
+52:        {                                 │左矢印キーを押していたら
+53:            x--;                          │カーソルを左に移動
+54:            ClearKeyBuffer();             │
+55:        }                                 ┘
+56:        if(BiKey(BIKEY_RIGHT)==BI_ON)     ┐
+57:        {                                 │右矢印キーを押していたら
+58:            x++;                          │カーソルを右に移動
+59:            ClearKeyBuffer();             │
+60:        }                                 ┘
+61:        if(BiKey(BIKEY_UP)==BI_ON)        ┐
+62:        {                                 │上矢印キーを押していたら
+63:            y--;                          │カーソルを上に移動
+64:            ClearKeyBuffer();             │
+65:        }                                 ┘
+66:        if(BiKey(BIKEY_DOWN)==BI_ON)      ┐
+67:        {                                 │下矢印キーを押していたら
+68:            y++;                          │カーソルを下に移動
+69:            ClearKeyBuffer();             │
+70:        }                                 ┘
+71:
+72:        BiClearScreen();
+73:        DrawCursor(x,y);      →カーソルを描画
+74:        BiSwapBuffers();
+75:    }
+76:}
+77:
+78:void DrawCursor(long x,long y)
+79:{
+80:    long wid,hei;
+81:    BIPOINTS s1,s2;
+82:    BICOLOR col;
+83:
+84:    BiGetWindowSize(&wid,&hei);                      ┐画面を40×25分割
+85:                                                     │してx,yに対応する
+86:    BiSetColorRGB(&col,255,255,255);                 │ブロックにカーソ
+87:    BiSetPointS(&s1,wid* x   /40  ,hei* y   /25);    │ル(矩形)を描画す
+88:    BiSetPointS(&s2,wid*(x+1)/40-1,hei*(y+1)/25-1);  │る
+89:    BiDrawRect2(&s1,&s2,&col);                       ┘
+90:}
+91:
+92:void ClearKeyBuffer(void)
+93:{
+94:    while(BiInkey()!=BIKEY_NULL)  ┐
+95:    {                             │ライブラリのキーバッファが空になる
+96:        BiUpdateDevice();         │までキーをダミーリード
+97:    }                             ┘
+98:}
+
+47行
+  キー入力のサンプルなので、何かキーを押しただけで終了しては困るので、この
+サンプルでは、Xキーを押すまで回りつづけます。
+
+
+51～70行
+  BiKey関数でキーの押し下げ状態を調べて、キーに応じた方向にカーソルを移動
+します。なお、キーの押し下げ状態を調べたあとで、ClearKeyBufferをコールし
+ているのは、キーバッファにキーが溜まりすぎるのを防止するためです。
+
+  通常、キーを一度押すと、ライブラリ内部またはOSレベルのキーバッファにキー
+コードが溜まります。このサンプルプログラムでは、1ループに1度BiInkeyを使っ
+てキーバッファの中身を読みだします。このとき1度の読み出しにつき、キーバッ
+ファ内のキーコードをひとつ消費します。しかし、キーリピート間隔よりも1ルー
+プにかかる時間が長くなると、キーコードが溜まるスピードが消費スピードよりも
+上回り、どんどんキーバッファの内容が増えてゆきます。これは、なにかと不都合
+が多いので、BiKeyでキー押し下げ状態を検知した段階でClearKeyBufferでキーバ
+ッファを空にします。
+
+  もっとも、このサンプルの方法も完璧ではありません。例えば、矢印キー以外
+のキーを押しつづけていたとすると、ClearKeyBufferを呼び出さないので、キー
+バッファが溜まりつづける可能性があります。
+
+  より積極的にキーバッファをクリアするには、whileループの中で、
+
+    if(key!=BIKEY_NULL) /* なんかキーを押していたら */
+    {
+        while(BiInkey()!=BIKEY_NULL)
+        {
+            BiUpdateDevice();
+        }
+    }
+
+とか書くことも手です。が、こうすると、先行入力をすべて無視することになる
+ので、ケースバイケースで使い分けるのがいいでしょう。
+
+
+92～98行
+  ClearKeyBufferは、キーバッファを空にします。キーバッファにキーコードが
+残っているときは、BiInkey()がBIKEY_NULL以外の値を返します。従って、キーバ
+ッファをクリアするには、BiInkey()がBIKEY_NULL以外を返している間BiUpdateDevice
+を繰り返し呼び出せばOKです。
+
+
+
+
+
+
+<< mosread.c >>
+  このサンプルは、ウィンドウ上でマウスカーソルに追従するマーカーを表示し
+ます。
+
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0xf000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void MouseMain(void);
+14:void DrawCursor(int lbt,long x,long y);
+15:
+16:BIAPPENTRY
+17:{
+18:    BIPROJ prj;
+19:
+20:    BIAPPINIT;
+21:    BiMemoryInitialize();
+22:    BiCalcInitialize();
+23:    BiGraphInitialize(BiWork,BIWORKSIZE);
+24:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+25:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+26:    BiDeviceInitialize();
+27:
+28:    BiOpenWindow(640,480);
+29:
+30:    BiGetStdProjection(&prj);
+31:    BiSetProjection(&prj);
+32:
+33:    MouseMain();
+34:
+35:    BiCloseWindow();
+36:    return 0;
+37:}
+38:
+39:void MouseMain(void)
+40:{
+41:    int lbt,rbt,mbt;    →マウスボタン状態は int 型でなくてはならない
+42:    long mx,my;         →マウス座標は long 型でなくてはならない
+43:
+44:    while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+45:    {
+46:        BiUpdateDevice();        →ループに入ったらBiUpdateDevice
+47:
+48:        BiMouse(&lbt,&mbt,&rbt,&mx,&my);   →マウス読み取り
+49:
+50:        BiClearScreen();
+51:        DrawCursor(lbt,mx,my);   →マウスカーソル位置にマーカーを描画
+52:        BiSwapBuffers();
+53:    }
+54:}
+55:
+56:void DrawCursor(int lbt,long x,long y)
+57:{
+58:    BIPOINTS s;
+59:    BICOLOR col;
+60:
+61:    BiSetColorRGB(&col,255,255,255);    →マーカーの色:白
+62:    BiSetPointS(&s,x,y);                →マーカー表示位置をセット
+63:    switch(lbt)             →ボタン押下状態によってマーカー形状を変える
+64:    {
+65:    case BI_ON:                              ┐
+66:        BiDrawMarker2(&s,BIMK_RECT,&col);    │押下→矩形
+67:        break;                               ┘
+68:    case BI_OFF:                             ┐
+69:        BiDrawMarker2(&s,BIMK_CROSS,&col);   │解放→×印
+70:        break;                               ┘
+71:    }
+72:}
+
+(説明省略:コメント見てください)
+
+
+
+
+
+
+[4]3次元演算
+<< axisconv.c  座標変換 >>
+  このサンプルは、plgcube.cと似ています。ポリゴンを張ったキューブを回転し
+ながら表示します。ただ、plgcube.cと違うのは、BiSetLocalMatrixを使ってい
+ないという点です。このサンプルでは、アプリケーション側で座標変換していま
+す。
+
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0xf000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void DrawCubeLoop(void);
+14:void DrawCube(BIPNTANG *pos);
+15:
+16:BIAPPENTRY
+17:{
+18:    BIPROJ prj;
+19:
+20:    BIAPPINIT;
+21:    BiMemoryInitialize();
+22:    BiCalcInitialize();
+23:    BiGraphInitialize(BiWork,BIWORKSIZE);
+24:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+25:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+26:    BiDeviceInitialize();
+27:
+28:    BiOpenWindow(640,480);
+29:
+30:    BiGetStdProjection(&prj);
+31:    BiSetProjection(&prj);
+32:
+33:    DrawCubeLoop();
+34:
+35:    BiCloseWindow();
+36:    return 0;
+37:}
+38:
+39:void DrawCubeLoop(void)
+40:{
+41:    BIPROJ prj;
+42:    BIPNTANG eye,cub;
+43:
+44:    BiSetPoint(&eye.p,0,0,0);
+45:    BiSetAngle(&eye.a,0,0,0);
+46:
+47:    BiSetPoint(&cub.p,0,0,20);
+48:    BiSetAngle(&cub.a,0,0,0);
+49:
+50:    while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+51:    {
+52:        BiUpdateDevice();
+53:
+54:        BiGetStdProjection(&prj);
+55:        BiSetProjection(&prj);
+56:
+57:        BiClearScreen();
+58:        BiStartBuffer(&eye);
+59:        DrawCube(&cub);
+60:        BiFlushBuffer();
+61:        BiSwapBuffers();
+62:
+63:        cub.a.h+=512;
+64:        cub.a.p+=512;
+65:    }
+66:}
+67:
+68:BIPOINT vtx[6][4]=
+69:{
+70:    {{ 5, 5, 5},{-5, 5, 5},{-5,-5, 5},{ 5,-5, 5}},
+71:    {{ 5, 5,-5},{-5, 5,-5},{-5,-5,-5},{ 5,-5,-5}},
+72:    {{ 5, 5, 5},{ 5,-5, 5},{ 5,-5,-5},{ 5, 5,-5}},
+73:    {{-5, 5, 5},{-5,-5, 5},{-5,-5,-5},{-5, 5,-5}},
+74:    {{ 5, 5, 5},{-5, 5, 5},{-5, 5,-5},{ 5, 5,-5}},
+75:    {{ 5,-5, 5},{-5,-5, 5},{-5,-5,-5},{ 5,-5,-5}}
+76:};
+77:
+78:BICOLOR col[6]=
+79:{
+80:    {  0,  0,255},{  0,255,  0},{  0,255,255},{255,  0,  0},
+81:    {255,  0,255},{255,255,  0}
+82:};
+83:
+84:void DrawCube(BIPNTANG *pos)
+85:{
+86:    int i,j;
+87:    BIPOINT tmp[4];
+88:    BIAXIS axs;
+89:
+90:    BiPntAngToAxis(&axs,pos);    →オブジェクトの座標系をセット
+91:    for(i=0; i<6; i++)
+92:    {
+93:        for(j=0; j<4; j++)                       ┐4点をグローバル座標
+94:        {                                        │に変換して、できた
+95:            BiConvLtoG(&tmp[j],&vtx[i][j],&axs); │ポリゴンをオブジェ
+96:        }                                        │クトバッファに追加
+97:        BiInsPolyg(4,tmp,&col[i]);               ┘
+98:    }
+99:}
+
+84～99行
+  位置と姿勢が決まると、ひとつローカルな座標系が決まります。キューブの各
+頂点は68～76行で定義していますが、これらはすべてローカルな座標系での値で
+す。
+
+  キューブを*posの位置/姿勢に表示するというのは、キューブの各頂点の座標
+を*posで決まる座標系からグローバルな座標系に変換して表示すると考えること
+ができます。DrawCubeには、この処理を記述してあります。
+
+  Blue Impulse Libraryでは、位置と姿勢を表す構造体としてBIPNTANG型、座標
+系を表す構造体としてBIAXIS型を使います。BIPNTANG型からBIAXIS型への変換は、
+BiPntAngToAxisを使います(90行)。
+
+  そして、ローカル座標系の値をグローバル座標系の値に変換するには、BiConvLtoG
+を使います(95行)。90行では、座標系axsの頂点vtx[i][j]をグローバル座標系で
+の値に変換してtmp[j]に格納します。
+
+  座標変換には、次のふたつの関数を使うことができます。
+
+    BiConvLtoG
+    BiConvGtoL
+
+  また、変換対象がベクトルの場合には、次の関数を使うことができます。
+
+    BiRotLtoG
+    BiRotGtoL
+    BiRotFastLtoG
+    BiRotFastGtoL
+
+  なお、BiRotFastLtoG/BiRotFastGtoLは、座標系を表す引数にBIAXISではなく、
+BITRIGONを使っていますが、BIAXISがわかっている場合は、
+
+    BiRotFastLtoG(&pnt,&pnt,&axs.t);
+    BiRotFastGtoL(&pnt,&pnt,&axs.t);
+
+のようにBIAXIS構造体のメンバtを使って記述することができます。
+
+
+
+
+
+
+<< lookat.c  指定の方角を見る >>
+  これは、指定のオブジェクトを正面に見る方向に視線を合わせるサンプルです。
+実行すると、T-2 Blue Impulse機が左から右に飛んでいきます。この間、視線は
+常に機体の方を向きます。
+
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0xf000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void LookAtMain(void);
+14:
+15:BIAPPENTRY
+16:{
+17:    BIPROJ prj;
+18:
+19:    BIAPPINIT;
+20:    BiMemoryInitialize();
+21:    BiCalcInitialize();
+22:    BiGraphInitialize(BiWork,BIWORKSIZE);
+23:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+24:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+25:    BiDeviceInitialize();
+26:
+27:    BiOpenWindow(640,480);
+28:
+29:    BiGetStdProjection(&prj);
+30:    BiSetProjection(&prj);
+31:
+32:    LookAtMain();
+33:
+34:    BiCloseWindow();
+35:    return 0;
+36:}
+37:
+38:void LookAtMain(void)
+39:{
+40:    BIPROJ prj;
+41:    BIPOINT vec;
+42:    BIPNTANG eye,obj;
+43:    BISRFMODEL srf;
+44:    BIPOINTS s1,s2;
+45:    BICOLOR bkg;
+46:
+47:    BiSetShadMode(BI_ON);         →陰影モードON
+48:
+49:    BiSetColorRGB(&bkg,0,255,255);
+50:
+51:    if(BiLoadSrf(&srf,"t2blue.srf")==BI_OK)
+52:    {
+53:        BiSetPoint(&eye.p,0,0,0);      ┬→視点:原点
+54:        BiSetAngle(&eye.a,0,0,0);      ┘
+55:
+56:        BiSetPoint(&obj.p,-100,15,15); ┬→オブジェクト(-100,15,15)
+57:        BiSetAngleDeg(&obj.a,-90,0,0); ┘              (-90°,0,0)
+58:        while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+59:        {
+60:            BiUpdateDevice();  →ループに入ったらBiUpdateDevice
+61:
+62:            BiSetPointS(&s1,0,0);
+63:            BiGetWindowSize(&s2.x,&s2.y);
+64:
+65:            BiGetStdProjection(&prj);
+66:            BiSetProjection(&prj);
+67:
+68:            BiSubPoint(&vec,&obj.p,&eye.p);    →視線(視点→オブジェクト)
+69:            BiVectorToHeadPitch(&eye.a,&vec);  →視線から姿勢に変換
+70:
+71:            BiClearScreen();
+72:            BiDrawRect2(&s1,&s2,&bkg);   →背景色の塗りつぶし
+73:            BiStartBuffer(&eye);
+74:            BiInsSrfModel(&srf,&obj);
+75:            BiFlushBuffer();
+76:            BiSwapBuffers();
+77:
+78:            obj.p.x+=5;         →飛行機飛ばす
+79:            if(obj.p.x>=100)    ┐
+80:            {                   │ある程度右に行ったら
+81:                obj.p.x=-100;   │左に戻す
+82:            }                   ┘
+83:        }
+84:    }
+85:}
+
+68～69行
+  視線をあるオブジェクトを見る向きに合わせるには、視点からオブジェクトへ
+のベクトルが必要です。68行では、視点位置(eye.p)からオブジェクト位置(obj.p)
+に向かうベクトルを計算して vec に格納します。そして、69行では、求めたベク
+トルから姿勢を計算します。姿勢の計算には、BiVectorToHeadPitchなる関数を使
+います。あとは、普通に視点をセットしてオブジェクトを描画するだけです。
+
+  なお、ベクトルから姿勢を計算するには、BiVectorToAngleなる関数もあります。
+この違いについては、impulse.docを参照してください。
+
+
+
+
+
+
+<< pitch.c  ピッチング/ヨーイング/直進 >>
+  このサンプルは、T-4 Blue Impulse機のモデルを表示して、矢印キーで機首の
+姿勢変化、Fキーで前進、Bキーで後退するというものです。Xキーを押すと終了し
+ます。
+
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0xf000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void PitchYawMain(void);
+14:
+15:BIAPPENTRY
+16:{
+17:    BIPROJ prj;
+18:
+19:    BIAPPINIT;
+20:    BiMemoryInitialize();
+21:    BiCalcInitialize();
+22:    BiGraphInitialize(BiWork,BIWORKSIZE);
+23:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+24:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+25:    BiDeviceInitialize();
+26:
+27:    BiOpenWindow(640,480);
+28:
+29:    BiGetStdProjection(&prj);
+30:    BiSetProjection(&prj);
+31:
+32:    PitchYawMain();
+33:
+34:    BiCloseWindow();
+35:    return 0;
+36:}
+37:
+38:void PitchYawMain(void)
+39:{
+40:    BIPROJ prj;
+41:    BIPOINT vec;
+42:    BIPNTANG eye,obj;
+43:    BISRFMODEL srf;
+44:    int key;
+45:
+46:    BiSetShadMode(BI_ON);         →陰影モードON
+47:
+48:    if(BiLoadSrf(&srf,"t4blue.srf")==BI_OK)
+49:    {
+50:        BiSetPoint(&eye.p,0,0,0);
+51:        BiSetAngle(&eye.a,0,0,0);
+52:
+53:        BiSetPoint(&obj.p,0,0,20);
+54:        BiSetAngleDeg(&obj.a,130,-30,30);
+55:
+56:        while((key=BiInkey())!=BIKEY_X && BiFatal()==BI_FALSE)
+57:        {
+58:            BiUpdateDevice();     →ループに入ったらBiUpdateDevice
+59:
+60:            switch(key)
+61:            {
+62:            case BIKEY_LEFT:                     ┐左矢印キーを押したら
+63:                BiPitchUp(&obj.a,&obj.a,0,512);  │左に回転
+64:                break;                           ┘
+65:            case BIKEY_RIGHT:                    ┐右矢印キーを押したら
+66:                BiPitchUp(&obj.a,&obj.a,0,-512); │右に回転
+67:                break;                           ┘
+68:            case BIKEY_UP:                       ┐上矢印キーを押したら
+69:                BiPitchUp(&obj.a,&obj.a,-512,0); │上向き回転
+70:                break;                           ┘
+71:            case BIKEY_DOWN:                     ┐下矢印キーを押したら
+72:                BiPitchUp(&obj.a,&obj.a,512,0);  │下向き回転
+73:                break;                           ┘
+74:            case BIKEY_F:                        ┐
+75:                BiSetPoint(&vec,0,0,3);          │Fキーで前進
+76:                BiRotLtoG(&vec,&vec,&obj.a);     │
+77:                BiAddPoint(&obj.p,&obj.p,&vec);  │
+78:                break;                           ┘
+79:            case BIKEY_B:                        ┐
+80:                BiSetPoint(&vec,0,0,-3);         │Bキーで後退
+81:                BiRotLtoG(&vec,&vec,&obj.a);     │
+82:                BiAddPoint(&obj.p,&obj.p,&vec);  │
+83:                break;                           ┘
+84:            }
+85:
+86:            BiGetStdProjection(&prj);
+87:            BiSetProjection(&prj);
+88:
+89:            BiClearScreen();
+90:            BiStartBuffer(&eye);
+91:            BiInsSrfModel(&srf,&obj);
+92:            BiFlushBuffer();
+93:            BiSwapBuffers();
+94:        }
+95:    }
+96:}
+
+62～73行
+  フライトシミュレータタイプのソフトでは、機の姿勢の変化の計算は重要です。
+操縦桿を引けば機首は上を向き、操縦桿を押せば機首が下を向きます。この運動
+は、3Dモデルが、それ自身の持つ座標系のX軸を中心に回転している運動と見る
+ことができます。これをピッチングといいます。また、これと似た運動で、左右
+に首を振る運動があります。これは、自身の持つ座標系のY軸を中心に回転する
+運動と見ることができます。この運動のことをヨーイングと言います。
+
+  バンク角が0のとき(左右に傾きが無いとき)、ピッチング運動はピッチ角の単
+純なプラスマイナスで計算できます。ところが、少しでもバンクが付くと、ピッ
+チング運動は、ヘディング角、ピッチ角、バンク角すべてが同時に変化する運動
+になり、たちまち計算が複雑になります。ヨーイング運動も同様です。ヨーイン
+グの場合は、ピッチ角とバンク角が共に0の場合は単純なヘディング角のプラス
+マイナスで計算できますが、どちらか一方が0でなくなったとき、複雑な計算に
+なります。
+
+  この計算は、次の命題と置き換えることができます。
+
+    地球上の緯度p、経度hで方向bを向いて立っている人がいるとする。この人
+    が、真っ直ぐ前方に向かって地球の中心に対する角度dpだけ進み、右に向か
+    って地球の中心に対する角度dhだけ進んだ。このとき、この人のいる緯度と
+    経度、および向いている方向を計算せよ。
+
+実は、よく考えると緯度が＋90度または－90度のとき、方向が定義できなくなっ
+て困ってしまいます。実際、まともにこの問題を解くには、座標球面上の直角三
+角形を考えて解くことになりますが、かなり難しい計算を強いられます。
+
+  ところが、(h,p,b)を2本のベクトルに変換することによって、非常に容易に計
+算できます。(僕は、この解決法を、実に高校2年のときに考えはじめて、大学3
+年に編み出しました)。と、いうわけで、Blue Impulse Libraryには、ピッチング
+とヨーイングを計算する関数BiPitchUp関数があります。これをやってるのが62～
+73行です。
+
+
+74～83行
+  フライスルー(ウォークスルーは歩くけどフライスルーは空を飛び回る)タイプ
+のアプリケーションで、もうひとつ必要なことは、直進計算です。視点の姿勢を
+自由にすると、直進したとき位置がどう変化するか一見複雑に見えます。
+
+  この問題を整理すると、ある姿勢aのオブジェクトがまっすぐ前方に向かって距
+離dだけ進むとき、もとの座標に加えるべきベクトルvを計算する、となります。
+vがわかれば、元の座標に足してやればいいだけです。
+
+  ところで、前方に距離dだけ進むベクトルとは、オブジェクトのローカルな座標
+系で見たとき、定義より(0,0,d)となります。一方、オブジェクトの元の座標とは
+グローバルな座標系での値なので、求めるベクトルvもグローバルな座標系での値
+でなくては意味がありません。このことから、ベクトルvは、ベクトル(0,0,d)を
+姿勢aについてローカル座標系→グローバル座標系に変換したものということにな
+ります。
+
+  plgcube.cの解説で少し触れましたが、ベクトルをローカル座標→グローバル座
+標に変換するには、 BiRotLtoG なる関数を使えばOKです。と、いうわけで、それ
+をやってるのが74～83行です。
+
+
+
+
+
+
+<< freeaxis.c  任意軸回転 >>
+  このサンプルは、T-4 Blue Impulse機のモデルを表示して、自由に回転してみる
+プログラムです。マウスカーソルをウィンドウ上に移動して、左ボタンを押すと、
+ボタンを押している間、カーソルに引っ張られるような感じでモデルが回転します。
+
+ 1:#include <stdio.h>
+ 2:#include <stdlib.h>
+ 3:#include <string.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:
+ 8:#define BIWORKSIZE 0xf000L
+ 9:char BiWork[BIWORKSIZE];
+10:char BiWork2[BIWORKSIZE];
+11:char BiWork3[BIWORKSIZE];
+12:
+13:void FreeAxisMain(void);
+14:void FreeAxisRotation(BIANGLE *obj);
+15:
+16:BIAPPENTRY
+17:{
+18:    BIPROJ prj;
+19:
+20:    BIAPPINIT;
+21:    BiMemoryInitialize();
+22:    BiCalcInitialize();
+23:    BiGraphInitialize(BiWork,BIWORKSIZE);
+24:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+25:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+26:    BiDeviceInitialize();
+27:
+28:    BiOpenWindow(640,480);
+29:
+30:    BiGetStdProjection(&prj);
+31:    BiSetProjection(&prj);
+32:
+33:    FreeAxisMain();
+34:
+35:    BiCloseWindow();
+36:    return 0;
+37:}
+38:
+39:void FreeAxisMain(void)
+40:{
+41:    BIPROJ prj;
+42:    BIPNTANG eye,obj;
+43:    BISRFMODEL srf;
+44:    int key;
+45:
+46:    BiSetShadMode(BI_ON);         →陰影モードON
+47:
+48:    if(BiLoadSrf(&srf,"t4blue.srf")==BI_OK)
+49:    {
+50:        BiSetPoint(&eye.p,0,0,0);
+51:        BiSetAngle(&eye.a,0,0,0);
+52:
+53:        BiSetPoint(&obj.p,0,0,20);
+54:        BiSetAngle(&obj.a,32768,0,0);
+55:
+56:        while((key=BiInkey())==BIKEY_NULL && BiFatal()==BI_FALSE)
+57:        {
+58:            BiUpdateDevice();
+59:
+60:            FreeAxisRotation(&obj.a);
+61:
+62:            BiGetStdProjection(&prj);
+63:            BiSetProjection(&prj);
+64:
+65:            BiClearScreen();
+66:            BiStartBuffer(&eye);
+67:            BiInsSrfModel(&srf,&obj);
+68:            BiFlushBuffer();
+69:            BiSwapBuffers();
+70:        }
+71:    }
+72:}
+73:
+74:void FreeAxisRotation(BIANGLE *obj)
+75:{
+76:    int lbt,rbt,mbt;
+77:    long mx,my,wx,wy;
+78:    BIPOINT ev,uv;
+79:    BIANGLE rot;
+80:
+81:    BiMouse(&lbt,&mbt,&rbt,&mx,&my);
+82:    if(lbt==BI_ON)
+83:    {
+84:        BiGetWindowSize(&wx,&wy);
+85:
+86:        BiSetAngle(&rot,(mx-wx/2)*10,(my-wy/2)*10,0);  ┐
+87:                                                       │
+88:        BiAngleToVector(&ev,&uv,obj);                  │自由軸回転計算
+89:        BiRotLtoG(&ev,&ev,&rot);                       │
+90:        BiRotLtoG(&uv,&uv,&rot);                       │
+91:        BiVectorToAngle(obj,&ev,&uv);                  ┘
+92:    }
+93:}
+
+86～91行
+  このサンプルのほとんどの部分は、これまでのサンプルの中にある内容です。
+唯一新しいのは86～91行の自由軸回転計算の部分です。
+
+  ここでの自由軸回転の目的は、マウスカーソルを追いかけるようにモデルを
+回転することです。マウスカーソル位置のウィンドウ中心からの偏差を(dx,dy)
+とすると、マウスカーソルを追うように回転するには、視点に対してモデルの
+水平方向の回転角と垂直方向の回転角の比率をdx:dyにします。この値をセット
+しているのが86行です。
+
+  次に、モデルの回転ですが、モデルの姿勢(h,p,b)を直接回転することは非常
+に困難です。そこで、一時的に姿勢をベクトルに変換して回転します。姿勢を
+ベクトルに変換するには、BiAngleToVectorを使います(88行)。BiAngleToVector
+によって、姿勢は視線ベクトルとアップベクトルに変換できます。
+
+  変換したベクトルを回転しているのが89～90行です。実は、89～90行はひと
+つの手抜きをしています。本来であれば、
+
+    ev,uvを視野座標に変換
+        ↓
+    ev,uvを回転
+        ↓
+    ev,uvをグローバル座標に変換
+
+というプロセスを経るべきなのですが、このサンプルでは、視点の姿勢が(0,0,0)
+なので、ev,uvの視野座標/グローバル座標変換を省略しています。
+
+  最後に、回転した2ベクトルを姿勢に変換して計算は終了します。これが91行の
+BiVectorToAngleです。
+
+  この方法を使うと、回転方向を直観的に決めることができるので、ビューアや
+エディタ系のソフトを作るときは有効です。
+
+
+
+
+
+
+<< screen.c  3D座標→画面座標変換 >>
+  1:#include <stdio.h>
+  2:#include <stdlib.h>
+  3:#include <string.h>
+  4:#include <stddef.h>
+  5:
+  6:#include <impulse.h>
+  7:
+  8:#define BIWORKSIZE 0xf000L
+  9:char BiWork[BIWORKSIZE];
+ 10:char BiWork2[BIWORKSIZE];
+ 11:char BiWork3[BIWORKSIZE];
+ 12:
+ 13:void DrawCubeLoop(void);
+ 14:void DrawCube(BIPNTANG *eye,BIPNTANG *obj,BIPROJ *prj);
+ 15:void DrawLine
+ 16:    (BIPOINT *p1,BIPOINT *p2,
+ 17:     BIPNTANG *eye,BIPNTANG *obj,BICOLOR *col,BIPROJ *prj);
+ 18:
+ 19:BIAPPENTRY
+ 20:{
+ 21:    BIPROJ prj;
+ 22:
+ 23:    BIAPPINIT;
+ 24:    BiMemoryInitialize();
+ 25:    BiCalcInitialize();
+ 26:    BiGraphInitialize(BiWork,BIWORKSIZE);
+ 27:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+ 28:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+ 29:    BiDeviceInitialize();
+ 30:
+ 31:    BiOpenWindow(640,480);
+ 32:
+ 33:    BiGetStdProjection(&prj);
+ 34:    BiSetProjection(&prj);
+ 35:
+ 36:    DrawCubeLoop();
+ 37:
+ 38:    BiCloseWindow();
+ 39:    return 0;
+ 40:}
+ 41:
+ 42:void DrawCubeLoop(void)
+ 43:{
+ 44:    BIPNTANG eye,obj;
+ 45:    BIPROJ prj;
+ 46:
+ 47:    BiSetPoint(&eye.p,0,0,-20);
+ 48:    BiSetAngle(&eye.a,0,0,0);
+ 49:
+ 50:    BiSetPoint(&obj.p,0,0,0);
+ 51:    BiSetAngle(&obj.a,0,0,0);
+ 52:
+ 53:    while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+ 54:    {
+ 55:        BiUpdateDevice();
+ 56:
+ 57:        BiGetStdProjection(&prj);
+ 58:
+ 59:        BiClearScreen();
+ 60:        DrawCube(&eye,&obj,&prj);
+ 61:        BiSwapBuffers();
+ 62:
+ 63:        obj.a.h+=256;
+ 64:    }
+ 65:}
+ 66:
+ 67:static BIPOINT vtx[]=
+ 68:{
+ 69:    { 5, 5, 5},{-5, 5, 5},{-5,-5, 5},{ 5,-5, 5},
+ 70:    { 5, 5,-5},{-5, 5,-5},{-5,-5,-5},{ 5,-5,-5}
+ 71:};
+ 72:
+ 73:void DrawCube(BIPNTANG *eye,BIPNTANG *obj,BIPROJ *prj)
+ 74:{
+ 75:    BICOLOR col;
+ 76:    BiSetColorRGB(&col,255,255,255);
+ 77:
+ 78:    DrawLine(&vtx[0],&vtx[1],eye,obj,&col,prj);
+ 79:    DrawLine(&vtx[1],&vtx[2],eye,obj,&col,prj);
+ 80:    DrawLine(&vtx[2],&vtx[3],eye,obj,&col,prj);
+ 81:    DrawLine(&vtx[3],&vtx[0],eye,obj,&col,prj);
+ 82:
+ 83:    DrawLine(&vtx[4],&vtx[5],eye,obj,&col,prj);
+ 84:    DrawLine(&vtx[5],&vtx[6],eye,obj,&col,prj);
+ 85:    DrawLine(&vtx[6],&vtx[7],eye,obj,&col,prj);
+ 86:    DrawLine(&vtx[7],&vtx[4],eye,obj,&col,prj);
+ 87:
+ 88:    DrawLine(&vtx[0],&vtx[4],eye,obj,&col,prj);
+ 89:    DrawLine(&vtx[1],&vtx[5],eye,obj,&col,prj);
+ 90:    DrawLine(&vtx[2],&vtx[6],eye,obj,&col,prj);
+ 91:    DrawLine(&vtx[3],&vtx[7],eye,obj,&col,prj);
+ 92:}
+ 93:
+ 94:void DrawLine
+ 95:    (BIPOINT *p1,BIPOINT *p2,
+ 96:     BIPNTANG *eye,BIPNTANG *obj,BICOLOR *col,BIPROJ *prj)
+ 97:{
+ 98:    BIPOINTS s1,s2;
+ 99:    BIPOINT q1,q2;
+100:    BIAXIS eyeAxs,objAxs;
+101:
+102:    BiPntAngToAxis(&eyeAxs,eye);  →視野座標系をセット
+103:    BiPntAngToAxis(&objAxs,obj);  →オブジェクト座標系をセット
+104:
+105:    BiConvLtoG(&q1,p1,&objAxs);   ┬→オブジェクト座標からグローバル座標
+106:    BiConvLtoG(&q2,p2,&objAxs);   ┘  に変換(モデリング変換)
+107:
+108:    BiConvGtoL(&q1,&q1,&eyeAxs);  ┬→グローバル座標から視野座標に変換
+109:    BiConvGtoL(&q2,&q2,&eyeAxs);  ┘  (視野座標変換)
+110:
+111:    BiProject(&s1,&q1,prj);       ┬→画面に投影
+112:    BiProject(&s2,&q2,prj);       ┘
+113:
+114:    BiDrawLine2(&s1,&s2,col);
+115:}
+
+
+
+
+
+
+[5]Flight View
+<< flight.c  (Not a "Simulator"! This simulates nothing.) >>
+  今までのまとめということで、超簡単なフライスループログラムを挙げます。
+
+  1:#include <stdio.h>
+  2:#include <stdlib.h>
+  3:#include <string.h>
+  4:#include <stddef.h>
+  5:
+  6:#include <impulse.h>
+  7:
+  8:#define BIWORKSIZE 0xf000L
+  9:char BiWork[BIWORKSIZE];
+ 10:char BiWork2[BIWORKSIZE];
+ 11:char BiWork3[BIWORKSIZE];
+ 12:
+ 13:BIPICT2 map;
+ 14:BITERRMESH ter;
+ 15:
+ 16:void FlightMain(void);
+ 17:
+ 18:BIAPPENTRY
+ 19:{
+ 20:    BIPROJ prj;
+ 21:
+ 22:    BIAPPINIT;
+ 23:    BiMemoryInitialize();
+ 24:    BiCalcInitialize();
+ 25:    BiGraphInitialize(BiWork,BIWORKSIZE);
+ 26:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+ 27:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+ 28:    BiDeviceInitialize();
+ 29:
+ 30:    BiOpenWindow(640,480);
+ 31:
+ 32:    BiGetStdProjection(&prj);
+ 33:    BiSetProjection(&prj);
+ 34:
+ 35:    if(BiLoadPict2(&map,"demo.pc2")==BI_OK &&   ┬→使うデータ読み込み
+ 36:       BiLoadTerrMesh(&ter,"demo.ter")==BI_OK)  ┘
+ 37:    {
+ 38:        FlightMain();       →読み込みに成功したらメインルーチンに入る
+ 39:    }
+ 40:
+ 41:    BiCloseWindow();
+ 42:    return 0;
+ 43:}
+ 44:
+ 45:void FlightMain(void)
+ 46:{
+ 47:    long vh,vp,mx,my,wx,wy;
+ 48:    int lbt,rbt,mbt;
+ 49:    BIPNTANG eye,obj;
+ 50:    BICOLOR grd,sky;
+ 51:    BIPOINT vec;
+ 52:    real elv;
+ 53:
+ 54:    BiSetPoint(&eye.p,0,300,-1000);   ┬→視点/姿勢
+ 55:    BiSetAngle(&eye.a,0,0,0);         ┘
+ 56:
+ 57:    BiSetPoint(&obj.p,0,0,0);         ┬→地上絵と地形表示表
+ 58:    BiSetAngle(&obj.a,0,0,0);         ┘
+ 59:
+ 60:    BiSetColorRGB(&grd,0,128,0);      →地面の色
+ 61:    BiSetColorRGB(&sky,32,180,180);   →空の色
+ 62:
+ 63:    BiSetShadMode(BI_ON);             →陰影モードON
+ 64:
+ 65:    while(BiInkey()==BIKEY_NULL && BiFatal()==BI_FALSE)
+ 66:    {
+ 67:        BiUpdateDevice();             →ループに入ったらまずこれ
+ 68:
+ 69:        BiMouse(&lbt,&mbt,&rbt,&mx,&my);  ┐
+ 70:                                          │マウスを読み取って中心点
+ 71:        BiGetWindowSize(&wx,&wy);         │からの相対位置によって姿
+ 72:        vh=-(mx-wx/2)*3;                  │勢を変える
+ 73:        vp= (my-wy/2)*3;                  │
+ 74:                                          │
+ 75:        eye.a.h+=vh;                      │
+ 76:        eye.a.p+=vp;                      │
+ 77:        if(eye.a.p>8192)                  │
+ 78:        {                                 │
+ 79:            eye.a.p=8192;                 │
+ 80:        }                                 │
+ 81:        if(eye.a.p<-8192)                 │
+ 82:        {                                 │
+ 83:            eye.a.p=-8192;                │
+ 84:        }                                 ┘
+ 85:
+ 86:        BiSetPoint(&vec,0,0,10);          ┐
+ 87:        BiRotLtoG(&vec,&vec,&eye.a);      │視点前進
+ 88:        BiAddPoint(&eye.p,&eye.p,&vec);   ┘
+ 89:
+ 90:        if(BiTerrMeshHeight(&elv,eye.p.x,eye.p.z,&ter,&obj)==BI_IN)┐
+ 91:        {                                                          │地形
+ 92:            if(eye.p.y < elv+10)                                   │との
+ 93:            {                                                      │衝突
+ 94:                eye.p.y=elv+10;                                    │判定
+ 95:            }                                                      │
+ 96:        }                                                          ┘
+ 97:        else                                                       ┐
+ 98:        {                                                          │地面
+ 99:            if(eye.p.y < 10)                                       │との
+100:            {                                                      │衝突
+101:                eye.p.y=10;                                        │判定
+102:            }                                                      │
+103:        }                                                          ┘
+104:
+105:        BiClearScreen();              →フレームバッファクリア
+106:        BiStartBuffer(&eye);          →視点をセット
+107:        BiDrawGroundSky(&grd,&sky);   →地面と空を描画
+108:        obj.a.p=-16384;
+109:        BiOvwPict2(&map,&obj);        →地上絵(demo.pc2)を描画
+110:        obj.a.p=0;
+111:        BiInsTerrMesh(&ter,&obj);     →地形(demo.ter)をバッファに追加
+112:        BiFlushBuffer();              →バッファを掃き出し
+113:        BiSwapBuffers();              →フレームバッファを表示画面に転送
+114:    }
+115:}
+
+90～103行
+  このプログラムで敢えて説明しておくことのひとつは、墜落判定です。地面に
+墜落したかどうかの判定は、単純に視点のy座標を参照すればできますが、地形デ
+ータとの墜落判定には、BiTerrMeshHeightなる関数を使います。BiTerrMeshHeight
+を使うと、指定の位置/姿勢のBITERRMESHの座標(x,z)での地面の高さ(Field
+Elevation)を求めることができます。これが90行です。92～94行では、視点のy
+座標が求めた高度の10メートル上を切ったら強制的に10メートルまで押し上げて
+います。
+
+  が、当然(x,z)がBITERRMESHの範囲外にある場合もあります。その場合、
+BiTerrMeshHeightは、BI_OUTを返します。BiTerrMeshHeightがBI_OUTを返したの
+であれば、墜落高度は0メートルということになるので、99～102行では、高度10
+を切ったら強制的に高度10にする処理をしています。
+
+107～108行
+  このプログラムでもうひとつ説明することは、アンダーレイの描画です。まず、
+107行のBiDrawGroundSkyは、地面と空を描画する関数です。地面と空は、それ自
+身が他のものを隠すということはありえないので、アンダーレイに描画します。
+(地面に穴があるなどということは考えない ^_^;)。また、地上絵(PC2形式)のデ
+ータも地面と同じ扱いになります。と、いうわけで、107～109行はアンダーレイ
+を描画している部分です。なお、ピッチ角を0にしてPC2形式の絵を表示すると、
+絵が立ってしまうので、ピッチ角を-16384(-90度)にしています。

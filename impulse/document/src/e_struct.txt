@@ -1,0 +1,303 @@
+------------------------------------------------------------------------------
+NAME:real
+CATEGORY:TYPE
+DEFINITION:
+  typedef float real;
+DESCRIPTION:
+  Floating point type. (Actually, it's float)
+------------------------------------------------------------------------------
+NAME:BIFLD
+NAME:BIFIELD
+CATEGORY:STRUCTURE
+DEFINITION:
+  (omitted)
+DESCRIPTION:
+  Structure represents a Field Object
+REFERENCE:
+  BiGetFldElevation,BiGetFldGroundSky,BiGetFldRegion,
+  BiGetFldSrfCollision,BiInsFld,BiLoadFld,BiOvwFld
+------------------------------------------------------------------------------
+NAME:BIPC2
+NAME:BIPICT2
+CATEGORY:STRUCTURE
+DEFINITION:
+  (omitted)
+DESCRIPTION:
+  Structure represents 2D-Drawing Object
+REFERENCE:
+  BiDrawPc2,BiDrawPc2Zoom,BiLoadPc2,BiOvwPc2,
+  BiLoadPc2FromString,BiInsPc2
+------------------------------------------------------------------------------
+NAME:BIVECTOR
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef BIPOINT BIVECTOR;
+DESCRIPTION:
+  Structure represents a 3D vector. Identical to BIPOINT
+REFERENCE:
+  BIPOINT
+------------------------------------------------------------------------------
+NAME:BIATTITUDE
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef BIANGLE BIATTITUDE;
+DESCRIPTION:
+  Structure represents an attitude by euler angle. Identical to BIANGLE
+REFERENCE:
+  BIANGLE
+------------------------------------------------------------------------------
+NAME:BIPOSATT
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef BIPNTANG BIPOSATT;
+DESCRIPTION:
+  A combination of a position and an attitude. Identical to BIPNTANG.
+REFERENCE:
+  BIPNTANG
+------------------------------------------------------------------------------
+NAME:BIPOINT
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      double x,y,z;
+  } BIPOINT;
+DESCRIPTION:
+  Structure represents a coordinate(or a vector). Identical to BIVECTOR
+REFERENCE:
+  BiSetPoint,BiAddPoint,BiSubPoint,BiMulPoint,BiDivPoint
+------------------------------------------------------------------------------
+NAME:BILINE
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+    BIPOINT o,v;
+  } BILINE;
+DESCRIPTION:
+  Structure represents a 3D line.
+    o  :One passing point
+    v  :Direction
+------------------------------------------------------------------------------
+NAME:BILIMLINE
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      BIPOINT p1,p2;
+  } BILIMLINE;
+DESCRIPTION:
+  Structure represents a line segment.
+    p1  :One end point
+    p2  :The other end point
+------------------------------------------------------------------------------
+NAME:BILINE2
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      BIPOINT2 o,v;
+  } BILINE2;
+DESCRIPTION:
+  Structure represents a 2D line
+    o  :Passing point
+    v  :Direction
+------------------------------------------------------------------------------
+NAME:BILIMLINE2
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      BIPOINT2 p1,p2;
+  } BILIMLINE2;
+DESCRIPTION:
+  Structure represents a 2D line segment
+    p1  :One end point
+    p2  :The other end point
+------------------------------------------------------------------------------
+NAME:BIPOLYGON
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      int np;
+      BIPOINT *p;
+  } BIPOLYGON;
+DESCRIPTION:
+  Structure represents a 3D polygon
+------------------------------------------------------------------------------
+NAME:BIANGLE
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      long h,p,b;
+  } BIANGLE;
+DESCRIPTION:
+  Structure represents an attitude. Identical to BIATTITUDE.
+REFERENCE:
+  BiSetAngle,BiSetAngleDeg
+------------------------------------------------------------------------------
+NAME:BIPNTANG
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      BIPOINT p;
+      BIANGLE a;
+  } BIPNTANG;
+DESCRIPTION:
+  Structure represents a position and an attitude. Identical to BIPOSATT.
+REFERENCE:
+  BiSetPoint,BiSetAngle,BiSetAngleDeg
+------------------------------------------------------------------------------
+NAME:BIPOINT2
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      double x,y;
+  } BIPOINT2;
+DESCRIPTION:
+  Structure represents a 2D coordinate/vector.
+REFERENCE:
+  BiSetPoint2
+------------------------------------------------------------------------------
+NAME:BITRIGON
+CATEGORY:STRUCTURE
+DEFINITION:
+  (omitted)
+DESCRIPTION:
+  Structure keeps a set of trigonomy value for an attitude(h,p,b).
+REFERENCE:
+  BiMakeTrigonomy,BiRotFastLtoG,BiRotFastGtoL
+------------------------------------------------------------------------------
+NAME:BIPLANE
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      BIPOINT o,n;
+  } BIPLANE;
+DESCRIPTION:
+  Structure represents an infinite plane.
+REFERENCE:
+  BiAxisToPlane,BiMakePlane,BiCrossPoint
+------------------------------------------------------------------------------
+NAME:BIAXIS
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      BIPOINT p;      /* Point of origin */
+      BIANGLE a;      /* Euler angle that defines relative rotation */
+      BITRIGON t;     /* Trigonomy value corresponding to a */
+  } BIAXIS;
+DESCRIPTION:
+  Structure represents a local coordinate system. Use BiMakeAxis to
+  construct.
+REFERENCE:
+  BiMakeAxis,BiConvLtoG,BiConvGtoL,BiAxisToPlane
+------------------------------------------------------------------------------
+NAME:BIPROJ
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      long lx,ly;
+      long cx,cy;
+      double magx,magy;
+      double nearz,farz;
+  } BIPROJ;
+DESCRIPTION:
+  Structure keeps projection information.
+    lx,ly      : Screen size
+    cx,cy      : Center of screen
+    magx,magy  : Magnification in x and y direction (aspect ratio)
+    nearz,farz : Distance to clip plane in z direction. (Note:farz is used
+                 just for culling. Not actual clipping)
+REFERENCE:
+  BiGetStdProjection,BiSetProjection
+------------------------------------------------------------------------------
+NAME:BIPOINTS
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      long x,y;
+  } BIPOINTS;
+DESCRIPTION:
+  Structure represents a screen coordinate.
+REFERENCE:
+  BiSetPointS
+------------------------------------------------------------------------------
+NAME:BICOLOR
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      unsigned int g,r,b;
+  } BICOLOR;
+DESCRIPTION:
+  Structure represents a color. The range of r,g,b is 0 through 255.
+REFERENCE:
+  BiSetColorRGB
+------------------------------------------------------------------------------
+NAME:BISRF
+NAME:BISRFMODEL
+CATEGORY:STRUCTURE
+DEFINITION:
+  (omitted)
+DESCRIPTION:
+  Structure keeps a polygon model. Use BiLoadSrf to load polygon model
+  from a file.
+REFERENCE:
+  BiLoadSrf,BiLoadSrfFromString,BiInsSrf,BiScaleSrf,BiGetSrfRadius
+------------------------------------------------------------------------------
+NAME:BITERRBLOCK
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      double y;        Elevation of left-bottom point
+      int lup;         BI_ON if left-up
+      BICOLOR col[2];  Color of top triangle (col[0]) bottom triangle(col[1])
+        (explanation of other members are ommited)
+  } BITERRBLOCK;
+DESCRIPTION:
+  Structure represents a terrain object.
+REFERENCE:
+  BITERRMESH
+------------------------------------------------------------------------------
+NAME:BITER
+NAME:BITERRMESH
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      long xSiz,zSiz;    Number of blocks in lateral and vertical direction
+      double xWid,zWid;  Width of one block
+      BITERRBLOCK *blk;  Blocks ([0]`[(xSiz+1)*(zSiz+1)]
+      int side[4];       BI_ON if sidefaces are needed.
+      BICOLOR sdCol[4];  Color of sidefaces (efective when side[?]==BI_ON)
+        (explanation of other members are ommited)
+  } BITERRMESH;
+DESCRIPTION:
+  Structure represents a terrain object. If you create a terrain object
+  in your program (not from a file), set values to members above, then
+  use BiConstTerrMesh to initialize the other members.
+
+  Subscript of side,sdCol are shown below.
+
+         [3]
+          Z
+          |
+     +----+----+
+     |    |    |
+  [2]|    +----|->X [1]
+     |         |
+     +---------+
+         [0]
+
+REFERENCE:
+  BiAboveTer,BiInsTer,BiConstTer,BiLoadTer,
+  BiLoadTerFromString,BiTerEyeVecUpVec,BiTerHeight
+------------------------------------------------------------------------------
+NAME:BI3DFONT
+CATEGORY:STRUCTURE
+DEFINITION:
+  typedef struct {
+      real wid;      Width of 1 charactor
+      real hei;      Height of 1 charactor
+      BICOLOR col;   Color of charactor
+     (omitted)
+  }BI3DFONT;
+DESCRIPTION:
+  Structure represents 3D font.
+REFERENCE:
+  BiMakeStdSolidFont,BiFreeSolidFont,BiInsSolidString,BiInsSolidText
+------------------------------------------------------------------------------

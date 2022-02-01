@@ -1,0 +1,272 @@
+<HTML>
+<TITLE>Blue Impulse 3DG SDK - How to build?</TITLE>
+<BODY bgcolor="#00A0F0"
+      text="#FFFFFF"
+      link="#80FF80"
+      vlink="#FF8080"
+      background="sky.jpg">
+
+<CENTER><BIG><BIG><FONT COLOR="#C0C0FF">
+<B>
+Blue Impulse 3DG SDK - How to build?
+</B><BR>
+</BIG></BIG></FONT></CENTER>
+
+<UL>
+
+
+<!---------------------------------------------------------->
+
+
+
+
+
+<BIG><B>- How to build libraries/How to compile your programs.</B></BIG><BR>
+
+  This document explains<BR>
+  <UL>
+    <LI>How to build libraries<BR>
+    <LI>How to compile your own programs<BR>
+  </UL>
+  for UNIX,GLX and Windows environment.
+
+<BR><BR>
+
+  I cannot follow what's going on CodeWarrior (Macintosh) because it
+  changes the environment very often. Maybe you can find by reading
+  manual of CodeWarrior.
+
+<BR><BR>
+
+  And I believe that if you are using FM-TOWNS and you are familiar
+  with High-C compiler, you should be powerful enough to find out
+  how to build libraries and how to compile your program. (I hope   :-)
+
+<BR><BR>
+
+
+<HR>
+
+
+<B>For UNIX:</B><BR>
+<B><I> + Build libraries</I></B><BR>
+
+<OL TYPE='0'>
+ <LI>Build libimpulse.a using makefile@impulse/src/xwin/.
+ <LI>Copy libimpulse.a to the librarh path.
+ <LI>Copy impulse.h (@impulse/src/) to the include path.
+
+<BR><BR>
+
+ <LI>Build libskyhawk.a using makefile.unx@skyhawk/src/.
+ <LI>Copy libskyhawk.a to the librarh path.
+ <LI>Copy skyhawk.h to the include path.
+
+<BR><BR>
+
+ <LI>Modify include path in makefile@hotas/src/emulate/  (CFLAGS=-I____)
+ <LI>Build libhotas.a using makefile@hotas/src/emulate.
+ <LI>Copy libhotas.a to the librarh path.
+ <LI>Copy hotas.h to the include path.
+
+<BR><BR>
+
+ <LI>Modify include path in makefile.unx@aurora/src/  (CFLAGS=-I____)
+ <LI>Build libaurora.a using makefile.unx@aurora/src/makefile.unx
+ <LI>Copy libaurora.a to the librarh path.
+ <LI>Copy aurora.h to the include path.
+
+<BR><BR>
+
+ <LI>Modify include path in makefile.x@impulse/impulse2g/.
+ <LI>Build libimpulse2g.a using makefile.x@impulse/impulse2g/.
+ <LI>Copy libimpulse2g.a to the librarh path.
+ <LI>Copy impulse2g.h to the include path.
+
+<BR><BR>
+
+ (I assume gcc is installed to your system. But, if not, modify
+  makefile or makefile.unx or makefile.x so that proper
+  compiler is used).
+</OL>
+
+
+
+
+
+<B><I> + Compile your programs</I></B><BR>
+ (1)If you copied all libraries and headers to your compiler's library/include
+    directory.
+
+    <BR><BR>
+    <SMALL>
+    gcc (your source) -limpulse -lskyhawk -lhotas -laurora -limpulse2g -X11 -lm
+    </SMALL>
+    <BR><BR>
+
+ (2)If you don't have root password (and your system administrator is not
+    helpful...   :-)
+
+    <BR><BR>
+    <SMALL>
+    gcc (your source) -I(your include path) -L(your library path)-limpulse -lskyhawk -lhotas -laurora -limpulse2g -X11 -lm
+    </SMALL>
+    <BR><BR>
+
+  (You may get an error says some functions are missing. In case, exchange
+   the order of library files. I don't understand why it happens.)
+
+    <BR><BR>
+
+
+<HR>
+
+
+
+<B>For GLX:</B><BR>
+<B><I>+ Build libraries</I></B><BR>
+<OL TYPE='0'>
+  <LI>Build libimpulse.a using makefile@impulse/src/glx/.
+  <LI>Copy libimpulseglx.a to the librarh path.
+  <LI>Copy impulse.h (@impulse/src/) to the include path.
+  <BR><BR>
+  Step 4 through 11 are the same as For UNIX.
+</OL>
+
+
+<B><I>+Compile your program</I></B><BR>
+ (1)If you copied all libraries and headers to your compiler's library/include
+    directory.
+
+    <BR><BR>
+    <SMALL>
+    gcc (your source) -limpulse -lskyhawk -lhotas -laurora -limpulse2g -lX11 -lXext -lGL -lGLU -lm
+    </SMALL>
+    <BR><BR>
+
+ (2)If you don't have root password (and your system administrator is not
+    helpful...   :-)
+
+    <BR><BR>
+    <SMALL>
+    gcc (your source) -I(your include path) -L(your library path)-limpulse -lskyhawk -lhotas -laurora -limpulse2g -lX11 -lXext -lGL -lGLU -lm
+    <BR><BR>
+    </SMALL>
+
+  (You may get an error says some functions are missing. In case, exchange
+   the order of library files. I don't understand why it happens.)
+
+    <BR><BR>
+
+
+
+<HR>
+
+
+
+<B>For Windows:</B><BR>
+<B><I> +Build libraries</I></B><BR>
+   Binary files are provided in my Web page. Please use that   :-P
+
+   <BR><BR>
+
+   All .lib files should be copied to VC++'s standard librarh path.
+   All .h files should be copied to VC++'s standard include path.
+
+   <BR><BR>
+
+     (For VC++5 with standard installation,<BR>
+        Library ->  "C:\Program Files\DevStudio\VC\lib"<BR>
+        Include ->  "C:\Program Files\DevStudio\VC\include"<BR>
+   <BR><BR>
+
+
+<B><I> +Compiling your program</I></B><BR>
+  <I>From MS-DOS prompt (make sure environment variables are set).</I>
+
+  <BR><BR>
+  <SMALL>
+    cl /D "WIN32" /D "_WINDOWS" (your source) impls32d.lib impulse2g.lib hotas32.lib aurora32.lib shawk32.lib kernel32.lib user32.lib gdi32.lib
+  </SMALL>
+  <BR><BR>
+
+
+  <I>From Developer Studio</I>
+  <OL TYPE='0'>
+   <LI>Copy hotasrc.rc and hotasrc.ico to your project directory.
+   <LI>Create a new project (Console Application or Windows Application).
+   <LI>Add your source files and hotasrc.rc to your project.
+   <LI>Add following libraries in link setting<BR>
+         impls32d.lib impulse2g.lib hotas32.lib aurora32.lib shawk32.lib
+   <LI>Build it.<BR><BR>
+
+  (* For OpenGL implementation, impls32d.lib should read impls32o.lib.
+     Also opengl32.lib and glu32.lib should be added).
+   </OL>
+
+
+
+<HR>
+
+<UL>
+<A HREF="http://member.nifty.ne.jp/ysdynamics/index.html">
+RETURN TO TOP PAGE
+</A>
+</UL>
+
+<BR>
+
+<UL>
+Comments are welcome. Send E-Mail to<BR>
+  <UL>
+    <A HREF="mailto:PEB01130@nifty.ne.jp">
+    <ADDRESS>PEB01130@nifty.ne.jp</ADDRESS>
+    </A>
+  </UL>
+or
+  <UL>
+    <A HREF="mailto:Soji_Yamakawa@cmu.edu">
+    <ADDRESS>Soji_Yamakawa@cmu.edu</ADDRESS>
+    </A>
+  </UL>
+In both address, I can read E-Mail written in either Japanese or English.
+</UL>
+
+
+
+
+
+
+
+
+<!---------------------------------------------------------->
+
+<HR>
+
+<UL>
+<A HREF="http://member.nifty.ne.jp/ysdynamics/index.html">
+RETURN TO TOP PAGE
+</A>
+</UL>
+
+<BR>
+
+<UL>
+Comments are welcome. Send E-Mail to<BR>
+  <UL>
+    <A HREF="mailto:PEB01130@nifty.ne.jp">
+    <ADDRESS>PEB01130@nifty.ne.jp</ADDRESS>
+    </A>
+  </UL>
+or
+  <UL>
+    <A HREF="mailto:Soji_Yamakawa@cmu.edu">
+    <ADDRESS>Soji_Yamakawa@cmu.edu</ADDRESS>
+    </A>
+  </UL>
+In both address, I can read E-Mail written in either Japanese or English.
+</UL>
+
+</UL>
+</BODY>
+</HTML>

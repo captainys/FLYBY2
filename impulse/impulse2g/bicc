@@ -1,0 +1,19 @@
+#!/bin/csh
+set libdir = -L/home/ys11/pub/ipl2g
+set incdir = -I/home/ys11/pub/ipl2g
+
+switch($HOSTTYPE)
+	case "iris4d":
+		gcc $incdir $* $libdir -limpulse2gsgi -limpulsesgi -lgl -lm
+		breaksw
+	case "sun4":
+		gcc $incdir $* $libdir -limpulse2gsun -limpulsesun -lX11 -lm
+		breaksw
+  	case "news_mips":
+	case "rs6000":
+	default:
+		echo "This command is available on CCN and INDY only."
+		echo "Blue Impulse 3DG SDK is not supported on DEC"
+		echo "Alpha Machines due to some troubles."
+		breaksw
+endsw

@@ -1,0 +1,129 @@
+
+普通のアプリケーション(MFC Application (AppWizard))
+1.プロジェクトワークスペースを作る
+2.ビルド(B)→設定(S)→リンク→オブジェクト/ライブラリモジュールに次の内容を追加
+  wimpulse32d.lib shawk32.lib aurora32.lib
+3.Class View→???クラス→C???Appクラスに次のメンバ変数を追加。
+    char BiWork[BiWorkSize];
+    char BiCkBuf[BiCkBufSize];
+  あと、クラスの外側に、次の変数を追加。(大きさはそれぞれのアプリに応じて変える)
+    const int BiWorkSize=0x40000;
+    const int BiCkBufSize=0x40000;
+
+4.Class Wizard→クラスC???App→メンバ関数InitInstanceの始めの方を次のように書き換える。
+
+	BIPROJ prj;
+
+	BiMemoryInitialize();
+	BiCalcInitialize();
+	BiGraphInitialize(BiWork,BiWorkSize);
+
+	BiGetStdProjection(&prj);
+	BiSetProjection(&prj);
+	BiSetShadMode(BI_ON);
+
+	ArInitialize();
+
+	//レンダリング機能を使わないときは不要
+	BiRenderInitialize();
+
+	//Clickable Objectを使わないときは不要
+	BiSetClickableBuffer(BiCkBuf,BiCkBufSize);  
+
+5.同じファイル(???App.cpp)の先頭の方に、最初からある#includeに続けて次の内容を追加する。
+	#include <stddef.h>
+    #include <wimpulse.h>
+    #include <impulse.h>
+    #include <aurora.h>
+
+7.CMainFrameクラスに次のメンバ変数を追加。
+    HPALETTE biPal;
+
+8.Class Wizard→クラスCMainFrame→オブジェクトCMainFrame→メッセージWM_CREATEに関数の追加。そして、メンバ関数OnCreateの中身を次のように書き換える。
+	CDC *dc;
+	dc=GetDC();
+	biPal=BiWinCreatePalette(dc->m_hDC);
+	ReleaseDC(dc);
+また、MainFrm.cppに次のヘッダを追加。
+    #include <wimpulse.h>
+
+9.描画関数では、まず、
+    BiWinPlug(pDC->m_hDC,640,480,16);
+  を呼び出してから、BiClearScreen～BiSwapBuffersを実行する。
+
+ 例)void C???View::OnDraw(CDC *pDC)
+    {
+		CRect rect;
+		GetClientRect(rect);
+		BiWinPlug(pDC->m_hDC,rect.Width(),rect.Height(),8);
+		BiClearScreen();
+		   :
+		   :
+		BiSwapBuffers();
+	}
+
+
+
+
+
+
+OLE Control
+1.プロジェクトワークスペースを作る
+2.ビルド(B)→設定(S)→リンク→オブジェクト/ライブラリモジュールに次の内容を追加
+  wimpulse32d.lib shawk32.lib aurora32.lib
+3.Class View→???クラス→C???Ctrlクラスに次のメンバ変数を追加。
+    char BiWork[BiWorkSize];
+    char BiCkBuf[BiCkBufSize];
+    HPALETTE biPal;
+  あと、クラスの外側に、次の変数を追加。(大きさはそれぞれのアプリに応じて変える)
+    const int BiWorkSize=0x40000;
+    const int BiCkBufSize=0x40000;
+
+4.???Ctrl.cpp→C???Ctrl::C???Ctrl(C???Ctrlクラスのコンストラクタ)の最初の方を次のように書き換える。
+
+	BIPROJ prj;
+
+	BiMemoryInitialize();
+	BiCalcInitialize();
+	BiGraphInitialize(BiWork,BiWorkSize);
+
+	BiGetStdProjection(&prj);
+	BiSetProjection(&prj);
+	BiSetShadMode(BI_ON);
+
+	ArInitialize();
+
+	//レンダリング機能を使わないときは不要
+	BiRenderInitialize();
+
+	//Clickable Objectを使わないときは不要
+	BiSetClickableBuffer(BiCkBuf,BiCkBufSize);  
+
+5.同じファイル(???Ctrl.cpp)の先頭の方に、最初からある#includeに続けて次の内容を追加する。
+	#include <stddef.h>
+    #include <wimpulse.h>
+    #include <impulse.h>
+    #include <aurora.h>
+
+8.Class Wizard→クラスC???Ctrl→オブジェクトC???Ctrl→メッセージWM_CREATEに関数の追加。そして、メンバ関数OnCreateの中身を次のように書き換える。
+	CDC *dc;
+	dc=GetDC();
+	biPal=BiWinCreatePalette(dc->m_hDC);
+	ReleaseDC(dc);
+
+9.描画関数では、まず、
+    BiWinPlug(pDC->m_hDC,640,480,16);
+  を呼び出してから、BiClearScreen～BiSwapBuffersを実行する。
+
+ 例)void C???View::OnDraw(CDC *pDC)
+    {
+		CRect rect;
+		GetClientRect(rect);
+		BiWinPlug(pDC->m_hDC,rect.Width(),rect.Height(),8);
+		BiClearScreen();
+		   :
+		   :
+		BiSwapBuffers();
+	}
+
+

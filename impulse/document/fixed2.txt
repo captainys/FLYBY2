@@ -1,0 +1,3642 @@
+------------
+NAME:BI3DFONT
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      real wid;      1文字の幅
+      real hei;      1文字の高さ
+      BICOLOR col;   文字の色
+     (以下省略)
+  }BI3DFONT;
+DESCRIPTION:
+  ソリッドフォントを表す構造体です。
+REFERENCE:
+  BiFreeSolidFont,BiInsSolidString,BiInsSolidText,BiMakeStdSolidFont
+------------
+NAME:BI3DG_NOERR
+NAME:BI3DG_STACKOVERFLOW
+NAME:BI3DG_UNSUPPORTED  /* BiMdlAxsSw==YSON && BiInsSrf */
+CATEGORY:マクロ
+DEFINITION:
+  省略
+DESCRIPTION:
+  3Dグラフィックライブラリのエラーコードを表す定数です。
+    BI3DG_NOERR          正常終了
+    BI3DG_STACKOVERFLOW  テンポラリスタックがフルになった
+    BI3DG_UNSUPPORTED    未サポートの機能を使おうとした
+------------
+NAME:BIANGLE
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      long h,p,b;
+  } BIANGLE;
+DESCRIPTION:
+  姿勢(Attitude)を表す構造体です。
+REFERENCE:
+  BIATTITUDE,BiSetAngle,BiSetAngleDeg,BiSetAngleRad
+------------
+NAME:BIATTITUDE
+CATEGORY:構造体
+DEFINITION:
+  typedef BIANGLE BIATTITUDE;
+DESCRIPTION:
+  姿勢(オイラー角)を表す構造体です。BIANGLEと同じものです。
+REFERENCE:
+  BIANGLE
+------------
+NAME:BIAXIS
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      BIPOINT p;      /* 原点座標 */
+      BIANGLE a;      /* 座標のAttitudeを規定するオイラー角 */
+      BITRIGON t;     /* メンバaに対するsin/cosの値 */
+  } BIAXIS;
+DESCRIPTION:
+  ローカル座標系を表す構造体です。
+  値をセットする方法は、BiMakeAxisを参照してください。
+REFERENCE:
+  BiAxisToPlane,BiConvGtoL,BiConvLtoG,BiMakeAxis
+------------
+NAME:BICOLOR
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      unsigned int g,r,b;
+  } BICOLOR;
+DESCRIPTION:
+  色を表す構造体です。r,g,bの値の範囲は0～255です。
+REFERENCE:
+  BiSetColorRGB
+------------
+NAME:BIFLD
+NAME:BIFIELD
+CATEGORY:構造体
+DEFINITION:
+  省略
+DESCRIPTION:
+  フィールドデータを表す構造体です。
+REFERENCE:
+  BiGetFieldElevation,BiGetFieldGroundSky,BiGetFieldRegion,
+  BiGetFieldSrfCollision,BiGetFldElevation,BiGetFldGroundSky,
+  BiGetFldRegion,BiGetFldSrfCollision,BiInsField,BiInsFld,BiLoadFld,
+  BiOvwField,BiOvwFld
+------------
+NAME:BIKEY_
+NAME:BIKEY_NULL
+NAME:BIKEY_STOP
+NAME:BIKEY_COPY
+NAME:BIKEY_F1
+NAME:BIKEY_F2
+NAME:BIKEY_F3
+NAME:BIKEY_F4
+NAME:BIKEY_F5
+NAME:BIKEY_F6
+NAME:BIKEY_F7
+NAME:BIKEY_F8
+NAME:BIKEY_F9
+NAME:BIKEY_F10
+NAME:BIKEY_ZERO
+NAME:BIKEY_ONE
+NAME:BIKEY_TWO
+NAME:BIKEY_THREE
+NAME:BIKEY_FOUR
+NAME:BIKEY_FIVE
+NAME:BIKEY_SIX
+NAME:BIKEY_SEVEN
+NAME:BIKEY_EIGHT
+NAME:BIKEY_NINE
+NAME:BIKEY_A
+NAME:BIKEY_B
+NAME:BIKEY_C
+NAME:BIKEY_D
+NAME:BIKEY_E
+NAME:BIKEY_F
+NAME:BIKEY_G
+NAME:BIKEY_H
+NAME:BIKEY_I
+NAME:BIKEY_J
+NAME:BIKEY_K
+NAME:BIKEY_L
+NAME:BIKEY_M
+NAME:BIKEY_N
+NAME:BIKEY_O
+NAME:BIKEY_P
+NAME:BIKEY_Q
+NAME:BIKEY_R
+NAME:BIKEY_S
+NAME:BIKEY_T
+NAME:BIKEY_U
+NAME:BIKEY_V
+NAME:BIKEY_W
+NAME:BIKEY_X
+NAME:BIKEY_Y
+NAME:BIKEY_Z
+NAME:BIKEY_SPACE
+NAME:BIKEY_ESC
+NAME:BIKEY_TAB
+NAME:BIKEY_CTRL
+NAME:BIKEY_SHIFT
+NAME:BIKEY_ALT
+NAME:BIKEY_BS
+NAME:BIKEY_RET
+NAME:BIKEY_HOME
+NAME:BIKEY_DEL
+NAME:BIKEY_UP
+NAME:BIKEY_DOWN
+NAME:BIKEY_LEFT
+NAME:BIKEY_RIGHT
+NAME:BIKEY_TEN0
+NAME:BIKEY_TEN1
+NAME:BIKEY_TEN2
+NAME:BIKEY_TEN3
+NAME:BIKEY_TEN4
+NAME:BIKEY_TEN5
+NAME:BIKEY_TEN6
+NAME:BIKEY_TEN7
+NAME:BIKEY_TEN8
+NAME:BIKEY_TEN9
+NAME:BIKEY_TENMUL
+NAME:BIKEY_TENDIV
+NAME:BIKEY_TENPLUS
+NAME:BIKEY_TENMINUS
+NAME:BIKEY_TENEQUAL
+NAME:BIKEY_TENDOT
+CATEGORY:マクロ
+DEFINITION:
+  省略
+DESCRIPTION:
+  Blue Impulse Library独自キーコードを表す定数です。それぞれの意味は
+  次の通りです。
+     BIKEY_NULL         キー入力が無いことを表す
+     BIKEY_STOP         BREAK/STOP
+     BIKEY_COPY         COPY
+     BIKEY_F1           F1
+     BIKEY_F2           F2
+     BIKEY_F3           F3
+     BIKEY_F4           F4
+     BIKEY_F5           F5
+     BIKEY_F6           F6
+     BIKEY_F7           F7
+     BIKEY_F8           F8
+     BIKEY_F9           F9
+     BIKEY_F10          F10
+     BIKEY_ZERO         フルキーの0
+     BIKEY_ONE          フルキーの1
+     BIKEY_TWO          フルキーの2
+     BIKEY_THREE        フルキーの3
+     BIKEY_FOUR         フルキーの4
+     BIKEY_FIVE         フルキーの5
+     BIKEY_SIX          フルキーの6
+     BIKEY_SEVEN        フルキーの7
+     BIKEY_EIGHT        フルキーの8
+     BIKEY_NINE         フルキーの9
+     BIKEY_A            A
+     BIKEY_B            B
+     BIKEY_C            C
+     BIKEY_D            D
+     BIKEY_E            E
+     BIKEY_F            F
+     BIKEY_G            G
+     BIKEY_H            H
+     BIKEY_I            I
+     BIKEY_J            J
+     BIKEY_K            K
+     BIKEY_L            L
+     BIKEY_M            M
+     BIKEY_N            N
+     BIKEY_O            O
+     BIKEY_P            P
+     BIKEY_Q            Q
+     BIKEY_R            R
+     BIKEY_S            S
+     BIKEY_T            T
+     BIKEY_U            U
+     BIKEY_V            V
+     BIKEY_W            W
+     BIKEY_X            X
+     BIKEY_Y            Y
+     BIKEY_Z            Z
+     BIKEY_SPACE        スペースキー
+     BIKEY_ESC          ESCキー
+     BIKEY_TAB          TABキー
+     BIKEY_CTRL         コントロールキー
+     BIKEY_SHIFT        シフトキー
+     BIKEY_ALT          ALTキー
+     BIKEY_BS           バックスペース
+     BIKEY_RET          リターンキー
+     BIKEY_HOME         HOMEキー
+     BIKEY_DEL          削除キー
+     BIKEY_UP           ↑キー
+     BIKEY_DOWN         ↓キー
+     BIKEY_LEFT         ←キー
+     BIKEY_RIGHT        →キー
+     BIKEY_TEN0         テンキーの0
+     BIKEY_TEN1         テンキーの1
+     BIKEY_TEN2         テンキーの2
+     BIKEY_TEN3         テンキーの3
+     BIKEY_TEN4         テンキーの4
+     BIKEY_TEN5         テンキーの5
+     BIKEY_TEN6         テンキーの6
+     BIKEY_TEN7         テンキーの7
+     BIKEY_TEN8         テンキーの8
+     BIKEY_TEN9         テンキーの9
+     BIKEY_TENMUL       テンキーの*
+     BIKEY_TENDIV       テンキーの/
+     BIKEY_TENPLUS      テンキーの+
+     BIKEY_TENMINUS     テンキーの-
+     BIKEY_TENEQUAL     テンキーの=
+     BIKEY_TENDOT       テンキーの.
+CAUTION:
+  プラットフォームによって、この中のキーのうちの一部をシステムでは
+  その構造上Blue Impulse Libraryでは検出できない場合があります。
+  とくに、以下のキーでその傾向が強いので使用は避けた方が良いでしょう。
+    テンキー
+    ALTキー
+    COPYキー
+
+  さらに、X-Windowではウィンドウマネージャによっては、スペースキーまでも
+  奪ってしまうものがあるようです。そのような場合はウィンドウマネージャを
+  変更してください。Blue Impulse Libraryではそこまで面倒は見切れません(^_^;)
+REFERENCE:
+  BiInkey,BiKey
+------------
+NAME:BILIMLINE
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      BIPOINT p1,p2;
+  } BILIMLINE;
+DESCRIPTION:
+  線分をあらわす構造体です。
+    p1  :端点１
+    p2  :端点２
+------------
+NAME:BILIMLINE2
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      BIPOINT2 p1,p2;
+  } BILIMLINE2;
+DESCRIPTION:
+  ２次元線分をあらわす構造体です。
+    p1  :端点１
+    p2  :端点２
+------------
+NAME:BILINE
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+    BIPOINT o,v;
+  } BILINE;
+DESCRIPTION:
+  直線をあらわす構造体です。
+    o  :通過点
+    v  :方向ベクトル
+------------
+NAME:BILINE2
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      BIPOINT2 o,v;
+  } BILINE2;
+DESCRIPTION:
+  ２次元直線をあらわす構造体です。
+    o  :通過点
+    v  :方向ベクトル
+------------
+NAME:BIPC2
+NAME:BIPICT2
+CATEGORY:構造体
+DEFINITION:
+  省略
+DESCRIPTION:
+  図形オブジェクトを表す構造体です。
+REFERENCE:
+  BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,BiDrawPict2Zoom,BiInsPc2,
+  BiInsPict2,BiLoadPc2,BiLoadPc2FromString,BiLoadPict2,
+  BiLoadPict2FromString,BiOvwPc2,BiOvwPict2
+------------
+NAME:BIPLANE
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      BIPOINT o,n;
+  } BIPLANE;
+DESCRIPTION:
+  無限平面を表す構造体です。
+REFERENCE:
+  BiAxisToPlane,BiCrossPoint,BiMakePlane
+------------
+NAME:BIPNTANG
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      BIPOINT p;
+      BIANGLE a;
+  } BIPNTANG;
+DESCRIPTION:
+  座標と姿勢を表す構造体です。
+REFERENCE:
+  BIPOSATT,BiSetAngle,BiSetAngleDeg,BiSetAngleRad,BiSetPoint
+------------
+NAME:BIPOINT
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      double x,y,z;
+  } BIPOINT;
+DESCRIPTION:
+  ３次元座標またはベクトルを表す構造体です。
+REFERENCE:
+  BIVECTOR,BiAddPoint,BiDivPoint,BiMulPoint,BiSetPoint,BiSubPoint
+------------
+NAME:BIPOINT2
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      double x,y;
+  } BIPOINT2;
+DESCRIPTION:
+  ２次元座標を表す構造体です。
+REFERENCE:
+  BiSetPoint2
+------------
+NAME:BIPOINTS
+CATEGORY:構造体
+定義
+  typedef struct {
+      long x,y;
+  } BIPOINTS;
+DESCRIPTION:
+  画面座標を表す構造体です。
+REFERENCE:
+  BiSetPointS
+------------
+NAME:BIPOLYGON
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      int np;
+      BIPOINT *p;
+  } BIPOLYGON;
+DESCRIPTION:
+  ３次元ポリゴンを表す構造体です。
+------------
+NAME:BIPOSATT
+CATEGORY:構造体
+DEFINITION:
+  typedef BIPNTANG BIPOSATT;
+DESCRIPTION:
+  座標と姿勢を表す構造体です。BIPNTANGと同じものです。
+REFERENCE:
+  BIPNTANG
+------------
+NAME:BIPRJ_PERS
+NAME:BIPRJ_ORTHO
+CATEGORY:マクロ
+DEFINITION:
+  enum { BIPRJ_PERS,BIPRJ_ORTHO };
+DESCRIPTION:
+  3Dグラフィックライブラリの投影モードを表す定数です。
+    BIPRJ_PERS   斜投影法
+    BIPRJ_ORTHO  正投影法
+REFERENCE:
+  BiSetProjectionMode
+------------
+NAME:BIPROJ
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      long lx,ly;
+      long cx,cy;
+      double magx,magy;
+      double nearz,farz;
+  } BIPROJ;
+DESCRIPTION:
+  投影情報を表す構造体です。それぞれのメンバの意味は次の通りです。
+    lx,ly      : 描画画面サイズ
+    cx,cy      : 投影の中心点(消失点)の画面座標
+    magx,magy  : 縦横の倍率(これによって視野角度が決定)
+    nearz,farz : クリップ面までの距離(farzはカリングのためにのみ使用)
+REFERENCE:
+  BiGetStdProjection,BiSetProjection
+------------
+NAME:BISRF
+NAME:BISRFMODEL
+CATEGORY:構造体
+DEFINITION:
+  省略
+DESCRIPTION:
+  ポリゴンモデルを表す構造体です。
+  値をセットする方法は、BiLoadSrfを参照してください。
+REFERENCE:
+  BiGetSrfRadius,BiInsSrf,BiInsSrfModel,BiLoadSrf,BiLoadSrfFromString,
+  BiScaleSrf,BiScaleSrfModel
+------------
+NAME:BITER
+NAME:BITERRMESH
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      long xSiz,zSiz;    横ブロック数,縦ブロック数
+      double xWid,zWid;  横1ブロックあたりの長さ,縦1ブロックあたりの長さ
+      BITERRBLOCK *blk;  ブロックデータ([0]～[(xSiz+1)*(zSiz+1)]
+      int side[4];       側面にポリゴンを張るならBI_ON張らないならBI_OFF
+      BICOLOR sdCol[4];  側面の色(side==BI_ONのときのみ有効)
+        以下略
+  } BITERRMESH;
+DESCRIPTION:
+  地形オブジェクトを表す構造体です。プログラム中で新しい地形オブジェクトを
+  生成するには、上記のメンバに値をセットしてから必ずBiConstTerrMesh関数で
+  その他のメンバを初期化してください。
+
+  なお、side,sdColとBITERの各辺との対応は次の通りです。
+
+         [3]
+          Z
+          |
+     +----+----+
+     |    |    |
+  [2]|    +----|->X [1]
+     |         |
+     +---------+
+         [0]
+
+REFERENCE:
+  BITERRBLOCK,BiAboveTer,BiAboveTerrMesh,BiConstTer,BiConstTerrMesh,
+  BiInsTer,BiInsTerrMesh,BiLoadTer,BiLoadTerFromString,BiLoadTerrMesh,
+  BiLoadTerrMeshFromString,BiTerEyeVecUpVec,BiTerHeight,
+  BiTerrMeshEyeVecUpVec,BiTerrMeshHeight
+------------
+NAME:BITERRBLOCK
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      double y;        左下の点での高さ
+      int lup;         左上がりならBI_ON
+      BICOLOR col[2];  ポリゴンの色上側[0]と下側[1]
+          以下略
+  } BITERRBLOCK;
+DESCRIPTION:
+  地形オブジェクトのブロックを表す構造体です。
+REFERENCE:
+  BITER,BITERRMESH
+------------
+NAME:BITRIGON
+CATEGORY:構造体
+DEFINITION:
+  省略
+DESCRIPTION:
+  姿勢(h,p,b)のsin,cosの値を保持する構造体です。
+REFERENCE:
+  BiMakeTrigonomy,BiRotFastGtoL,BiRotFastLtoG
+------------
+NAME:BITWIST_UNKNOWN
+NAME:BITWIST_RIGHT
+NAME:BITWIST_LEFT
+CATEGORY:マクロ
+DEFINITION:
+  enum {BITWIST_UNKNOWN,BITWIST_RIGHT,BITWIST_LEFT};
+DESCRIPTION:
+  面の回転の向きを表す定数です。
+    BITWIST_UNKNOWN  不明(計算できなかった。交差している辺があるなど。)
+    BITWIST_RIGHT    右回り
+    BITWIST_LEFT     左回り
+REFERENCE:
+  BiTwist2,BiTwist3
+------------
+NAME:BIVECTOR
+CATEGORY:構造体
+DEFINITION:
+  typedef BIPOINT BIVECTOR;
+DESCRIPTION:
+  3次元ベクトルを表す構造体です。BIPOINTと同じものです。
+REFERENCE:
+  BIPOINT
+------------
+NAME:BI_CRS_SAME
+NAME:BI_CRS_PARALLEL
+NAME:BI_CRS_ON_LINE
+NAME:BI_CRS_ONESIDE_SAME
+NAME:BI_CRS_CROSS
+NAME:BI_CRS_NOCROSS
+NAME:BI_CRS_LN1_TOUCH_LN2
+NAME:BI_CRS_LN2_TOUCH_LN1
+CATEGORY:マクロ
+DEFINITION:
+  省略
+DESCRIPTION:
+  ２線分の関係をあらわす定数です。
+    BI_CRS_SAME           一致
+    BI_CRS_PARALLEL       平行
+    BI_CRS_ON_LINE        同一直線上
+    BI_CRS_ONESIDE_SAME   片側の頂点が一致
+    BI_CRS_CROSS          交差
+    BI_CRS_NOCROSS        平行でもないし交差もしない
+    BI_CRS_LN1_TOUCH_LN2  線分1の片方の点が線分2に接している
+    BI_CRS_LN2_TOUCH_LN1  線分2の片方の点が線分1に接している
+REFERENCE:
+  BiLine2CrossStatus
+------------
+NAME:BI_OFF
+NAME:BI_ON
+CATEGORY:マクロ
+DEFINITION:
+  enum { BI_OFF,BI_ON };
+DESCRIPTION:
+  各種状態変数のオン/オフを表す定数です。
+------------
+NAME:BI_OK
+NAME:BI_ERR
+CATEGORY:マクロ
+DEFINITION:
+  enum { BI_OK,BI_ERR };
+DESCRIPTION:
+  エラー発生/正常終了判別のための定数です。
+------------
+NAME:BI_OUT
+NAME:BI_IN
+CATEGORY:マクロ
+DEFINITION:
+  enum { BI_OUT,BI_IN };
+DESCRIPTION:
+  内外判定の結果を表す定数です。
+REFERENCE:
+  BiAboveTer,BiAboveTerrMesh,BiClipLineScrn,BiClipPolygScrn,
+  BiSrfCollision,BiTerEyeVecUpVec,BiTerHeight,BiTerrMeshEyeVecUpVec,
+  BiTerrMeshHeight
+------------
+NAME:BI_TRUE
+NAME:BI_FALSE
+CATEGORY:マクロ
+DEFINITION:
+  enum { BI_TRUE,BI_FALSE };
+DESCRIPTION:
+  真偽を表す定数です。
+------------
+NAME:BiAboveTer
+NAME:BiAboveTerrMesh
+CATEGORY:関数
+DEFINITION:
+  int BiAboveTer(real x,real z,BITER *ter,BIPOSATT *pos);
+RETURN:
+  BI_IN    地形オブジェクトの上空にいる
+  BI_OUT   地形オブジェクトの上空ではない(範囲外である)
+DESCRIPTION:
+  (x,z)が*posの位置/姿勢の*terの上空または下にいるかを判定します。
+REFERENCE:
+  BITER,BITERRMESH,BI_IN,BI_OUT,BiConstTer,BiConstTerrMesh,BiInsTer,
+  BiInsTerrMesh,BiLoadTer,BiLoadTerFromString,BiLoadTerrMesh,
+  BiLoadTerrMeshFromString,BiTerEyeVecUpVec,BiTerHeight,
+  BiTerrMeshEyeVecUpVec,BiTerrMeshHeight
+------------
+NAME:BiAbs
+CATEGORY:マクロ
+DEFINITION:
+  #define BiAbs(a) ((a)>=0 ? (a) : -(a))
+DESCRIPTION:
+  絶対値を求めます。int/double/floatによらずどの型でも使用可能です。
+REFERENCE:
+  BiLarger,BiSgn,BiSmaller
+------------
+NAME:BiAcos
+CATEGORY:関数
+DEFINITION:
+  long BiAcos(double s);
+PARAMETER:
+  double s;     cos値(-1.0～+1.0)
+RETURN:
+  角度(+0x0000～+0x8000)
+DESCRIPTION:
+  アークコサイン(cosの逆関数)を求める関数です。
+REFERENCE:
+  BiAngle2,BiAsin,BiAtan
+------------
+NAME:BiAddPoint
+CATEGORY:マクロ
+DEFINITION:
+  void BiAddPoint(BIPOINT *ret,BIPOINT *a,BIPOINT *b);  (相当)
+PARAMETER:
+  BIPOINT *ret;   計算結果格納ポインタ
+  BIPOINT *a,*b;  加算する座標
+DESCRIPTION:
+  ３次元座標*aと*bの値を加算して*retに格納します。
+REFERENCE:
+  BIPOINT,BiDivPoint,BiMulPoint,BiSubPoint
+------------
+NAME:BiAddPoint2
+CATEGORY:マクロ
+DEFINITION:
+  void BiAddPoint2(BIPOINT2 *ret,BIPOINT2 *a,BIPOINT2 *b);  (相当)
+PARAMETER:
+  BIPOINT2 *ret;   計算結果可能ポインタ
+  BIPOINT2 *a,*b;  加算する２次元座標
+DESCRIPTION:
+  ２次元座標*aと*bの値を加算して*retに格納します。
+REFERENCE:
+  BiDivPoint2,BiMulPoint2,BiSubPoint2
+------------
+NAME:BiAngle2
+CATEGORY:関数
+DEFINITION:
+  long BiAngle2(BIPOINT2 *vec);
+PARAMETER:
+  BIPOINT2 *vec;  角度を計算する座標値
+RETURN:
+  long  角度(-0x8000～+0x8000)
+DESCRIPTION:
+  t>0,(t,0.0)を0度,(0.0,t)を+90度としたとき、(vec->x,vec->y)に相当する
+  角度を計算します。
+REFERENCE:
+  BiAcos,BiAsin,BiAtan
+------------
+NAME:BiAngleToVector
+CATEGORY:関数
+DEFINITION:
+  void BiAngleToVector(BIPOINT *eye,BIPOINT *up,BIANGLE *an);
+PARAMETER:
+  BIPOINT *eye;  視線(Ｚ軸方向のベクトル)を格納するポインタ
+  BIPOINT *up;   アップベクトル(Ｙ軸方向のベクトル)を格納するポインタ
+  BIANGLE *an;   角度
+DESCRIPTION:
+  *anから視線ベクトルとアップベクトルを計算して、*eye,*upに格納します。
+REFERENCE:
+  BiPitchUp,BiVectorToAngle,BiVectorToHeadPitch
+------------
+NAME:BiAsin
+CATEGORY:関数
+DEFINITION:
+  long BiAsin(double s);
+PARAMETER:
+  double s;  sin値(-1.0～+1.0)
+RETURN:
+  long        角度(-0x4000～+0x4000)
+DESCRIPTION:
+  アークコサイン(cosの逆関数)を求めます。
+REFERENCE:
+  BiAcos,BiAngle2,BiAtan
+------------
+NAME:BiAtan
+CATEGORY:関数
+DEFINITION:
+  long BiAtan(double s);
+PARAMETER:
+  double s;  tan値
+RETURN:
+  long        角度(-0x4000～+0x4000);
+DESCRIPTION:
+  アークタンジェント(tanの逆関数)を求めます。
+REFERENCE:
+  BiAcos,BiAngle2,BiAsin
+------------
+NAME:BiAverageNormalVector
+CATEGORY:関数
+DEFINITION:
+  int BiAverageNormalVector(BIPOINT *nom,int np,BIPOINT p[]);
+PARAMETER:
+  BIPOINT *nom;  法線ベクトル
+  int np;        頂点数
+  BIPOINT p[];   頂点
+DESCRIPTION:
+  p[0]～p[np-1]を元に、平均法線ベクトルを求めます。
+REFERENCE:
+  BiRightAngleVector,BiTwist3
+------------
+NAME:BiAxisToPlane
+CATEGORY:関数
+DEFINITION:
+  void BiAxisToPlane(BIPLANE *dst,BIAXIS *src)
+PARAMETER:
+  BIPLANE *dst;  結果の平面
+  BIAXIS *src;   平面に変換する座標軸
+DESCRIPTION:
+  座標軸*srcのXZ平面を計算して*dstに格納します。
+REFERENCE:
+  BIAXIS,BIPLANE,BiMakePlane
+------------
+NAME:BiBlack
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiBlack;
+DESCRIPTION:
+  黒(R=0,G=0,B=0)を表します。
+------------
+NAME:BiBlue
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiBlue;
+DESCRIPTION:
+  青(R=0,G=0,B=255)を表します。
+------------
+NAME:BiCalcInitialize
+CATEGORY:関数
+DEFINITION:
+  void BiCalcInitialize(void);
+DESCRIPTION:
+  数値演算ライブラリを初期化します。アプリケーションで
+  数値演算ライブラリ関数を使う前に必ず呼び出してください。
+REFERENCE:
+  BiDeviceInitialize,BiGraphInitialize,BiGraphSetBuffer2,
+  BiGraphSetBuffer3
+------------
+NAME:BiCheckClicked
+DEFINITION:
+  int BiCheckClicked(int *i1,int *i2,int *i3,void **ext,BIPOINTS *sc,int ctr);
+CATEGORY:関数
+PARAMETER:
+  int *i1,*i2,*i3;  オブジェクトID格納先ポインタ(不要ならNULL可)
+  void **ext;       追加情報のポインタ格納先(不要ならNULL)
+  BIPOINTS *sc;     画面座標
+  int ctr;          カウント(第何候補を取るか 第1候補なら1を指定)
+RETURN:
+  BI_TRUE  ヒットした
+  BI_FALSE ヒットしなかった
+DESCRIPTION:
+  クリッカブルオブジェクトと画面座標を比較して、ヒットしたクリッカブル
+  オブジェクトのIDと追加情報へのポインタを返します。
+REFERENCE:
+  BiClearClickable,BiInsClickable,BiSetClickableBuffer
+------------
+NAME:BiCheckClickedPoint
+CATEGORY:関数
+DEFINITION:
+  int BiCheckClickedPoint(int *i1,int *i2,int *i3,void **ext,BIPOINTS *sc,int ctr);
+PARAMETER:
+  int *i1,*i2,*i3;  オブジェクトID格納先ポインタ(不要ならNULL可)
+  void **ext;       追加情報のポインタ格納先(不要ならNULL)
+  BIPOINTS *sc;     画面座標
+  int ctr;          カウント(第何候補を取るか 第1候補なら1を指定)
+RETURN:
+  BI_TRUE           ヒットした
+  BI_FALSE          ヒットしなかった
+DESCRIPTION:
+  クリッカブルオブジェクトと画面座標を比較して、ヒットしたクリッカブル
+  オブジェクトのIDと追加情報へのポインタを返します。ただし、
+  BiInsClickable()で追加したもののみを対象とします。BiInsClickablePolyg()
+  で登録したものは対象とはなりません。
+REFERENCE:
+  BiCheckClickedPolyg,BiClearClickable,BiInsClickable,
+  BiSetClickableBuffer
+------------
+NAME:BiCheckClickedPolyg
+CATEGORY:関数
+DEFINITION:
+  int BiCheckClickedPolyg(int *i1,int *i2,int *i3,void **ext,BIPOINTS *sc,int ctr);
+PARAMETER:
+  int *i1,*i2,*i3;  オブジェクトID格納先ポインタ(不要ならNULL可)
+  void **ext;       追加情報のポインタ格納先(不要ならNULL)
+  BIPOINTS *sc;     画面座標
+  int ctr;          カウント(第何候補を取るか 第1候補なら1を指定)
+RETURN:
+  BI_TRUE           ヒットした
+  BI_FALSE          ヒットしなかった
+DESCRIPTION:
+  クリッカブルオブジェクトと画面座標を比較して、ヒットしたクリッカブル
+  オブジェクトのIDと追加情報へのポインタを返します。ただし、
+  BiInsClickablePolyg()で追加したもののみを対象とします。BiInsClickable()
+  で登録したものは対象とはなりません。
+REFERENCE:
+  BiCheckClickedPoint,BiClearClickable,BiInsClickable,
+  BiSetClickableBuffer
+------------
+NAME:BiCheckConvex
+NAME:BiCheckConvex2
+CATEGORY:関数
+DEFINITION:
+  int BiCheckConvex(BIPOLYGON *plg);
+  int BiCheckConvex2(BIPOLYGON2 *plg);
+PARAMETER:
+  BIPOLYGON *plg;     判定対象のポリゴン
+  BIPOLYGON2 *plg;    判定対象の2次元ポリゴン
+RETURN:
+  BI_TRUE     凸多角形である
+  BI_FALSE    凹多角形である or 判定不能
+DESCRIPTION:
+  指定のポリゴンが凸であるか凹であるかを判定します。判定不能の場合は、
+  ほとんどの場合凹多角形です。また、凸として扱うと都合の悪い多角形は
+  凹多角形と同じ扱いにしています。
+REFERENCE:
+  BiKillCLoop,BiKillCLoop2,BiPolyg2ToConvex,BiPolyg2ToTris,
+  BiPolygToConvex,BiPolygToTris,BiTwist2,BiTwist3
+------------
+NAME:BiClearClickable
+CATEGORY:関数
+DEFINITION:
+  int BiClearClickable(void);
+RETURN:
+  BI_OK  正常
+DESCRIPTION:
+  クリッカブルオブジェクトテーブルをクリアします。BiClearScreenの直後に
+  呼び出します。
+REFERENCE:
+  BiCheckClicked,BiCheckClickedPoint,BiCheckClickedPolyg,BiInsClickable,
+  BiInsClickablePolyg,BiSetClickableBuffer
+------------
+NAME:BiClearLocalMatrix
+CATEGORY:関数
+DEFINITION:
+  void BiClearLocalMatrix(void);
+DESCRIPTION:
+  セットしていたローカル座標軸を解除します。
+REFERENCE:
+  BiPopMatrix,BiPushMatrix,BiSetLocalMatrix
+------------
+NAME:BiClearScreen
+CATEGORY:関数
+DEFINITION:
+  void BiClearScreen(void);
+DESCRIPTION:
+  仮想画面をクリアします。
+REFERENCE:
+  BiFlushBuffer,BiStartBuffer,BiSwapBuffers
+------------
+NAME:BiClipLineScrn
+CATEGORY:関数
+DEFINITION:
+  int BiClipLineScrn(BIPOINTS *p1New,BIPOINTS *p2New,BIPOINTS *p1,BIPOINTS *p2)
+戻り値：
+  BI_IN   線分は描画範囲に入っている
+  BI_OUT  線分はすべて画面外であった
+DESCRIPTION:
+  画面座標*p1,*p2を結ぶ線分をクリップして*p1New,*p2Newに結果をセットします。
+  クリップ枠は、BiSetClipScreenFrame関数で設定します。なお、p1,p2の
+  上下左右の位置関係はクリップ後のp1New,p2Newに反映します。
+REFERENCE:
+  BI_IN,BI_OUT,BiClipPolygScrn,BiGetClipScreenFrame,
+  BiSetClipScreenFrame
+------------
+NAME:BiClipPolygScrn
+CATEGORY:関数
+DEFINITION:
+  int BiClipPolygScrn(int *npNew,BIPOINTS *pNew,int np,BIPOINTS *p)
+RETURN:
+  BI_IN   ポリゴンは描画範囲に入っている
+  BI_OUT  ポリゴンは画面外である
+DESCRIPTION:
+  頂点数np,画面座標p[]の多角形を画面座標でクリップして、クリップ後の
+  頂点数を*npNewに、頂点をpNew[]にセットします。クリップ枠は
+  BiSetClipScreenFrame関数で設定します。なお、クリップの結果を完全に
+  格納するには、pNewには元の頂点個数の４倍の頂点数分の配列を
+  確保してください。
+REFERENCE:
+  BI_IN,BI_OUT,BiClipLineScrn,BiGetClipScreenFrame,BiSetClipScreenFrame
+------------
+NAME:BiCloseWindow
+CATEGORY:関数
+DEFINITION:
+  void BiCloseWindow(void);
+DESCRIPTION:
+  BiOpenWindowで開いたウィンドウをクローズします。現バージョンでは、
+  シングルウィンドウのみサポートなので、アプリケーション開始時に
+  BiOpenWindowを一度コールして、アプリケーション終了時にBiCloseWindowを
+  コールしてください。
+REFERENCE:
+  BiOpenWindow
+------------
+NAME:BiConstTer
+NAME:BiConstTerrMesh
+CATEGORY:関数
+DEFINITION:
+  void BiConstTer(BITER *ter);
+DESCRIPTION:
+  地形オブジェクトを初期化して、使える状態にします。
+  BiLoadTer関数を使って読み込んだものに対して実行する必要はありません。
+REFERENCE:
+  BITER,BITERRMESH,BiAboveTer,BiAboveTerrMesh,BiInsTer,BiInsTerrMesh,
+  BiLoadTer,BiLoadTerFromString,BiLoadTerrMesh,BiLoadTerrMeshFromString,
+  BiTerEyeVecUpVec,BiTerHeight,BiTerrMeshEyeVecUpVec,BiTerrMeshHeight
+------------
+NAME:BiConvAxisGtoL
+CATEGORY:関数
+DEFINITION:
+  void BiConvAxisGtoL(BIAXIS *neo,BIAXIS *src,BIAXIS *bas)
+DESCRIPTION:
+  グローバルな座標系にある座標系*srcを座標系*basのローカルな
+  座標系での値に変換して*neoに格納します。
+REFERENCE:
+  BiConvAxisLtoG,BiConvGtoL,BiConvLtoG
+------------
+NAME:BiConvAxisLtoG
+CATEGORY:関数
+DEFINITION:
+  void BiConvAxisLtoG(BIAXIS *neo,BIAXIS *src,BIAXIS *bas)
+DESCRIPTION:
+  座標軸*bas内のさらにローカルな座標軸*srcを、グローバル座標系での値に
+  変換して*neoに格納します。
+REFERENCE:
+  BiConvAxisGtoL,BiConvGtoL,BiConvLtoG
+------------
+NAME:BiConvGtoL
+CATEGORY:マクロ
+DEFINITION:
+  void BiConvGtoL(BIPOINT *ret,BIPOINT *src,BIAXIS *axs); (相当)
+PARAMETER:
+  BIPOINT *ret;  計算結果格納ポインタ
+  BIPOINT *src;  変換元の座標
+  BIAXIS *axs;   ローカル座標軸
+DESCRIPTION:
+  世界座標*srcをローカル座標*axsでの値に変換して、結果を*retに格納します。
+  retとsrcは同じ値でもOKです。この関数はBiConvLtoGの逆関数です。
+REFERENCE:
+  BIAXIS,BiConvAxisGtoL,BiConvAxisLtoG,BiConvLtoG,BiPntAngToAxis
+------------
+NAME:BiConvLtoG
+CATEGORY:マクロ
+DEFINITION:
+  void BiConvLtoG(BIPOINT *ret,BIPOINT *src,BIAXIS *axs); (相当)
+PARAMETER:
+  BIPOINT *ret;  計算結果格納ポインタ
+  BIPOINT *src;  変換元の座標
+  BIAXIS *axs;   ローカル座標軸
+DESCRIPTION:
+  ローカル座標*axs上の座標*srcを世界座標での値に変換して、結果を
+  *retに格納します。retとsrcは同じ値でもOKです。この関数は
+  BiConvGtoLの逆関数です。
+REFERENCE:
+  BIAXIS,BiConvAxisGtoL,BiConvAxisLtoG,BiConvGtoL,BiPntAngToAxis
+------------
+NAME:BiCopyPolyg
+NAME:BiCopyPolyg2
+CATEGORY:関数
+DEFINITION:
+  int BiCopyPolyg(BIPOLYGON *neo,BIPOLYGON *org);
+  int BiCopyPolyg2(BIPOLYGON2 *neo,BIPOLYGON2 *org);
+PARAMETER:
+  BIPOLYGON *neo;   コピー先のポリゴン
+  BIPOLYGON *org;   コピー元のポリゴン
+  BIPOLYGON2 *neo;  コピー先のポリゴン
+  BIPOLYGON2 *org;  コピー元のポリゴン
+RETURN:
+  BI_OK             コピーできた
+  BI_ERR            コピーできなかった(メモリ不足)
+DESCRIPTION:
+  *orgのポリゴンを*neoにコピーします。必要なメモリは自動的に確保するので、
+  解放には、BiFreePolyg/BiFreePolyg2を使います。
+REFERENCE:
+  BiFreePolyg,BiFreePolyg2,BiMakePolyg,BiMakePolyg2
+------------
+NAME:BiCos
+CATEGORY:関数
+DEFINITION:
+  double BiCos(long a);
+PARAMETER:
+  long a;  角度
+RETURN:
+  double  cosの値
+DESCRIPTION:
+  cos(a)を求めます。
+REFERENCE:
+  BiSin,BiTan
+------------
+NAME:BiCrossPoint
+CATEGORY:関数
+DEFINITION:
+  int BiCrossPoint(BIPOINT *out,BILINE *ln,BIPLANE *pl);
+PARAMETER:
+  BIPOINT *out;  結果の座標
+  BILINE *ln;    交点を求める直線
+  BIPLANE *pl;   交点を求める平面
+DESCRIPTION:
+  直線*lnと平面*plの交点を求めて*outに格納します。
+REFERENCE:
+  BIPLANE
+------------
+NAME:BiCyan
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiCyan;
+DESCRIPTION:
+  シアン(R=0,G=255,B=255)を表します。
+------------
+NAME:BiDeviceInitialize
+CATEGORY:関数
+DEFINITION:
+  void BiDeviceInitialize(void);
+DESCRIPTION:
+  デバイスライブラリを初期化します。プログラムの先頭でコールしてください。
+REFERENCE:
+  BiCalcInitialize,BiGraphInitialize,BiGraphSetBuffer2,
+  BiGraphSetBuffer3
+------------
+NAME:BiDivPoint
+CATEGORY:マクロ
+DEFINITION:
+  void BiDivPoint(BIPOINT *ret,BIPOINT *src,double d); (相当)
+PARAMETER:
+  BIPOINT *ret;  演算結果格納ポインタ
+  BIPOINT *src;  除算されるベクトル
+  double d;      除数
+DESCRIPTION:
+  ベクトル*srcを実数dで除算して結果を*retに格納します。
+REFERENCE:
+  BIPOINT,BiAddPoint,BiMulPoint,BiSubPoint
+------------
+NAME:BiDivPoint2
+CATEGORY:マクロ
+DEFINITION:
+  void BiDivPoint2(BIPOINT2 *ret,BIPOINT2 *src,double d); (相当)
+PARAMETER:
+  BIPOINT2 *ret;  演算結果格納ポインタ
+  BIPOINT2 *src;  被除数ベクトル
+  double d;       除数
+DESCRIPTION:
+  ２次元ベクトル*srcを実数dで除算して結果を*retに格納します。
+REFERENCE:
+  BiAddPoint2,BiMulPoint2,BiSubPoint2
+------------
+NAME:BiDrawCircle2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawCircle2(BIPOINTS *s,long radx,long rady,BICOLOR *c);
+PARAMETER:
+  BIPOINTS *s;    円の中心座標
+  long radx,rady;  横径,縦径
+  BICOLOR *c;     円の色
+DESCRIPTION:
+  画面上に中塗りの円(楕円)を描きます。
+  (※ FM-TOWNS版は都合により楕円になりません。すいません ^_^;)
+REFERENCE:
+  BiDrawEmptyCircle2,BiDrawEmptyPolyg2,BiDrawEmptyRect2,BiDrawLine2,
+  BiDrawMarker2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,BiDrawPict2Zoom,
+  BiDrawPolyg2,BiDrawPolyline2,BiDrawPset2,BiDrawRect2,BiDrawString2,
+  BiDrawText2
+------------
+NAME:BiDrawEmptyCircle2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawEmptyCircle2(BIPOINTS *s,long radx,long rady,BICOLOR *col);
+DESCRIPTION:
+  中塗なしの円(楕円)を描画します。
+REFERENCE:
+  BiDrawCircle2,BiDrawEmptyPolyg2,BiDrawEmptyRect2,BiDrawLine2,
+  BiDrawMarker2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,BiDrawPict2Zoom,
+  BiDrawPolyg2,BiDrawPolyline2,BiDrawPset2,BiDrawRect2,BiDrawString2,
+  BiDrawText2
+------------
+NAME:BiDrawEmptyPolyg2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawEmptyPolyg2(int n,BIPOINTS *s,BICOLOR *col);
+DESCRIPTION:
+  中塗なしのポリゴンを描画します。
+REFERENCE:
+  BiDrawCircle2,BiDrawEmptyCircle2,BiDrawEmptyRect2,BiDrawLine2,
+  BiDrawMarker2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,BiDrawPict2Zoom,
+  BiDrawPolyg2,BiDrawPolyline2,BiDrawPset2,BiDrawRect2,BiDrawString2,
+  BiDrawText2
+------------
+NAME:BiDrawEmptyRect2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawEmptyRect2(BIPOINTS *s1,BIPOINTS *s2,BICOLOR *col);
+PARAMETER:
+  BIPOINTS *s1,*s2;  矩形の両端点
+  BICOLOR *col;      矩形の色
+DESCRIPTION:
+  中塗なしの矩形を描画します。
+REFERENCE:
+  BiDrawCircle2,BiDrawEmptyCircle2,BiDrawEmptyPolyg2,BiDrawLine2,
+  BiDrawMarker2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,BiDrawPict2Zoom,
+  BiDrawPolyg2,BiDrawPolyline2,BiDrawPset2,BiDrawRect2,BiDrawString2,
+  BiDrawText2
+------------
+NAME:BiDrawGroundSky
+CATEGORY:関数
+DEFINITION:
+  void BiDrawGroundSky(BICOLOR *grd,BICOLOR *sky);
+PARAMETER:
+  BICOLOR *grd,*sky;  地表,空の色
+DESCRIPTION:
+  BiStartBufferで設定した姿勢に従って地表と空を描きます。
+REFERENCE:
+  BiGetFieldGroundSky,BiGetFldGroundSky
+------------
+NAME:BiDrawLine2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawLine2(BIPOINTS *s1,BIPOINTS *s2,BICOLOR *c);
+PARAMETER:
+  BIPOINTS *s1,*s2;  直線の２端点
+  BICOLOR *c;        直線の色
+DESCRIPTION:
+  画面上に２次元直線を描きます。
+REFERENCE:
+  BiDrawCircle2,BiDrawEmptyCircle2,BiDrawEmptyPolyg2,BiDrawEmptyRect2,
+  BiDrawMarker2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,BiDrawPict2Zoom,
+  BiDrawPolyg2,BiDrawPolyline2,BiDrawPset2,BiDrawRect2,BiDrawString2,
+  BiDrawText2
+------------
+NAME:BiDrawMarker2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawMarker2(BIPOINTS *s,int mkType,BICOLOR *col);
+PARAMETER:
+  BIPOINTS *s;    マーカー座標
+  int mkType;     マーカータイプ
+  BICOLOR *col;   マーカーの色
+DESCRIPTION:
+  画面にマーカーを描きます。マーカータイプは、次の中から選択してください。
+    BIMK_RECT    矩形
+    BIMK_CIRCLE  円
+    BIMK_CROSS   ×印
+REFERENCE:
+  BiDrawCircle2,BiDrawEmptyCircle2,BiDrawEmptyPolyg2,BiDrawEmptyRect2,
+  BiDrawLine2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,BiDrawPict2Zoom,
+  BiDrawPolyg2,BiDrawPolyline2,BiDrawPset2,BiDrawRect2,BiDrawString2,
+  BiDrawText2
+------------
+NAME:BiDrawPc2
+NAME:BiDrawPict2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawPc2(BIPC2 *pic,BIPOINTS *sc);
+PARAMETER:
+  BIPC2 *pic;  描画する図形オブジェクト
+  BIPOINTS *sc;  描画する図形の(0,0)に対応する画面座標
+DESCRIPTION:
+  BiLoadPc2で読み込んだ図形オブジェクトを表示します。
+REFERENCE:
+  BIPC2,BIPICT2,BiDrawCircle2,BiDrawEmptyCircle2,BiDrawEmptyPolyg2,
+  BiDrawEmptyRect2,BiDrawLine2,BiDrawMarker2,BiDrawPc2Zoom,
+  BiDrawPict2Zoom,BiDrawPolyg2,BiDrawPolyline2,BiDrawPset2,BiDrawRect2,
+  BiDrawString2,BiDrawText2,BiLoadPc2,BiLoadPict2
+------------
+NAME:BiDrawPc2Zoom
+NAME:BiDrawPict2Zoom
+CATEGORY:関数
+DEFINITION:
+  void BiDrawPc2Zoom(BIPC2 *pic,BIPOINTS *s1,BIPOINTS *s2);
+PARAMETER:
+  BIPC2 *pic;  描画する2次元図形オブジェクト
+  BIPOINTS *s1;  図形の左上端に対応する画面座標
+  BIPOINTS *s2;  図形の右下端に対応する画面座標
+DESCRIPTION:
+  BiLoadPc2で読み込んだ図形オブジェクトを拡大/縮小/反転して表示します。
+REFERENCE:
+  BIPC2,BIPICT2,BiDrawCircle2,BiDrawEmptyCircle2,BiDrawEmptyPolyg2,
+  BiDrawEmptyRect2,BiDrawLine2,BiDrawMarker2,BiDrawPc2,BiDrawPict2,
+  BiDrawPolyg2,BiDrawPolyline2,BiDrawPset2,BiDrawRect2,BiDrawString2,
+  BiDrawText2,BiLoadPc2,BiLoadPict2
+------------
+NAME:BiDrawPolyg2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawPolyg2(int ns,BIPOINTS *s,BICOLOR *c);
+PARAMETER:
+  int ns;       頂点数
+  BIPOINTS *s;  頂点座標
+  BICOLOR *c;   ポリゴンの色
+DESCRIPTION:
+  ポリゴン(塗りつぶし)を描画します。
+REFERENCE:
+  BiDrawCircle2,BiDrawEmptyCircle2,BiDrawEmptyPolyg2,BiDrawEmptyRect2,
+  BiDrawLine2,BiDrawMarker2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,
+  BiDrawPict2Zoom,BiDrawPolyline2,BiDrawPset2,BiDrawRect2,BiDrawString2,
+  BiDrawText2
+------------
+NAME:BiDrawPolyline2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawPolyline2(int n,BIPOINTS *s,BICOLOR *col);
+PARAMETER:
+  int n;         頂点数
+  BIPOINTS *s;   頂点
+  BICOLOR *col;  色
+DESCRIPTION:
+  連続線分を描画します。
+REFERENCE:
+  BiDrawCircle2,BiDrawEmptyCircle2,BiDrawEmptyPolyg2,BiDrawEmptyRect2,
+  BiDrawLine2,BiDrawMarker2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,
+  BiDrawPict2Zoom,BiDrawPolyg2,BiDrawPset2,BiDrawRect2,BiDrawString2,
+  BiDrawText2
+------------
+NAME:BiDrawPset2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawPset2(BIPOINTS *s,BICOLOR *c);
+PARAMETER:
+  BIPOINTS *s;  頂点座標
+  BICOLOR *c;   点の色
+DESCRIPTION:
+  画面上に点を描きます。
+REFERENCE:
+  BiDrawCircle2,BiDrawEmptyCircle2,BiDrawEmptyPolyg2,BiDrawEmptyRect2,
+  BiDrawLine2,BiDrawMarker2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,
+  BiDrawPict2Zoom,BiDrawPolyg2,BiDrawPolyline2,BiDrawRect2,
+  BiDrawString2,BiDrawText2
+------------
+NAME:BiDrawRect2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawRect2(BIPOINTS *s1,BIPOINTS *s2,BICOLOR *c)
+PARAMETER:
+  BIPOINTS *s1,*s2;  矩形の両端点
+  BICOLOR *c;        矩形の色
+DESCRIPTION:
+  矩形(塗りつぶし)を描画します。
+REFERENCE:
+  BiDrawCircle2,BiDrawEmptyCircle2,BiDrawEmptyPolyg2,BiDrawEmptyRect2,
+  BiDrawLine2,BiDrawMarker2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,
+  BiDrawPict2Zoom,BiDrawPolyg2,BiDrawPolyline2,BiDrawPset2,
+  BiDrawString2,BiDrawText2
+------------
+NAME:BiDrawString2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawString2(BIPOINTS *s,char *str,BICOLOR *c)
+PARAMETER:
+  BIPOINTS *s;  文字列左下端の座標
+  char *str;    文字列
+  BICOLOR *c;   色
+DESCRIPTION:
+  画面にstrが示す文字列を描画します。文字列に全角文字が入っていた場合、
+  全てのシステムで正常に表示できる保証はありません。特に、X-Windowが
+  出ません。また、伏兵でFM-TOWNS版も独自の文字列描画ルーチンを使っている
+  ので、全角文字が出ません。
+REFERENCE:
+  BiDrawCircle2,BiDrawEmptyCircle2,BiDrawEmptyPolyg2,BiDrawEmptyRect2,
+  BiDrawLine2,BiDrawMarker2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,
+  BiDrawPict2Zoom,BiDrawPolyg2,BiDrawPolyline2,BiDrawPset2,BiDrawRect2,
+  BiDrawText2
+------------
+NAME:BiDrawText2
+CATEGORY:関数
+DEFINITION:
+  void BiDrawText2(BIPOINTS *s,char *str[],int h,int v,BICOLOR *c)
+PARAMETER:
+  BIPOINTS *s;  基準点
+  char *str[];  テキスト
+  int h,v;      アラインメント(水平,垂直)
+  BICOLOR *c;   色
+DESCRIPTION:
+  画面にテキストを表示します。テキストは、文字列ポインタの配列で、
+    char *str[3];
+    str[0]="ABC";
+    str[1]="DEF";
+    str[2]=NULL;
+  のように、最後の行の次の配列要素にNULLを代入しておきます。
+
+  水平アラインメント(h)は、次の値の中から選択します。
+    BIMG_CENTER  テキスト中心のx座標をs->xに合わせる
+    BIMG_LEFT    テキスト左端のx座標をs->xに合わせる
+    BIMG_RIGHT   テキスト右端のx座標をs->xに合わせる
+
+  垂直アラインメント(v)は、次の値の中から選択します。
+    BIMG_CENTER  テキスト中心のy座標をs->yに合わせる
+    BIMG_TOP     テキスト上端のy座標をs->yに合わせる
+    BIMG_BOTTOM  テキスト下端のy座標をs->yに合わせる
+
+REFERENCE:
+  BiDrawCircle2,BiDrawEmptyCircle2,BiDrawEmptyPolyg2,BiDrawEmptyRect2,
+  BiDrawLine2,BiDrawMarker2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,
+  BiDrawPict2Zoom,BiDrawPolyg2,BiDrawPolyline2,BiDrawPset2,BiDrawRect2,
+  BiDrawString2
+------------
+NAME:BiEpsClose
+CATEGORY:関数
+DEFINITION:
+  int BiEpsClose(void);
+DESCRIPTION:
+  BiEpsOpenで出力を開始したEPSファイルへの書き込みを終了します。
+REFERENCE:
+  BiEpsOpen,BiRenderClose,BiRenderOpen,BiSrfClose,BiSrfOpen,BiVrmlClose,
+  BiVrmlOpen
+------------
+NAME:BiEpsOpen
+DEFINITION:
+  int BiEpsOpen(char *fn,int wid,int hei);
+PARAMETER:
+  char *fn;    出力するEPSのファイル名
+  int wid;     EPSファイルの横幅
+  int hei;     EPSファイルの縦幅
+RETURN:
+  BI_OK        正常に出力を開始した
+  BI_ERR       出力を開始できなかった
+DESCRIPTION:
+  EPSファイル出力を開始します。Blue Impulse Libraryは、この関数を
+  呼び出してから、次にBiEpsCloseを呼び出すまでの間に描画したものと
+  同じ画像を、fnで指定した名前のEPSファイルに出力します。
+REFERENCE:
+  BiEpsClose,BiRenderClose,BiRenderOpen,BiSrfClose,BiSrfOpen,
+  BiVrmlClose,BiVrmlOpen
+------------
+NAME:BiFatal
+CATEGORY:関数
+DEFINITION:
+  int BiFatal(void);
+DESCRIPTION:
+  プログラム続行に致命的な問題が発生したとき、BI_ONを返します。正常に
+  動作している状態では、BI_OFFを返します。アプリケーションでは、定期的に
+  この関数を監視して、BI_ONを受け取ったら直ちにプログラムを
+  終了してください。
+------------
+NAME:BiFlushBuffer
+CATEGORY:関数
+DEFINITION:
+  void BiFlushBuffer(void);
+DESCRIPTION:
+  BiStartBuffer以降登録してきた3次元オブジェクトを画面に書き出します。
+REFERENCE:
+  BiClearScreen,BiStartBuffer,BiSwapBuffers
+------------
+NAME:BiFree
+CATEGORY:関数
+DEFINITION:
+  void BiFree(void *ptr);
+DESCRIPTION:
+  BiMallocで確保したメモリを開放します。
+REFERENCE:
+  BiFreePolyg,BiFreePolyg2,BiMalloc
+------------
+NAME:BiFreePolyg
+NAME:BiFreePolyg2
+CATEGORY:関数
+DEFINITION:
+  void BiFreePolyg(BIPOLYGON *plg);
+  void BiFreePolyg2(BIPOLYGON2 *plg);
+PARAMETER:
+  BIPOLYGON *plg;   解放するポリゴン
+  BIPOLYGON2 *plg;  解放するポリゴン
+DESCRIPTION:
+  指定のポリゴンの頂点座標のメモリを解放します。BiMakePolyg等の、メモリを
+  自動的に確保する関数で作成したポリゴン以外に対してこの関数を実行しては
+  いけません。
+REFERENCE:
+  BiCopyPolyg,BiCopyPolyg2,BiFree,BiMakePolyg,BiMakePolyg2,BiMalloc,
+  BiPolyg2ToConvex,BiPolygToConvex
+------------
+NAME:BiFreeSolidFont
+CATEGORY:関数
+DEFINITION:
+  void BiFreeSolidFont(BI3DFONT *fnt);
+PARAMETER:
+  BI3DFONT *fnt;  解放するソリッドフォント
+DESCRIPTION:
+  BiMakeStdSolidFontで生成したソリッドフォントのメモリを解放します。
+REFERENCE:
+  BI3DFONT,BiInsSolidString,BiInsSolidText,BiMakeStdSolidFont
+------------
+NAME:BiFreeSrf
+NAME:BiFreeSrfModel
+CATEGORY:関数
+DEFINITION:
+  void BiFreeSrf(BISRF *srf);
+DESCRIPTION:
+  BiLoadSrfで読み込み時に確保したメモリ領域を解放します。
+REFERENCE:
+  BiLoadSrf
+------------
+NAME:BiGetClipScreenFrame
+CATEGORY:関数
+DEFINITION:
+  void BiGetClipScreenFrame(BIPOINTS *l,BIPOINTS *r)
+PARAMETER:
+  BIPOINTS *l,*r;  画面クリップ枠(演算用)
+DESCRIPTION:
+  BiSetClipScreenFrameで設定したクリップ枠を取得します。
+REFERENCE:
+  BiClipLineScrn,BiClipPolygScrn,BiSetClipScreenFrame
+------------
+NAME:BiGetFldElevation
+NAME:BiGetFieldElevation
+CATEGORY:関数
+DEFINITION:
+  int BiGetFldElevation
+    (int *trId,char tag[],real *elv,BIPOINT *ev,BIPOINT *uv,
+     BIFLD *fld,BIPOSATT *pos,BIPOINT *p,long hdg);
+PARAMETER:
+  int *trId;      地形ID格納先ポインタ(NULL可)
+  char tag[];     地形名格納先ポインタ(NULL可)
+  real *elv;      標高格納先ポインタ(NULL可)
+  BIPOINT *ev;    指定地点での視線ベクトル格納先ポインタ(NULL可)
+  BIPOINT *uv;    指定地点でのアップベクトル格納先ポインタ(NULL可)
+  BIFLD *fld;   フィールドのポインタ
+  BIPOSATT *pos;  フィールドの位置/姿勢
+  BIPOINT *p;     判定位置
+  long hdg;       ヘディング (ev,uvがNULLのとき0を指定)
+RETURN:
+  BI_IN           判定位置はひとつの地形オブジェクトの範囲内である
+  BI_OUT          判定位置はどの地形オブジェクトの範囲内でもない
+DESCRIPTION:
+  判定位置*pが、位置/姿勢*posのフィールド*fld内のいずれかの
+  地形オブジェクトの範囲内にあるかを判定します。その地点が地形オブジェクトの
+  範囲内であれば、*trId,tag[],*elv,*ev,*uvに情報を格納します。
+  (ただしNULL指定したもの以外)。
+REFERENCE:
+  BIFIELD,BIFLD,BiGetFieldRegion,BiGetFldRegion,BiLoadFld,
+  BiSrfCollision,BiTerHeight,BiTerrMeshHeight
+------------
+NAME:BiGetFldGroundSky
+NAME:BiGetFieldGroundSky
+CATEGORY:関数
+DEFINITION:
+  int BiGetFldGroundSky(BICOLOR *gnd,BICOLOR *sky,BIFLD *fld);
+PARAMETER:
+  BICOLOR *gnd;    地面の色
+  BICOLOR *sky;    空の色
+  BIFLD *fld;    フィールドのポインタ
+RETURN:
+  BI_OK            ←いつでもこれ
+DESCRIPTION:
+  フィールドデータ*fldの地面の色と空の色を取得します。
+REFERENCE:
+  BIFIELD,BIFLD,BiDrawGroundSky,BiLoadFld
+------------
+NAME:BiGetFldNumObj
+NAME:BiGetFieldNumObj
+CATEGORY:関数
+DEFINITION:
+  int BiGetFldNumObj(int *nObj,BIFLD *fld,int typ);
+DESCRIPTION:
+  フィールドに含むオブジェクト個数を求めます。typには、以下の値を指定します。
+	BIFLD_PC2MAP  図形オブジェクト(地図)
+	BIFLD_SRF     ポリゴンモデル
+	BIFLD_PC2     図形オブジェクト(看板)
+	BIFLD_TER     地形オブジェクト
+	BIFLD_RGN     矩形領域
+	BIFLD_FLD     フィールド
+REFERENCE:
+  BiGetFieldObjId,BiGetFieldObjPosition,BiGetFldObjId,
+  BiGetFldObjPosition
+------------
+NAME:BiGetFldObjId
+NAME:BiGetFieldObjId
+CATEGORY:関数
+DEFINITION:
+  int BiGetFldObjId(int *oId,char tag[],BIFLD *fld,int typ,int id);
+PARAMETER:
+  int *oId;      オブジェクトのID(Gefilで指定した値)
+  char tag[];    オブジェクトのメッセージ(Gefilで指定した文字列)
+  BIFLD *fld;  フィールド
+  int typ;       タイプ
+  int id;        通し番号
+DESCRIPTION:
+  Gefilで指定したオブジェクトのIDとメッセージを取得します。tagの大きさは、
+  BIFLD_TAG_LEN(#define BIFLD_TAG_LEN 80)だけの大きさを確保してください。
+  typには以下の値を指定します。
+	BIFLD_PC2MAP  図形オブジェクト(地図)
+	BIFLD_SRF     ポリゴンモデル
+	BIFLD_PC2     図形オブジェクト(看板)
+	BIFLD_TER     地形オブジェクト
+	BIFLD_RGN     矩形領域
+	BIFLD_FLD     フィールド
+  idには、0から、BiGetFldNumObjで取得したオブジェクト個数から1を引いた値を
+  指定することができます。
+REFERENCE:
+  BiGetFieldNumObj,BiGetFieldObjPosition,BiGetFldNumObj,
+  BiGetFldObjPosition
+------------
+NAME:BiGetFldObjPosition
+NAME:BiGetFieldObjPosition
+CATEGORY:関数
+DEFINITION:
+  int BiGetFldObjPosition
+      (BIPOSATT *pos,BIFLD *fld,BIPOSATT *lay,int typ,int id);
+PARAMETER:
+  BIPOSATT *pos;    オブジェクトの位置/姿勢格納先ポインタ
+  BIFLD *fld;     フィールド
+  BIPOSATT *lay;    フィールド位置/姿勢
+  int typ;          タイプ
+  int id;           通し番号
+DESCRIPTION:
+  *layの位置/姿勢にあるフィールド*fldの指定のタイプのオブジェクトが
+  ワールド座標ではどの位置/姿勢にあるのかを計算します。typには以下の値を
+  指定します。
+	BIFLD_PC2MAP  図形オブジェクト(地図)
+	BIFLD_SRF     ポリゴンモデル
+	BIFLD_PC2     図形オブジェクト(看板)
+	BIFLD_TER     地形オブジェクト
+	BIFLD_RGN     矩形領域
+	BIFLD_FLD     フィールド
+  idには、0から、BiGetFldNumObjで取得したオブジェクト個数から1を引いた値を
+  指定することができます。
+REFERENCE:
+  BiGetFieldNumObj,BiGetFieldObjId,BiGetFldNumObj,BiGetFldObjId
+------------
+NAME:BiGetFldRegion
+NAME:BiGetFieldRegion
+CATEGORY:関数
+DEFINITION:
+  int BiGetFldRegion
+    (int *rgId,char tag[],BIFLD *fld,BIPOSATT *pos,BIPOINT *p)
+PARAMETER:
+  int *rgId;       領域ID格納先ポインタ(NULL可)
+  char tag[];      領域名格納先ポインタ(NULL可)
+  BIFLD *fld;    フィールドのポインタ
+  BIPOSATT *pos;   フィールドの位置/姿勢
+  BIPOINT *p;      判定位置
+RETURN:
+  BI_IN            *pはひとつ以上の矩形領域内であった
+  BI_OUT           *pはどの矩形領域内でもなかった
+DESCRIPTION:
+  *pが、位置/姿勢*posのフィールド*fldに設定してある矩形領域オブジェクトの
+  上にあるかを判定します。判定して、いずれかの矩形領域内であれば、
+  *rgId,tag[]に領域IDと領域名を格納します。
+REFERENCE:
+  BIFIELD,BIFLD,BiGetFieldElevation,BiGetFieldSrfCollision,
+  BiGetFldElevation,BiGetFldSrfCollision,BiLoadFld
+------------
+NAME:BiGetFldSrfCollision
+NAME:BiGetFieldSrfCollision
+CATEGORY:関数
+DEFINITION:
+  int BiGetFldSrfCollision
+    (int *sfId,char tag[],BIFLD *fld,BIPOSATT *pos,BIPOINT *p);
+PARAMETER:
+  int *sfId;      SRFモデルID(NULL可)
+  char tag[];     SRFモデル名(NULL可)
+  BIFLD *fld;   フィールドのポインタ
+  BIPOSATT *pos;  フィールドの位置/姿勢
+  BIPOINT *p;     判定位置
+  real bump;      衝突範囲拡大幅
+RETURN:
+  BI_IN           衝突している
+  BI_OUT          衝突していない
+DESCRIPTION:
+  判定位置*pが位置*posのフィールド*fld内のいずれかのポリゴンモデルと
+  衝突しているかを判定します。なお、bumpに正の値を指定すると、
+  *srfのバウンディングボックスの大きさをbump分だけ大きく見積もって
+  衝突判定します。
+REFERENCE:
+  BIFIELD,BIFLD,BiGetFieldRegion,BiGetFldRegion,BiLoadFld,
+  BiSrfCollision,BiSrfCollision
+------------
+NAME:BiGetSrfRadius
+CATEGORY:関数
+DEFINITION:
+  void BiGetSrfRadius(real *rad,BISRF *srf);
+DESCRIPTION:
+  ポリゴンモデルのバウンディングボックスの半径を計算します。
+REFERENCE:
+  BISRF,BISRFMODEL,BiLoadSrf
+------------
+NAME:BiGetStdProjection
+CATEGORY:関数
+DEFINITION:
+  void BiGetStdProjection(BIPROJ *prj);
+DESCRIPTION:
+  BiOpenWindowで開いたウィンドウで、視角60度の場合の標準的な投影情報を
+  返します。
+REFERENCE:
+  BIPROJ,BiSetProjection
+------------
+NAME:BiGetWindowSize
+CATEGORY:関数
+DEFINITION:
+  void BiGetWindowSize(long *wid,long *hei);
+DESCRIPTION:
+  BiOpenWindowで実際に開いたウィンドウのサイズを返します。
+  ウィンドウの大きさが変化した場合は、この関数が返す値も変化します。
+------------
+NAME:BiGraphInitialize
+CATEGORY:関数
+DEFINITION:
+  void BiGraphInitialize(char *work,unsigned wSize);
+PARAMETER:
+  char *work;      グラフィックライブラリが使うワークエリア
+  unsigned wSize;  ワークエリアサイズ
+DESCRIPTION:
+  グラフィックライブラリを初期化します。
+  すべてのグラフィックライブラリ関数呼出しに先立って実行してください。
+  ここで指定するワークエリアの大きさによって、描画できるオブジェクト数が
+  決まります。
+REFERENCE:
+  BiCalcInitialize,BiDeviceInitialize,BiGraphSetBuffer2,
+  BiGraphSetBuffer3
+------------
+NAME:BiGraphSetBuffer2
+NAME:BiGraphSetBuffer3
+CATEGORY:関数
+DEFINITION:
+  void BiGraphSetBuffer2(char *work,unsigned long wSize);
+  void BiGraphSetBuffer3(char *work,unsigned long wSize);
+PARAMETER:
+  char *work;      グラフィックライブラリが使うワークエリア(追加分)
+  unsigned wSize;  ワークエリアサイズ
+DESCRIPTION:
+  BiGraphInitializeでライブラリに渡したバッファに加えてバッファを追加します。
+  64KBを越える配列を使うと突然パフォーマンスの落ちるWindows3.1に対応して、
+  バッファを複数に分割してライブラリに通知できるようにしたものです。が、
+  ライブラリリリースの段階になって、Windowsも95が標準になってしまったので、
+  BiGraphInitializeで十分大きなバッファを渡すことを推奨します。
+REFERENCE:
+  BiCalcInitialize,BiDeviceInitialize,BiGraphInitialize
+------------
+NAME:BiGreen
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiGreen;
+DESCRIPTION:
+  グリーン(R=0,G=255,B=0)を表します。
+------------
+NAME:BiInBetweenAngle
+CATEGORY:関数
+DEFINITION:
+  void BiInBetweenAngle(BIANGLE *dst,BIANGLE *a1,BIANGLE *a2,real t);
+DESCRIPTION:
+  姿勢*a1と*a2を(t:1-t)に内分する姿勢を計算して*dstに格納します。
+REFERENCE:
+  BiInBetweenPoint
+------------
+NAME:BiInBetweenPoint
+CATEGORY:関数
+DEFINITION:
+  void BiInBetweenPoint(BIPOINT *dst,BIPOINT *p1,BIPOINT *p2,real t);
+DESCRIPTION:
+  三次元座標*p1と*p2を(t:1-t)に内分する点を計算して*dstに格納します。
+REFERENCE:
+  BiInBetweenAngle
+------------
+NAME:BiInkey
+CATEGORY:関数
+DEFINITION:
+  int BiInkey(void);
+DESCRIPTION:
+  キーバッファからキーを読み取ります。この関数を使うには、ループの先頭で
+  必ずBiUpdateDevice関数をコールして
+  デバイス情報を更新しておく必要があります。
+  また、BiInkey関数が返す値はBlue Impulse Library独自のキーコードなので、
+  キーボードのキーとの対応は、BIKEY_マクロを参照してください。
+  (例:Aキー→BIKEY_A)
+CAUTION:
+  アプリケーションで、矢印キーを押している間オブジェクトが移動するような
+  タイプのプログラムでは、BiInkey関数でBIKEY_NULL以外のキーコードを
+  取得した場合、次の行を実行した方が安全です。
+
+      while(BiInkey()!=BIKEY_NULL);  /* Clear Key Buffer */
+
+REFERENCE:
+  BIKEY_,BIKEY_A,BIKEY_ALT,BIKEY_B,BIKEY_BS,BIKEY_C,BIKEY_COPY,
+  BIKEY_CTRL,BIKEY_D,BIKEY_DEL,BIKEY_DOWN,BIKEY_E,BIKEY_EIGHT,BIKEY_ESC,
+  BIKEY_F,BIKEY_F1,BIKEY_F10,BIKEY_F2,BIKEY_F3,BIKEY_F4,BIKEY_F5,
+  BIKEY_F6,BIKEY_F7,BIKEY_F8,BIKEY_F9,BIKEY_FIVE,BIKEY_FOUR,BIKEY_G,
+  BIKEY_H,BIKEY_HOME,BIKEY_I,BIKEY_J,BIKEY_K,BIKEY_L,BIKEY_LEFT,BIKEY_M,
+  BIKEY_N,BIKEY_NINE,BIKEY_NULL,BIKEY_O,BIKEY_ONE,BIKEY_P,BIKEY_Q,
+  BIKEY_R,BIKEY_RET,BIKEY_RIGHT,BIKEY_S,BIKEY_SEVEN,BIKEY_SHIFT,
+  BIKEY_SIX,BIKEY_SPACE,BIKEY_STOP,BIKEY_T,BIKEY_TAB,BIKEY_TEN0,
+  BIKEY_TEN1,BIKEY_TEN2,BIKEY_TEN3,BIKEY_TEN4,BIKEY_TEN5,BIKEY_TEN6,
+  BIKEY_TEN7,BIKEY_TEN8,BIKEY_TEN9,BIKEY_TENDIV,BIKEY_TENDOT,
+  BIKEY_TENEQUAL,BIKEY_TENMINUS,BIKEY_TENMUL,BIKEY_TENPLUS,BIKEY_THREE,
+  BIKEY_TWO,BIKEY_U,BIKEY_UP,BIKEY_V,BIKEY_W,BIKEY_X,BIKEY_Y,BIKEY_Z,
+  BIKEY_ZERO,BiKey,BiKeyToAscii,BiUpdateDevice
+------------
+NAME:BiInnerPoint
+CATEGORY:マクロ
+DEFINITION:
+  double BiInnerPoint(BIPOINT *a,BIPOINT *b); (相当)
+PARAMETER:
+  BIPOINT *a,*b;  ベクトル
+RETURN:
+  double          *aと*bの内積
+DESCRIPTION:
+  ベクトル*aと*bの内積を求めます。
+REFERENCE:
+  BiInnerPoint2,BiOuterProduct
+------------
+NAME:BiInnerPoint2
+CATEGORY:マクロ
+DEFINITION:
+  double BiInnerPoint2(BIPOINT2 *a,BIPOINT2 *b); (相当)
+PARAMETER:
+  BIPOINT2 *a,*b;  ベクトル
+RETURN:
+  double           *aと*bの内積
+DESCRIPTION:
+  ２次元ベクトル*aと*bの内積を求めます。
+REFERENCE:
+  BiInnerPoint,BiOuterProduct
+------------
+NAME:BiInsCircle
+CATEGORY:関数
+DEFINITION:
+  int BiInsCircle(BIPOINT *p,double r,BICOLOR *col);
+PARAMETER:
+  BIPOINT *p;    円の中心点
+  double r;      円の半径
+  BICOLOR *col;  色
+DESCRIPTION:
+  描画バッファに円を追加します。
+REFERENCE:
+  BiInsField,BiInsFld,BiInsLine,BiInsMarker,BiInsPc2,BiInsPict2,
+  BiInsPolyg,BiInsPolygFast,BiInsPset,BiInsRoundPolyg,BiInsSrf,
+  BiInsSrfDivide,BiInsSrfModel,BiInsSrfModelDivide,BiInsString,BiInsTer,
+  BiInsTerrMesh,BiInsText
+------------
+NAME:BiInsClickable
+DEFINITION:
+  int BiInsClickable
+    (BIPOINT *p,real rad,int pix,int i1,int i2,int i3,void *ext);
+CATEGORY:関数
+PARAMETER:
+  BIPOINT *p;   クリッカブルオブジェクトの座標
+  real rad;     半径(3次元空間での大きさ)
+  int pix;      半径(画面上でのピクセル数)
+  int i1,i2,i3; オブジェクトのID(3個まで自由な値を設定可能)
+  void *ext;    オブジェクトの追加情報(不要ならNULL)
+DESCRIPTION:
+  クリッカブルオブジェクトを登録します。BiInsMarkerの直後などに呼び出す
+  のが良いでしょう。オブジェクトの半径は、最終的に画面上の大きさに変換し
+  て、大きい方を優先します。仮に画面上でのピクセル数だけを設定したい場合
+  はradに0を指定します。オブジェクトIDには自由な値を3個設定できます。ま
+  た、追加情報があればextでポインタを指定することができます。このIDとポ
+  インタは、マウス座標がクリッカブルオブジェクトにヒットしたとき、
+  BiCheckClicked関数で取得することができます。
+REFERENCE:
+  BiCheckClicked,BiCheckClickedPoint,BiCheckClickedPolyg,
+  BiClearClickable,BiInsClickablePolyg,BiSetClickableBuffer
+------------
+NAME:BiInsClickablePolyg
+CATEGORY:関数
+DEFINITION:
+  int BiInsClickablePolyg
+    (int np,BIPOINT p[],BIVECTOR *n,int i1,int i2,int i3,void *extra);
+PARAMETER:
+  int np;       頂点個数
+  BIPOINT p[];  頂点
+  BIVECTOR *n;  法線ベクトル(NULL可 → 両面ポリゴン)
+  int i1,i2,i3; オブジェクトのID(3個まで自由な値を設定可能)
+  void *extra;  オブジェクトの追加情報(不要ならNULL)
+RETURN:
+  BI_OK         正常
+  BI_ERR        バッファあふれなどで登録できなかった
+DESCRIPTION:
+  クリッカブルなポリゴンを登録します。
+REFERENCE:
+  BiClearClickable,BiInsClickable,BiSetClickableBuffer
+------------
+NAME:BiInsFld
+NAME:BiInsField
+CATEGORY:関数
+DEFINITION:
+  void BiInsFld(BIFLD *fld,BIPOSATT *pos)
+PARAMETER:
+  BIFLD *fld;    フィールドのポインタ
+  BIPOSATT *pos;   フィールドの位置/姿勢
+DESCRIPTION:
+  フィールドデータ*fld内の大きさのあるオブジェクト
+  (ポリゴンモデル/地形オブジェクト)を描画バッファに追加します。
+REFERENCE:
+  BIFIELD,BIFLD,BiInsCircle,BiInsLine,BiInsMarker,BiInsPc2,BiInsPict2,
+  BiInsPolyg,BiInsPolygFast,BiInsPset,BiInsRoundPolyg,BiInsSrf,
+  BiInsSrfDivide,BiInsSrfModel,BiInsSrfModelDivide,BiInsString,BiInsTer,
+  BiInsTerrMesh,BiInsText,BiLoadFld,BiOvwField,BiOvwFld
+------------
+NAME:BiInsLine
+CATEGORY:関数
+DEFINITION:
+  int BiInsLine(BIPOINT *p1,BIPOINT *p2,BICOLOR *col);
+PARAMETER:
+  BIPOINT *p1,*p2;  直線の両端点
+  BICOLOR *col;     色
+DESCRIPTION:
+  描画バッファに直線を追加します。
+REFERENCE:
+  BiInsCircle,BiInsField,BiInsFld,BiInsMarker,BiInsPc2,BiInsPict2,
+  BiInsPolyg,BiInsPolygFast,BiInsPset,BiInsRoundPolyg,BiInsSrf,
+  BiInsSrfDivide,BiInsSrfModel,BiInsSrfModelDivide,BiInsString,BiInsTer,
+  BiInsTerrMesh,BiInsText,BiOvwLineShadow
+------------
+NAME:BiInsMarker
+CATEGORY:関数
+DEFINITION:
+  int BiInsMarker(BIPOINT *p,BICOLOR *col,int mkType);
+PARAMETER:
+  BIPOINT *p;    マーカー中心点
+  BICOLOR *col;  色
+  int mkType;    マーカータイプ
+DESCRIPTION:
+  描画バッファにマーカーを追加します。マーカータイプは、
+  BiDrawMarker2を参照してください。
+REFERENCE:
+  BiInsCircle,BiInsField,BiInsFld,BiInsLine,BiInsPc2,BiInsPict2,
+  BiInsPolyg,BiInsPolygFast,BiInsPset,BiInsRoundPolyg,BiInsSrf,
+  BiInsSrfDivide,BiInsSrfModel,BiInsSrfModelDivide,BiInsString,BiInsTer,
+  BiInsTerrMesh,BiInsText
+------------
+NAME:BiInsPc2
+NAME:BiInsPict2
+CATEGORY:関数
+DEFINITION:
+  void BiInsPc2(BIPC2 *pic,BIPOSATT *pos);
+PARAMETER:
+  BIPC2 *pic;   描画する図形オブジェクト
+  BIPOSATT *pos;  図形オブジェクトの位置/姿勢
+DESCRIPTION:
+  描画バッファにGepicで作成した図形オブジェクトを追加します。
+REFERENCE:
+  BIPC2,BIPICT2,BiInsCircle,BiInsField,BiInsFld,BiInsLine,BiInsMarker,
+  BiInsPolyg,BiInsPolygFast,BiInsPset,BiInsRoundPolyg,BiInsSrf,
+  BiInsSrfDivide,BiInsSrfModel,BiInsSrfModelDivide,BiInsString,BiInsTer,
+  BiInsTerrMesh,BiInsText,BiLoadPc2,BiLoadPc2FromString,BiLoadPict2,
+  BiLoadPict2FromString,BiOvwPc2,BiOvwPict2
+------------
+NAME:BiInsPolyg
+CATEGORY:関数
+DEFINITION:
+  int BiInsPolyg(int n,BIPOINT p[],BICOLOR *col);
+PARAMETER:
+  int n;         頂点数
+  BIPOINT p[];   頂点座標
+  BICOLOR *col;  色
+DESCRIPTION:
+  描画バッファにポリゴンを追加します。
+  このポリゴンは両面から見ることができます。
+REFERENCE:
+  BiInsCircle,BiInsField,BiInsFld,BiInsLine,BiInsMarker,BiInsPc2,
+  BiInsPict2,BiInsPolygFast,BiInsPset,BiInsRoundPolyg,BiInsSrf,
+  BiInsSrfDivide,BiInsSrfModel,BiInsSrfModelDivide,BiInsString,BiInsTer,
+  BiInsTerrMesh,BiInsText,BiOvwPolygShadow
+------------
+NAME:BiInsPolygFast
+CATEGORY:関数
+DEFINITION:
+  int BiInsPolygFast(int n,BIPOINT p[],BIPOINT *cen,BIPOINT *nom,BICOLOR *col);
+PARAMETER:
+  int n;         頂点数
+  BIPOINT p[];   頂点座標
+  BIPOINT *cen;  中心点座標(Z-Sortの基準に使う : NULL可)
+  BIPOINT *nom;  法線ベクトル
+  BICOLOR *col;  色
+DESCRIPTION:
+  描画バッファにポリゴンを追加します。このポリゴンは、
+  法線ベクトルの側からのみ見ることができます。
+  ポリゴンの中心点にNULLを指定すると、
+  ライブラリが自動的に中心点を計算します。
+REFERENCE:
+  BiInsCircle,BiInsField,BiInsFld,BiInsLine,BiInsMarker,BiInsPc2,
+  BiInsPict2,BiInsPolyg,BiInsPset,BiInsRoundPolyg,BiInsSrf,
+  BiInsSrfDivide,BiInsSrfModel,BiInsSrfModelDivide,BiInsString,BiInsTer,
+  BiInsTerrMesh,BiInsText
+------------
+NAME:BiInsPset
+CATEGORY:関数
+DEFINITION:
+  int BiInsPset(BIPOINT *p,BICOLOR *col);
+PARAMETER:
+  BIPOINT *p;    座標
+  BICOLOR *col;  色
+DESCRIPTION:
+  描画バッファに点を追加します。
+REFERENCE:
+  BiInsCircle,BiInsField,BiInsFld,BiInsLine,BiInsMarker,BiInsPc2,
+  BiInsPict2,BiInsPolyg,BiInsPolygFast,BiInsRoundPolyg,BiInsSrf,
+  BiInsSrfDivide,BiInsSrfModel,BiInsSrfModelDivide,BiInsString,BiInsTer,
+  BiInsTerrMesh,BiInsText
+------------
+NAME:BiInsRoundPolyg
+CATEGORY:関数
+DEFINITION:
+  int BiInsRoundPolyg(int n,BIPOINT p[],BIPOINT n[],BICOLOR *col);
+PARAMETER:
+  int n;          頂点数
+  BIPOINT p[];    頂点(0～n-1)
+  BIPOINT n[];    各頂点に対応する法線(0～n-1)
+  BICOLOR *col;   ポリゴンの色
+DESCRIPTION:
+  描画バッファに、スム-ズシェーディングの対象となるポリゴンを追加します。
+  ただし、3Dグラフィックスをサポートするシステムの無いプラットフォ-ム
+  では、フラットシェーディングになります。いずれの場合も、
+  BiRenderOpen関数を使ってレンダリングする場合は
+  スムーズシェーディングとなります
+REFERENCE:
+  BiInsCircle,BiInsField,BiInsFld,BiInsLine,BiInsMarker,BiInsPc2,
+  BiInsPict2,BiInsPolyg,BiInsPolygFast,BiInsPset,BiInsSrf,
+  BiInsSrfDivide,BiInsSrfModel,BiInsSrfModelDivide,BiInsString,BiInsTer,
+  BiInsTerrMesh,BiInsText
+------------
+NAME:BiInsSolidString
+CATEGORY:関数
+DEFINITION:
+  void BiInsSolidString(BIPOSATT *pos,BI3DFONT *fnt,char str[],int h,int v);
+PARAMETER:
+  BIPOSATT *pos;  表示位置と姿勢
+  BI3DFONT *fnt;  BiMakeStdSolidFontで生成したソリッドフォント
+  char str[];     表示する文字列
+  int h,v;        アラインメント
+DESCRIPTION:
+  ソリッドフォントを使って文字列を表示します。h,vの意味は、BiDrawText2を参照
+  してください。
+REFERENCE:
+  BI3DFONT,BiFreeSolidFont,BiInsSolidText,BiMakeStdSolidFont
+------------
+NAME:BiInsSolidText
+CATEGORY:関数
+DEFINITION:
+  void BiInsSolidText(BIPOSATT *pos,BI3DFONT *fnt,char *str[],int h,int v);
+PARAMETER:
+  BIPOSATT *pos;  表示位置と姿勢
+  BI3DFONT *fnt;  BiMakeSolidFontで生成したソリッドフォント
+  char *str[];    表示するテキスト
+  int h,v;        アラインメント
+DESCRIPTION:
+  ソリッドフォントを使ってテキストを表示します。h,vの意味は、BiDrawText2を参照
+  してください。
+REFERENCE:
+  BI3DFONT,BiFreeSolidFont,BiInsSolidString,BiMakeStdSolidFont
+------------
+NAME:BiInsSrf
+NAME:BiInsSrfModel
+CATEGORY:関数
+DEFINITION:
+  int BiInsSrf(BISRF *mdl,BIPOSATT *pos);
+PARAMETER:
+  BISRF *mdl;  ポリゴンモデルデータ
+  BIPOSATT *pos;    位置と姿勢
+DESCRIPTION:
+  描画バッファにポリゴンモデルを追加します。この関数は、
+  ポリゴンモデルが含むポリゴンすべてをひとまとめにして
+  1個のオブジェクトとしてバッファに登録するので、接近した位置に
+  複数のポリゴンモデルを表示する場合は正しい優先順位で描画できないことが
+  あります。その場合は、BiInsSrfDivide関数を使ってください。
+CAUTION:
+  この関数に渡すポリゴンモデルは少なくともBiFlushBufferを実行するまで
+  保持してください。
+REFERENCE:
+  BISRF,BISRFMODEL,BiInsCircle,BiInsField,BiInsFld,BiInsLine,
+  BiInsMarker,BiInsPc2,BiInsPict2,BiInsPolyg,BiInsPolygFast,BiInsPset,
+  BiInsRoundPolyg,BiInsSrfDivide,BiInsSrfModelDivide,BiInsString,
+  BiInsTer,BiInsTerrMesh,BiInsText,BiLoadSrf,BiLoadSrfFromString,
+  BiOvwSrfShadow,BiScaleSrf,BiScaleSrfModel
+------------
+NAME:BiInsSrfDivide
+NAME:BiInsSrfModelDivide
+CATEGORY:関数
+DEFINITION:
+  int BiInsSrf(BISRF *mdl,BIPOSATT *pos);
+PARAMETER:
+  BISRF *mdl;  ポリゴンモデルデータ
+  BIPOSATT *pos;    位置と姿勢
+DESCRIPTION:
+  描画バッファに.SRF形式モデルを追加します。
+REFERENCE:
+  BiInsCircle,BiInsField,BiInsFld,BiInsLine,BiInsMarker,BiInsPc2,
+  BiInsPict2,BiInsPolyg,BiInsPolygFast,BiInsPset,BiInsRoundPolyg,
+  BiInsSrf,BiInsSrfModel,BiInsString,BiInsTer,BiInsTerrMesh,BiInsText,
+  BiLoadSrf,BiLoadSrfFromString,BiScaleSrf,BiScaleSrfModel
+------------
+NAME:BiInsString
+CATEGORY:関数
+DEFINITION:
+  int BiInsString(BIPOINT *p,char *str,BICOLOR *col,int h,int v);
+PARAMETER:
+  BIPOINT *p;    文字列の位置
+  char *str;     文字列
+  BICOLOR *col;  色
+  int h,v;       アラインメント(水平,垂直)
+DESCRIPTION:
+  描画バッファに文字列を追加します。アラインメント(h,v)の意味は、
+  BiDrawText2を参照してください。
+REFERENCE:
+  BiInsCircle,BiInsField,BiInsFld,BiInsLine,BiInsMarker,BiInsPc2,
+  BiInsPict2,BiInsPolyg,BiInsPolygFast,BiInsPset,BiInsRoundPolyg,
+  BiInsSrf,BiInsSrfDivide,BiInsSrfModel,BiInsSrfModelDivide,BiInsTer,
+  BiInsTerrMesh,BiInsText,BiOvwString
+------------
+NAME:BiInsTer
+NAME:BiInsTerrMesh
+CATEGORY:関数
+DEFINITION:
+  int BiInsTer(BITER *ter,BIPOSATT *pnt);
+PARAMETER:
+  BITER *ter;  地形オブジェクト
+  BIPOSATT *pnt;    地形オブジェクトを配置する位置
+DESCRIPTION:
+  描画バッファに地形オブジェクトを追加します。
+REFERENCE:
+  BITER,BITERRMESH,BiAboveTer,BiAboveTerrMesh,BiConstTer,
+  BiConstTerrMesh,BiInsCircle,BiInsField,BiInsFld,BiInsLine,BiInsMarker,
+  BiInsPc2,BiInsPict2,BiInsPolyg,BiInsPolygFast,BiInsPset,
+  BiInsRoundPolyg,BiInsSrf,BiInsSrfDivide,BiInsSrfModel,
+  BiInsSrfModelDivide,BiInsString,BiInsText,BiLoadTer,
+  BiLoadTerFromString,BiLoadTerrMesh,BiLoadTerrMeshFromString,
+  BiTerEyeVecUpVec,BiTerHeight,BiTerrMeshEyeVecUpVec,BiTerrMeshHeight
+------------
+NAME:BiInsText
+CATEGORY:関数
+DEFINITION:
+  int BiInsText(BIPOINT *p,char *str[],BICOLOR *col,int h,int v);
+PARAMETER:
+  BIPOINT *p;    文字列の位置
+  char *str;     文字列
+  BICOLOR *col;  色
+  int h,v;       アラインメント(水平,垂直)
+DESCRIPTION:
+  描画バッファに文字列を追加します。(h,v)の値は、
+  BiDrawText2を参照してください。
+REFERENCE:
+  BiInsCircle,BiInsField,BiInsFld,BiInsLine,BiInsMarker,BiInsPc2,
+  BiInsPict2,BiInsPolyg,BiInsPolygFast,BiInsPset,BiInsRoundPolyg,
+  BiInsSrf,BiInsSrfDivide,BiInsSrfModel,BiInsSrfModelDivide,BiInsString,
+  BiInsTer,BiInsTerrMesh,BiOvwString
+------------
+NAME:BiKey
+CATEGORY:関数
+DEFINITION:
+  int BiKey(int kcode);
+DESCRIPTION:
+  kcodeが表すキーコードに対応するキーが押下状態であればBI_ONを、
+  押していない状態であればBI_OFFを返します。なお、引数のkcodeには、
+  Blue Impulse Library独自のキーコードをセットします。
+  独自キーコードについては、BIKEY_マクロを参照してください。
+  (例:Aキー→BIKEY_A)
+CAUTION:
+  BiKeyでキーの押下状態を読み取っても、そのキー押下が生成する
+  キープレスイベントはクリアしません。このため、
+  BiKey()==BI_ONを判定した直後にキーバッファをクリアした方が安全です。
+REFERENCE:
+  BIKEY_,BIKEY_A,BIKEY_ALT,BIKEY_B,BIKEY_BS,BIKEY_C,BIKEY_COPY,
+  BIKEY_CTRL,BIKEY_D,BIKEY_DEL,BIKEY_DOWN,BIKEY_E,BIKEY_EIGHT,BIKEY_ESC,
+  BIKEY_F,BIKEY_F1,BIKEY_F10,BIKEY_F2,BIKEY_F3,BIKEY_F4,BIKEY_F5,
+  BIKEY_F6,BIKEY_F7,BIKEY_F8,BIKEY_F9,BIKEY_FIVE,BIKEY_FOUR,BIKEY_G,
+  BIKEY_H,BIKEY_HOME,BIKEY_I,BIKEY_J,BIKEY_K,BIKEY_L,BIKEY_LEFT,BIKEY_M,
+  BIKEY_N,BIKEY_NINE,BIKEY_NULL,BIKEY_O,BIKEY_ONE,BIKEY_P,BIKEY_Q,
+  BIKEY_R,BIKEY_RET,BIKEY_RIGHT,BIKEY_S,BIKEY_SEVEN,BIKEY_SHIFT,
+  BIKEY_SIX,BIKEY_SPACE,BIKEY_STOP,BIKEY_T,BIKEY_TAB,BIKEY_TEN0,
+  BIKEY_TEN1,BIKEY_TEN2,BIKEY_TEN3,BIKEY_TEN4,BIKEY_TEN5,BIKEY_TEN6,
+  BIKEY_TEN7,BIKEY_TEN8,BIKEY_TEN9,BIKEY_TENDIV,BIKEY_TENDOT,
+  BIKEY_TENEQUAL,BIKEY_TENMINUS,BIKEY_TENMUL,BIKEY_TENPLUS,BIKEY_THREE,
+  BIKEY_TWO,BIKEY_U,BIKEY_UP,BIKEY_V,BIKEY_W,BIKEY_X,BIKEY_Y,BIKEY_Z,
+  BIKEY_ZERO,BiInkey,BiUpdateDevice
+------------
+NAME:BiKeyToAscii
+CATEGORY:関数
+DEFINITION:
+  int BiKeyToAscii(int bik)
+DESCRIPTION:
+  Blue Impulse Libraryキーコードをアスキーキーコードに変換します。
+REFERENCE:
+  BiInkey,BiUpdateDevice
+------------
+NAME:BiKillCLoop
+CATEGORY:関数
+DEFINITION:
+  int BiKillCLoop(BIPOLYGON *neo,int nPl,BIPOLYGON *pl)
+PARAMETER:
+  BIPOLYGON *neo  C-Loopを除去したポリゴン
+  int nPl         P-LoopとC-Loopの数の合計ポリゴン数
+  BIPOLYGON *pl   P-LoopとC-Loop(pl[0]:P-Loop  pl[1～nPl-1]:C-Loop)
+RETURN:
+  BI_OK   除去に成功
+  BI_ERR  除去できなかった
+DESCRIPTION:
+  C-Loopを含むポリゴンからC-Loopを除去してひとつのP-Loopにします。C-Loopは、
+  P-Loopに対して逆回りである必要があります。なお、交差する辺があったり、
+  連続する２頂点が同一である場合などは、除去に失敗する場合があり、
+  その場合はBI_ERRを返します。
+REFERENCE:
+  BiCheckConvex,BiCheckConvex2,BiKillCLoop2,BiPolyg2ToConvex,
+  BiPolyg2ToTris,BiPolygToConvex,BiPolygToTris,BiTwist2,BiTwist3
+------------
+NAME:BiKillCLoop2
+CATEGORY:関数
+DEFINITION:
+  int BiKillCLoop2(BIPOLYGON2 *dst,int nPl,BIPOLYGON2 *pl)
+PARAMETER:
+  BIPOLYGON2 *neo  C-Loopを除去したポリゴン
+  int nPl          P-LoopとC-Loopの数の合計ポリゴン数
+  BIPOLYGON2 *pl   P-LoopとC-Loop(pl[0]:P-Loop  pl[1～nPl-1]:C-Loop)
+RETURN:
+  BI_OK   除去に成功
+  BI_ERR  除去できなかった
+DESCRIPTION:
+  C-Loopを含む２次元ポリゴンからC-Loopを除去してひとつのP-Loopにします。
+  C-Loopは、P-Loopに対して逆回りである必要がある。なお、交差する辺が
+  あったり、連続する２頂点が同一である場合などは、除去に失敗する場合があり、
+  その場合はBI_ERRを返します。
+REFERENCE:
+  BiCheckConvex,BiCheckConvex2,BiKillCLoop,BiPolyg2ToConvex,
+  BiPolyg2ToTris,BiPolygToConvex,BiPolygToTris,BiTwist2,BiTwist3
+------------
+NAME:BiLarger
+CATEGORY:マクロ
+DEFINITION:
+  #define BiLarger(a,b) ((a)>(b) ? (a) : (b))
+DESCRIPTION:
+  aとbのうち大きい方を返します。見ての通りで、引数の型によらず使用可能です。
+REFERENCE:
+  BiAbs,BiSgn,BiSmaller
+------------
+NAME:BiLength2
+CATEGORY:関数
+DEFINITION:
+  double BiLength2(double x,double y);
+PARAMETER:
+  double x,y;  ２次元ベクトル
+RETURN:
+  double       ベクトル(x,y)の大きさ
+DESCRIPTION:
+  ベクトル(x,y)の大きさを計算して返します。sqrtは使ってないので、
+  そんなに遅くはありません(^-^)
+REFERENCE:
+  BiLength3,BiLengthPoint2,BiLengthPoint3,BiNormalize,BiNormalize2
+------------
+NAME:BiLength3
+CATEGORY:マクロ
+DEFINITION:
+  double BiLength3(double x,double y,double z); (相当)
+PARAMETER:
+  double x,y,z;  ３次元ベクトル
+RETURN:
+  double         ベクトル(x,y,z)の大きさ
+DESCRIPTION:
+  ベクトル(x,y,z)の大きさを計算して返します。内部的にBiLength2を
+  2度呼び出しています。
+REFERENCE:
+  BiLength2,BiLengthPoint2,BiLengthPoint3,BiNormalize,BiNormalize2
+------------
+NAME:BiLengthPoint2
+CATEGORY:マクロ
+DEFINITION:
+  double BiLengthPoint2(BIPOINT2 *p);  (相当)
+PARAMETER:
+  BIPOINT2 *p;  ２次元ベクトル
+RETURN:
+  double        ベクトル*pの長さ
+DESCRIPTION:
+  ベクトル*pの大きさを計算します。
+REFERENCE:
+  BiLength2,BiLength3,BiLengthPoint3,BiNormalize,BiNormalize2
+------------
+NAME:BiLengthPoint3
+CATEGORY:マクロ
+DEFINITION:
+  double BiLengthPoint3(BIPOINT *p);  (相当)
+PARAMETER:
+  BIPOINT *p;  ３次元ベクトル
+RETURN:
+  double       ベクトル*pの長さ
+DESCRIPTION:
+  ベクトル*pの大きさを計算します。
+REFERENCE:
+  BiLength2,BiLength3,BiLength3,BiLengthPoint2,BiNormalize,BiNormalize2
+------------
+NAME:BiLimLineToLine
+NAME:BiLimLineToLine2
+CATEGORY:マクロ
+DEFINITION:
+  void BiLimLineToLine(BILINE *dst,BILIMLINE *src);  (相当)
+  void BiLimLineToLine2(BILINE2 *dst,BILIMLINE *src);  (相当)
+PARAMETER:
+  BILINE *src;       変換先のポインタ
+  BILIMLINE *dst;    変換元のポインタ
+  BILINE2 *src;      変換先のポインタ
+  BILIMLINE2 *dst;   変換元のポインタ
+DESCRIPTION:
+  *srcの線分を*dstの直線に変換します。
+REFERENCE:
+  BiLineToLimLine,BiLineToLimLine2,BiMakeLimLine,BiMakeLimLine2,
+  BiMakeLine,BiMakeLine2
+------------
+NAME:BiLine2CrossPoint
+CATEGORY:関数
+DEFINITION:
+  int BiLine2CrossPoint(BIPOINT *o,BILINE2 *l1,BILINE2 *l2);
+PARAMETER:
+  BIPOINT *o   計算結果格納先
+  BILINE2 *l1  直線１
+  BILINE2 *l2  直線２
+RETURN:
+    BI_OK   正常終了
+    BI_ERR  交点は計算できなかった（２直線が平行だった場合など）
+DESCRIPTION:
+  ２直線の交点を計算します。
+REFERENCE:
+  BiLine2CrossStatus
+------------
+NAME:BiLine2CrossStatus
+CATEGORY:関数
+DEFINITION:
+  int BiLine2CrossStatus(BILIMLINE2 *ln1,BILIMLINE2 *ln2);
+PARAMETER:
+  BILIMLINE2 *ln1,*ln2;  線分１,線分２
+RETURN:
+  BI_CRS_SAME           一致
+  BI_CRS_PARALLEL       平行
+  BI_CRS_ON_LINE        同一直線上
+  BI_CRS_ONESIDE_SAME   片側の頂点が一致
+  BI_CRS_CROSS          交差
+  BI_CRS_NOCROSS        平行でもないし交差もしない
+  BI_CRS_LN1_TOUCH_LN2  線分1の片方の点が線分2に接している
+  BI_CRS_LN2_TOUCH_LN1  線分2の片方の点が線分1に接している
+DESCRIPTION:
+  ２線分の関係を求めます。
+REFERENCE:
+  BI_CRS_CROSS,BI_CRS_LN1_TOUCH_LN2,BI_CRS_LN2_TOUCH_LN1,BI_CRS_NOCROSS,
+  BI_CRS_ONESIDE_SAME,BI_CRS_ON_LINE,BI_CRS_PARALLEL,BI_CRS_SAME,
+  BiLine2CrossPoint
+------------
+NAME:BiLineProjectionVector
+CATEGORY:関数
+DEFINITION:
+  void BiLineProjectionVector(BIPOINT *v,BIPOINT *org,BILINE *ln)
+PARAMETER:
+  BIPOINT *v;    結果のベクトル
+  BIPOINT *org;  投影元の座標
+  BILINE *ln;    投影する直線
+DESCRIPTION:
+  頂点*orgを直線*lnに垂直に投影するときのベクトルを*vに返します。
+------------
+NAME:BiLineToLimLine
+NAME:BiLineToLimLine2
+CATEGORY:マクロ
+DEFINITION:
+  void BiLineToLimLine(BILIMLINE *dst,BILINE *src); (相当)
+  void BiLineToLimLine2(BILIMLINE2 *dst,BILINE2 *src);  (相当)
+PARAMETER:
+  BILIMLINE *dst;    変換先のポインタ
+  BILINE *src;       変換元のポインタ
+  BILIMLINE2 *dst;   変換先のポインタ
+  BILINE2 *src;      変換元のポインタ
+DESCRIPTION:
+  *srcの直線を*dstの線分に変換します。両端点は、src->o と、src->oからsrc->v
+  だけ移動した点です。
+REFERENCE:
+  BiLimLineToLine,BiLimLineToLine2,BiMakeLimLine,BiMakeLimLine2,
+  BiMakeLine,BiMakeLine2
+------------
+NAME:BiLoadFld
+CATEGORY:関数
+DEFINITION:
+  int BiLoadFld(BIFLD *fld,char fn[])
+PARAMETER:
+  BIFLD *fld;   フィールド読み込み先ポインタ
+  char fn[];      ファイル名
+RETURN:
+  BI_OK           正常終了
+  BI_ERR          エラー
+DESCRIPTION:
+  ファイル名fnのフィールドデータを読み込んで*fldに格納します。
+REFERENCE:
+  BIFIELD,BIFLD,BiGetFieldElevation,BiGetFieldGroundSky,
+  BiGetFieldRegion,BiGetFieldSrfCollision,BiGetFldElevation,
+  BiGetFldGroundSky,BiGetFldRegion,BiGetFldSrfCollision,BiInsField,
+  BiInsFld,BiOvwField,BiOvwFld
+------------
+NAME:BiLoadPc2
+NAME:BiLoadPict2
+CATEGORY:関数
+DEFINITION:
+  int BiLoadPc2(BIPC2 *pic,char *fn);
+PARAMETER:
+    BIPC2 *pic;  図形オブジェクト格納先ポインタ
+    char *fn;      ファイル名
+DESCRIPTION:
+  ファイル名fnの図形オブジェクトを読み込んで、*picに格納します。
+REFERENCE:
+  BIPC2,BIPICT2,BiDrawPc2,BiDrawPc2Zoom,BiDrawPict2,BiDrawPict2Zoom,
+  BiInsPc2,BiInsPict2,BiLoadPc2FromString,BiLoadPict2FromString,
+  BiOvwPc2,BiOvwPict2
+------------
+NAME:BiLoadPc2FromString
+NAME:BiLoadPict2FromString
+CATEGORY:関数
+DEFINITION:
+  int BiLoadPc2FromString(BIPC2 *pic,char *str[]);
+PARAMETER:
+  BIPC2 *pic;     生成する図形オブジェクトへのポインタ
+  char *str[];      元データへのポインタ
+RETURN:
+  BI_OK            生成できた
+  BI_ERR           生成できなかった
+DESCRIPTION:
+  ファイルの代わりに文字列配列を元に図形オブジェクトを生成します。
+REFERENCE:
+  BIPC2,BIPICT2,BiInsPc2,BiInsPict2,BiLoadPc2,BiLoadPict2
+------------
+NAME:BiLoadSrf
+CATEGORY:関数
+DEFINITION:
+  int BiLoadSrf(BISRF *mdl,char *fn);
+PARAMETER:
+  BISRF *mdl;  ポリゴンモデル格納先ポインタ
+  char *fn;         ファイル名
+DESCRIPTION:
+  ファイル名fnのポリゴンモデルを読み込んで、*mdlに格納します。
+REFERENCE:
+  BISRF,BISRFMODEL,BiFreeSrf,BiFreeSrfModel,BiGetSrfRadius,BiInsSrf,
+  BiInsSrfDivide,BiInsSrfModel,BiInsSrfModelDivide,BiLoadSrfFromString,
+  BiScaleSrf,BiScaleSrfModel,BiSrfCollision
+------------
+NAME:BiLoadSrfFromString
+CATEGORY:関数
+DEFINITION:
+  int BiLoadSrfFromString(BISRF *mdl,char *str[]);
+PARAMETER:
+  BISRF *mdl;  生成するポリゴンモデルへのポインタ
+  char *str[];      元データへのポインタ
+RETURN:
+  BI_OK            生成できた
+  BI_ERR           生成できなかった
+DESCRIPTION:
+  ファイルの代わりに文字列配列を元にポリゴンモデルを生成します。
+REFERENCE:
+  BISRF,BISRFMODEL,BiInsSrf,BiInsSrfDivide,BiInsSrfModel,
+  BiInsSrfModelDivide,BiLoadSrf
+------------
+NAME:BiLoadTer
+NAME:BiLoadTerrMesh
+CATEGORY:関数
+DEFINITION:
+  int BiLoadTer(BITER *tm,char *fn);
+PARAMETER:
+  BITER *tm;  地形オブジェクト格納先ポインタ
+  char *fn;        ファイル名
+DESCRIPTION:
+  ファイル名fnの地形オブジェクトを読み込んで*tmに格納します。
+REFERENCE:
+  BITER,BITERRMESH,BiAboveTer,BiAboveTerrMesh,BiConstTer,
+  BiConstTerrMesh,BiInsTer,BiInsTerrMesh,BiLoadTerFromString,
+  BiLoadTerrMeshFromString,BiTerEyeVecUpVec,BiTerHeight,
+  BiTerrMeshEyeVecUpVec,BiTerrMeshHeight
+------------
+NAME:BiLoadTerFromString
+NAME:BiLoadTerrMeshFromString
+CATEGORY:関数
+DEFINITION:
+  int BiLoadTerFromString(BITER *tm,char *str[]);
+PARAMETER:
+  BITER *tm;   生成する地形オブジェクトへのポインタ
+  char *str[];      元データへのポインタ
+RETURN:
+  BI_OK            生成できた
+  BI_ERR           生成できなかった
+DESCRIPTION:
+  ファイルの代わりに文字列配列を元に地形オブジェクトを生成します。
+REFERENCE:
+  BITER,BITERRMESH,BiAboveTer,BiAboveTerrMesh,BiConstTer,
+  BiConstTerrMesh,BiInsTer,BiInsTerrMesh,BiLoadTer,BiLoadTerrMesh
+------------
+NAME:BiMagenta
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiMagenta;
+DESCRIPTION:
+  マゼンタ(R=255,G=0,B=255)を表します。
+------------
+NAME:BiMakeAxis
+CATEGORY:マクロ
+DEFINITION:
+  void BiMakeAxis(BIAXIS *axs,BIPOSATT *pos);  (相当)
+DESCRIPTION:
+  *posが表す位置と姿勢から座標系*axsを作ります。BiPntAngToAxisと同じ
+  機能を持ちます。
+REFERENCE:
+  BIAXIS,BiPntAngToAxis
+------------
+NAME:BiMakeLimLine
+NAME:BiMakeLimLine2
+CATEGORY:マクロ
+DEFINITION:
+  void BiMakeLimLine(BILIMLINE *ln,BIPOINT *a,BIPOINT *b); (相当)
+  void BiMakeLimLine2(BILIMLINE2 *ln,BIPOINT2 *a,BIPOINT2 *b); (相当)
+PARAMETER:
+  BIPOINT *a,*b;  直線の両端点
+  BIPOINT2 *a,*b  直線の両端点
+DESCRIPTION:
+  2直線を線分に変換します。
+REFERENCE:
+  BiLimLineToLine,BiLimLineToLine2,BiLineToLimLine,BiLineToLimLine2,
+  BiMakeLine,BiMakeLine2
+------------
+NAME:BiMakeLine
+NAME:BiMakeLine2
+CATEGORY:マクロ
+DEFINITION:
+  void BiMakeLine(BILINE *ln,BIPOINT *a,BIPOINT *b); (相当)
+  void BiMakeLine2(BILINE2 *ln,BIPOINT2 *a,BIPOINT2 *b); (相当)
+PARAMETER:
+  BIPOINT *a,*b;  直線の両端点
+  BIPOINT2 *a,*b  直線の両端点
+DESCRIPTION:
+  2頂点を直線に変換します。
+REFERENCE:
+  BiLimLineToLine,BiLimLineToLine2,BiLineToLimLine,BiLineToLimLine2,
+  BiMakeLimLine,BiMakeLimLine2
+------------
+NAME:BiMakePlane
+CATEGORY:関数
+DEFINITION:
+  int BiMakePlane(BIPLANE *pln,int n,BIPOINT p[]);
+PARAMETER:
+  BIPLANE *pln;  結果の平面
+  int np;        頂点数
+  BIPOINT p[];   頂点
+RETURN:
+  int            計算できたとき BI_TRUE  できなかったとき BI_FALSE
+DESCRIPTION:
+  p[0]～p[np-1]を元に平均の平面を求めて、*plnに格納します。
+REFERENCE:
+  BIPLANE,BiAxisToPlane
+------------
+NAME:BiMakePolyg
+NAME:BiMakePolyg2
+CATEGORY:関数
+DEFINITION:
+  int BiMakePolyg(BIPOLYGON *plg,int np,BIPOINT p[]);
+  int BiMakePolyg2(BIPOLYGON2 *plg,int np,BIPOINT2 p[]);
+PARAMETER:
+  BIPOLYGON *plg;   作成するポリゴンへのポインタ
+  BIPOLYGON2 *plg;  作成するポリゴンへのポインタ
+  int np;           頂点数
+  BIPOINT p[];      頂点
+  BIPOINT2 p[];     頂点
+RETURN:
+  BI_OK             作成できた
+  BI_ERR            作成できなかった(メモリ不足)
+DESCRIPTION:
+  指定の頂点数と頂点のポリゴンを生成します。内部でメモリを自動的に
+  確保するので、解放するには、BiFreePolyg2/BiFreePolygを使います。
+REFERENCE:
+  BiCopyPolyg,BiCopyPolyg2,BiFreePolyg,BiFreePolyg2
+------------
+NAME:BiMakeStdSolidFont
+CATEGORY:関数
+DEFINITION:
+  int BiMakeStdSolidFont(BI3DFONT *fnt,real wid,BICOLOR *col);
+PARAMETER:
+  BI3DFONT *fnt;  ソリッドフォント格納先ポインタ
+  real wid;       1文字の幅
+  BICOLOR *col;   文字の色
+DESCRIPTION:
+  スタンダードなソリッドフォントを生成します。
+REFERENCE:
+  BI3DFONT,BiFreeSolidFont,BiInsSolidString,BiInsSolidText
+------------
+NAME:BiMakeTrigonomy
+CATEGORY:マクロ
+DEFINITION:
+  void BiMakeTrigonomy(BITRIGON *trg,BIANGLE *ang);  (相当)
+PARAMETER:
+  BITRIGON *trg;  計算結果格納ポインタ
+  BIANGLE *ang;   計算元の姿勢
+DESCRIPTION:
+  (ang->h,ang->p,ang->b)のsin/cosの値を計算して、*trgに格納します。
+  とくにこのマクロを使わなくてはできない座標変換はありませんが、
+  いくつものベクトルを連続して座標変換する場合は、このマクロで
+  BITRIGONを作っておいてBiRotFastLtoG / BiRotFastGtoLを使用した方が
+  高速に処理できます。
+REFERENCE:
+  BITRIGON,BiRotFastGtoL,BiRotFastLtoG
+------------
+NAME:BiMalloc
+CATEGORY:関数
+DEFINITION:
+  void *BiMalloc(size_t siz);
+DESCRIPTION:
+  sizバイトのメモリを確保します。システムによってmalloc関数が
+  TL_mallocだったりfallocだったりするので、この差を埋めるために用意した
+  関数です。だから、移植性を考えて、明らかにmallocとfreeが使用可能な
+  システムで開発するときでも、この関数を使ってください。
+REFERENCE:
+  BiFree,BiFreePolyg,BiFreePolyg2
+------------
+NAME:BiMouse
+CATEGORY:関数
+DEFINITION:
+  void BiMouse(int *lbt,int *mbt,int *rbt,long *mx,long *my);
+PARAMETER:
+  int *lbt,*mbt,*rbt;  ボタン状態(左,中,右)を格納するポインタ
+  long *mx,*my;        マウスカーソル座標を格納するポインタ
+DESCRIPTION:
+  関数呼出時点でのマウスのボタン状態,カーソル位置を返します。
+  なお、中ボタンのないシステムでは、*mbtは常にBI_OFFになります。
+  また、ボタンがひとつのシステムでは、*lbt以外は常にBI_OFFになります。
+REFERENCE:
+  BiUpdateDevice
+------------
+NAME:BiMulPoint
+CATEGORY:マクロ
+DEFINITION:
+  void BiMulPoint(BIPOINT *ret,BIPOINT *src,double m); (相当)
+PARAMETER:
+  BIPOINT *ret;  計算結果格納ポインタ
+  BIPOINT *src;  被乗数ベクトル
+  double m;      乗数
+DESCRIPTION:
+  *srcを実数m倍して結果を*retに格納します。
+REFERENCE:
+  BIPOINT,BiAddPoint,BiDivPoint,BiSubPoint
+------------
+NAME:BiMulPoint2
+CATEGORY:マクロ
+DEFINITION:
+  void BiMulPoint2(BIPOINT2 *ret,BIPOINT2 *src,double m); (相当)
+PARAMETER:
+  BIPOINT2 *ret;  計算結果格納ポインタ
+  BIPOINT2 *src;  被乗数ベクトル
+  double m;       乗数
+DESCRIPTION:
+  *srcを実数m倍して結果を*retに格納します。
+REFERENCE:
+  BiAddPoint2,BiDivPoint2,BiSubPoint2
+------------
+NAME:BiNearClipLine
+CATEGORY:関数
+DEFINITION:
+  void BiNearClipLine(BIPOINT c[2],BIPOINT p[2],double cpz);
+PARAMETER:
+  BIPOINT c[2];  クリップした結果の直線の両端点
+  BIPOINT p[2];  クリップする元の直線の両端点
+  double cpz;    クリップ平面のz座標
+DESCRIPTION:
+  p[0]とp[1]を両端点とする直線を平面z=cpz でクリップしてそれより奥の部分を
+  c[0]とc[1]に格納します。なお、この関数では、両端点ともに cpz よりも
+  手前にある場合は何もせずに終了するので、そのチェックはアプリケーション
+  側で行ってください。
+REFERENCE:
+  BiNearClipPolyg,BiPlProject,BiProject
+------------
+NAME:BiNearClipPolyg
+CATEGORY:関数
+DEFINITION:
+  void BiNearClipPolyg(int *nc,BIPOINT c[],int np,BIPOINT p[],double cpz);
+PARAMETER:
+  int *nc;      クリップ結果のポリゴンの頂点数を格納するポインタ
+  BIPOINT c[];  クリップ結果のポリゴンの頂点
+  int np;       元のポリゴンの頂点数
+  BIPOINT p[];  元のポリゴンの頂点
+  double cpz;   クリップ平面のz座標
+DESCRIPTION:
+  ポリゴンを平面z=cpz でクリップしてそれより奥の部分のポリゴンを生成します。
+  もしも、全ての頂点がcpzよりも手前にある場合は、*ncに0をセットします。
+REFERENCE:
+  BiNearClipLine,BiPlProject,BiProject
+------------
+NAME:BiNormalize
+CATEGORY:関数
+DEFINITION:
+  void BiNormalize(BIPOINT *dst,BIPOINT *src);
+PARAMETER:
+  BIPOINT *ret;  計算結果格納ポインタ
+  BIPOINT *src;  元のベクトル
+DESCRIPTION:
+  *srcを単位ベクトルにして、*retに格納します。
+REFERENCE:
+  BiLength2,BiLength3,BiLengthPoint2,BiLengthPoint3,BiNormalize2,
+  BiQuickNormalize
+------------
+NAME:BiNormalize2
+CATEGORY:関数
+DEFINITION:
+  void BiNormalize2(BIPOINT2 *ret,BIPOINT2 *src);
+PARAMETER:
+  BIPOINT2 *ret;  計算結果格納ポインタ
+  BIPOINT2 *src;  元のベクトル
+DESCRIPTION:
+  ２次元ベクトル*srcを単位ベクトルにして、*retに格納します。
+REFERENCE:
+  BiLength2,BiLength3,BiLengthPoint2,BiLengthPoint3,BiNormalize
+------------
+NAME:BiOpenWindow
+CATEGORY:関数
+DEFINITION:
+  void BiOpenWindow(long reqX,long reqY);
+PARAMETER:
+  long reqX,reqY;  要求するウィンドウサイズ
+DESCRIPTION:
+  ウィンドウを開きます。ただし、大きさが必ずreqX,reqYになるとは限りません。
+  実際に開いたウィンドウの大きさは、BiGetWindowSizeで求めることができます。
+  現バージョンでは、シングルウィンドウのみサポートなので、
+  アプリケーション開始時にBiOpenWindowを一度コールして、
+  アプリケーション終了時にBiCloseWindowをコールしてください。
+REFERENCE:
+  BiCloseWindow,BiSetWindowName
+------------
+NAME:BiOrgA
+CATEGORY:定義済構造体
+DEFINITION:
+  BIATTITUDE BiOrgA;
+DESCRIPTION:
+  姿勢(0,0,0)を表します。
+------------
+NAME:BiOrgAxs
+CATEGORY:定義済構造体
+DEFINITION:
+  BIAXIS BiOrgAxs;
+DESCRIPTION:
+  原点座標系を表します。位置(0,0,0),姿勢(0,0,0)から生成できる座標系の値です。
+------------
+NAME:BiOrgP
+CATEGORY:定義済構造体
+DEFINITION:
+  BIPOINT BiOrgP;
+DESCRIPTION:
+  座標(0,0,0)を表します。
+------------
+NAME:BiOrgPA
+CATEGORY:定義済構造体
+DEFINITION:
+  BIPOSATT BiOrgPA;
+DESCRIPTION:
+  位置(0,0,0),姿勢(0,0,0)を表します。
+------------
+NAME:BiOrgPln
+CATEGORY:定義済構造体
+DEFINITION:
+  BIPLANE BiOrgPln;
+DESCRIPTION:
+  XZ平面を表します。
+------------
+NAME:BiOuterProduct
+CATEGORY:関数
+DEFINITION:
+  void BiOuterProduct(BIPOINT *ou,BIPOINT *a,BIPOINT *b);
+PARAMETER:
+  BIPOINT *ou;  結果の外積
+  BIPOINT *a;   ベクトル
+  BIPOINT *b;   ベクトル
+DESCRIPTION:
+  ベクトル*aとベクトル*bと直交するベクトルを求めて、*ouに格納します。
+REFERENCE:
+  BiInnerPoint,BiInnerPoint2
+------------
+NAME:BiOvwFld
+NAME:BiOvwField
+CATEGORY:関数
+DEFINITION:
+  void BiOvwFld(BIFLD *fld,BIPOSATT *pos)
+PARAMETER:
+  BIFLD *fld;    フィールドのポインタ
+  BIPOSATT *pos;   フィールドの位置/姿勢
+DESCRIPTION:
+  フィールドデータ*fldの地図データを描画します。アンダーレイの描画として
+  コールしてください。(BiStartBufferと最初のBiIns**関数の間で実行する)。
+REFERENCE:
+  BIFIELD,BIFLD,BiInsField,BiInsFld,BiLoadFld,BiOvwLine,BiOvwMarker,
+  BiOvwPc2,BiOvwPict2,BiOvwPolyg,BiOvwPset,BiOvwString,BiOvwText
+------------
+NAME:BiOvwLine
+CATEGORY:関数
+DEFINITION:
+  void BiOvwLine(BIPOINT *p1,BIPOINT *p2,BICOLOR *col);
+PARAMETER:
+  BIPOINT *p1,*p2;  直線の両端点
+  BICOLOR *col;     色
+DESCRIPTION:
+  Z-Sortに関係なく*p1と*p2の間に直線を描画する。この関数は、
+  BiIns???～BiFlushBufferの間にコールしないでください。
+REFERENCE:
+  BiOvwField,BiOvwFld,BiOvwLineShadow,BiOvwMarker,BiOvwPc2,BiOvwPict2,
+  BiOvwPolyg,BiOvwPset,BiOvwString,BiOvwText
+------------
+NAME:BiOvwLineShadow
+CATEGORY:関数
+DEFINITION:
+  int BiOvwLineShadow(BIPOINT *p1,BIPOINT *p2,BICOLOR *col);
+DESCRIPTION:
+  直線の影をBiSetShadowPlaneで設定した平面に投影して描画します。
+REFERENCE:
+  BiInsLine,BiOvwLine,BiOvwPolygShadow,BiOvwSrfShadow,BiSetShadowPlane
+------------
+NAME:BiOvwMarker
+CATEGORY:関数
+DEFINITION:
+  void BiOvwMarker(BIPOINT *p,BICOLOR *col,int mkType);
+PARAMETER:
+  BIPOINT *p;    マーカー中心点
+  BICOLOR *col;  色
+  int mkType;    マーカータイプ
+DESCRIPTION:
+  Z-Sortに関係なく*pの位置にマーカーを描画します。この関数は、
+  BiIns???～BiFlushBufferの間にコールしないでください。
+REFERENCE:
+  BiOvwField,BiOvwFld,BiOvwLine,BiOvwPc2,BiOvwPict2,BiOvwPolyg,
+  BiOvwPset,BiOvwString,BiOvwText
+------------
+NAME:BiOvwPc2
+NAME:BiOvwPict2
+CATEGORY:関数
+DEFINITION:
+  void BiOvwPc2(BIPC2 *pic,BIPOSATT *pnt);
+PARAMETER:
+  BIPC2 *pic;   描画する図形オブジェクト
+  BIPOSATT *pnt;  2次元図形の位置/姿勢
+DESCRIPTION:
+  Z-Sortに関係なく*picを*pntの位置と姿勢で描画します。この関数は、
+  BiIns???～BiFlushBufferの間にコールしないでください。
+REFERENCE:
+  BIPC2,BIPICT2,BiInsPc2,BiInsPict2,BiLoadPc2,BiLoadPict2,BiOvwField,
+  BiOvwFld,BiOvwLine,BiOvwMarker,BiOvwPolyg,BiOvwPset,BiOvwString,
+  BiOvwText
+------------
+NAME:BiOvwPolyg
+CATEGORY:関数
+DEFINITION:
+  void BiOvwPolyg(int n,BIPOINT *p,BICOLOR *col);
+PARAMETER:
+  int n;         頂点数
+  BIPOINT *p;    頂点座標
+  BICOLOR *col;  色
+DESCRIPTION:
+  Z-Sortに関係なく、ポリゴンを描画します。この関数は、
+  BiIns???～BiFlushBufferの間にコールしないでください。
+REFERENCE:
+  BiOvwField,BiOvwFld,BiOvwLine,BiOvwMarker,BiOvwPc2,BiOvwPict2,
+  BiOvwPolygShadow,BiOvwPset,BiOvwString,BiOvwText
+------------
+NAME:BiOvwPolygShadow
+CATEGORY:関数
+DEFINITION:
+  int BiOvwPolygShadow(int np,BIPOINT p[],BICOLOR *col);
+DESCTIPTION:
+  ポリゴンの影をBiSetShadowPlaneで設定した平面に投影して描画します。
+REFERENCE:
+  BiInsPolyg,BiOvwLineShadow,BiOvwPolyg,BiOvwSrfShadow,BiSetShadowPlane
+------------
+NAME:BiOvwPset
+CATEGORY:関数
+DEFINITION:
+  void BiOvwPset(BIPOINT *p,BICOLOR *col);
+PARAMETER:
+  BIPOINT *p;    描画する点の座標
+  BICOLOR *col;  色
+DESCRIPTION:
+  Z-Sortに関係なく、*pの位置に点を描画します。この関数は、
+  BiIns???～BiFlushBufferの間にコールしないでください。
+REFERENCE:
+  BiOvwField,BiOvwFld,BiOvwLine,BiOvwMarker,BiOvwPc2,BiOvwPict2,
+  BiOvwPolyg,BiOvwString,BiOvwText
+------------
+NAME:BiOvwSrfShadow
+CATEGORY:関数
+DEFINITION:
+  int BiOvwSrfShadow(BISRF *mdl,BIPOSATT *pos);
+DESCRIPTION:
+  ポリゴンモデルの影をBiSetShadowPlaneで設定した平面に投影して描画します。
+REFERENCE:
+  BiInsSrf,BiInsSrfModel,BiOvwLineShadow,BiOvwPolygShadow,
+  BiSetShadowPlane
+------------
+NAME:BiOvwString
+CATEGORY:関数
+DEFINITION:
+  int BiOvwString(BIPOINT *p,char str[],BICOLOR *col,int hori,int vert);
+PARAMETER:
+  BIPOINT *p;    表示する位置
+  char str[];    文字列
+  BICOLOR *col;  色
+  int hori;      水平アラインメント(意味は、BiDrawText2を参照)
+  int vert;      垂直アラインメント(意味は、BiDrawText2を参照)
+DESCRIPTION:
+  Z-Sortに関係なく*pの位置に文字列strを描画します。
+  この関数は、BiIns???～BiFlushBufferの間にコールしないでください。
+REFERENCE:
+  BiInsString,BiInsText,BiOvwField,BiOvwFld,BiOvwLine,BiOvwMarker,
+  BiOvwPc2,BiOvwPict2,BiOvwPolyg,BiOvwPset,BiOvwText
+------------
+NAME:BiOvwText
+CATEGORY:関数
+DEFINITION:
+  int BiOvwText(BIPOINT *p,char *str[],BICOLOR *col,int hori,int vert);
+PARAMETER:
+  BIPOINT *p;    表示する位置
+  char *str[];   テキスト
+  BICOLOR *col;  色
+  int hori;      水平アラインメント(意味は、BiDrawText2を参照)
+  int vert;      垂直アラインメント(意味は、BiDrawText2を参照)
+DESCRIPTION:
+  Z-Sortに関係なく*pの位置にテキストstrを描画します。
+  この関数は、BiIns???～BiFlushBufferの間にコールしないでください。
+REFERENCE:
+  BiOvwField,BiOvwFld,BiOvwLine,BiOvwMarker,BiOvwPc2,BiOvwPict2,
+  BiOvwPolyg,BiOvwPset,BiOvwString
+------------
+NAME:BiPitchUp
+CATEGORY:関数
+DEFINITION:
+  void BiPitchUp(BIANGLE *ret,BIANGLE *src,long pit,long yaw);
+PARAMETER:
+  BIANGLE *ret;  計算結果格納ポインタ
+  BIANGLE *src;  ピッチアップ/ヨーイング前の姿勢
+  long pit;       ピッチアップ角度
+  long yaw;       ヨーイング角度
+DESCRIPTION:
+  姿勢*srcから、上にpit,左にyawだけ回転した姿勢を*retに返します。
+  フライトシミュレータ等で、引起し、首振りは単純なheading,pitchingの
+  加減算では計算できないので、この関数を利用します。
+REFERENCE:
+  BiAngleToVector,BiVectorToAngle,BiVectorToHeadPitch
+------------
+NAME:BiPlProject
+CATEGORY:マクロ
+DEFINITION:
+  void BiPlProject(int n,BIPOINTS ret[],BIPOINT src[],BIPROJ *prj); (相当)
+PARAMETER:
+  int n;           投影する頂点数
+  BIPOINTS ret[];  投影結果格納ポインタ
+  BIPOINT src[];   投影元の座標
+  BIPROJ *prj;     投影情報
+DESCRIPTION:
+  視野座標src[0]～src[n-1]を画面座標に投影して、結果をret[0]～ret[n-1]に
+  格納します。
+REFERENCE:
+  BiNearClipLine,BiNearClipPolyg,BiProject
+------------
+NAME:BiPntAngToAxis
+CATEGORY:マクロ
+DEFINITION:
+  void BiPntAngToAxis(BIAXIS *ret,BIPOSATT *pos); (相当)
+PARAMETER:
+  BIAXIS *ret;    計算結果格納ポインタ
+  BIPOSATT *pos;  ローカル座標原点と姿勢
+DESCRIPTION:
+  *posで決まる原点と軸方向からローカル座標軸を作成します。
+REFERENCE:
+  BiConvGtoL,BiConvLtoG,BiMakeAxis
+------------
+NAME:BiPolyg2ToTris
+CATEGORY:関数
+DEFINITION:
+  int BiPolyg2ToTris(int *nTr,BIPOINT2 *tr,int nPl,BIPOLYGON2 *pl)
+PARAMETER:
+  int *nTr        ３角形数格納先
+  BIPOINT2 *tr    ３角形の座標格納先(NULL:３角形数のみ計算)
+  int nPl         P-LoopとC-Loopの合計数(C-Loopがないときは１)
+  BIPOLYGON2 *pl  P-LoopとC-Loop (pl[0]:P-Loop  pl[1～nPl-1]:C-Loop)
+RETURN:
+  BI_OK   正常終了
+  BI_ERR  分割できなかった
+DESCRIPTION:
+  ２次元のP-LoopとC-Loopを三角形に分割して、結果を
+
+    tr[n*3～n*3+2] (n:整数 , n>=0)
+
+  に格納します。したがって、呼び出し元では、あらかじめ三角形数が入るだけの
+  配列を用意する必要があります。なお、引き数trにNULLを指定して呼び出すと
+  必要な三角形数だけを求めることができます。
+
+  また、C-Loopがある場合、C-LoopはP-Loopに対して逆回りである必要があります。
+REFERENCE:
+  BiCheckConvex,BiCheckConvex2,BiKillCLoop,BiKillCLoop2,
+  BiPolyg2ToConvex,BiPolygToConvex,BiPolygToTris,BiTwist2,BiTwist3
+------------
+NAME:BiPolygToConvex
+NAME:BiPolyg2ToConvex
+CATEGORY:関数
+DEFINITION:
+  int BiPolygToConvex(int *nCvx,BIPOLYGON *cvx,BIPOLYGON *org);
+  int BiPolyg2ToConvex(int *nCvx,BIPOLYGON2 cvx[],BIPOLYGON2 *org);
+PARAMETER:
+  int *nCvx;         分割の結果できたポリゴン数
+  BIPOLYGON  cvx[];  分割結果のポリゴン
+  BIPOLYGON  *org;   分割するもとのポリゴン
+  BIPOLYGON2 cvx[];  分割結果のポリゴン
+  BIPOLYGON2 *org;   分割するもとのポリゴン
+RETURN:
+  BI_OK              分割成功
+  BI_ERR             分割できなかった(交差する辺がある場合など)
+DESCRIPTION:
+  指定の2次元ポリゴンを凸多角形に分割します。分割したポリゴンの
+  頂点のメモリは関数内で自動的に確保するので、解放するには、
+  BiFreePolyg2/BiFreePolygを使います。
+REFERENCE:
+  BiCheckConvex,BiCheckConvex2,BiFreePolyg,BiFreePolyg2,BiKillCLoop,
+  BiKillCLoop2,BiPolyg2ToTris,BiPolygToTris,BiTwist2,BiTwist3
+------------
+NAME:BiPolygToTris
+CATEGORY:関数
+DEFINITION:
+  int BiPolygToTris(int *nTr,BIPOINT *tr,int nPl,BIPOLYGON *pl);
+PARAMETER:
+  int *nTr        ３角形数格納先
+  BIPOINT2 *tr    ３角形の座標格納先(NULL:３角形数のみ計算)
+  int nPl         P-LoopとC-Loopの合計数(C-Loopがないときは１)
+  BIPOLYGON2 *pl  P-LoopとC-Loop (pl[0]:P-Loop  pl[1～nPl-1]:C-Loop)
+RETURN:
+  BI_OK   正常終了
+  BI_ERR  分割できなかった
+DESCRIPTION:
+  3次元のP-LoopとC-Loopを三角形に分割して、結果を
+
+    tr[n*3～n*3+2] (n:整数 , n>=0)
+
+  に格納します。したがって、呼び出し元では、あらかじめ三角形数が入るだけの
+  配列を用意する必要があります。なお、引き数trにNULLを指定して呼び出すと
+  必要な三角形数だけを求めることができます。
+
+  また、C-Loopがある場合、C-LoopはP-Loopに対して逆回りである必要があります。
+REFERENCE:
+  BiCheckConvex,BiCheckConvex2,BiKillCLoop,BiKillCLoop2,
+  BiPolyg2ToConvex,BiPolyg2ToTris,BiPolygToConvex,BiTwist2,BiTwist3
+------------
+NAME:BiPopMatrix
+CATEGORY:関数
+DEFINITION:
+  int BiPopMatrix(void);
+DESCRIPTION:
+  BiPopMatrixの指定を一段階戻します。
+REFERENCE:
+  BiClearLocalMatrix,BiPushMatrix,BiSetLocalMatrix
+------------
+NAME:BiProject
+CATEGORY:関数
+DEFINITION:
+  void BiProject(BIPOINTS *ret,BIPOINT *src,BIPROJ *prj); (相当)
+PARAMETER:
+  BIPOINTS *ret;  投影結果格納ポインタ
+  BIPOINT *src;   投影する元の座標
+  BIPROJ *prj;    投影情報
+DESCRIPTION:
+  視野座標*srcを画面座標に投影して、結果を*retに格納します。
+REFERENCE:
+  BiNearClipLine,BiNearClipPolyg,BiPlProject
+------------
+NAME:BiProjectToPlane
+CATEGORY:関数
+DEFINITION:
+  void BiProjectToPlane(BIPOINT *pnt,BIPLANE *pln,BIPOINT *org)
+PARAMETER:
+  BIPOINT *pnt;  結果の座標
+  BIPLANE *pln;  投影する平面
+  BIPOINT *org;  投影元の座標
+DESCRIPTION:
+  頂点*orgを平面*plnに垂直に投影して、*pntに座標を返します。
+------------
+NAME:BiPushMatrix
+CATEGORY:関数
+DEFINITION:
+  int BiPushMatrix(BIPOSATT *pos);
+DESCRIPTION:
+  3次元描画関数(BiOvwXXXX,BiInsXXXX)で指定する座標の原点位置と基準姿勢を
+  指定します。BiSetLocalMatrixもこれと同様の機能を持ちますが、BiPushMatrix
+  は階層的に指定が可能であるという違いがあります。
+REFERENCE:
+  BiClearLocalMatrix,BiPopMatrix,BiSetLocalMatrix
+------------
+NAME:BiQuickNormalize
+CATEGORY:関数
+DEFINITION:
+  void BiQuickNormalize(BIPOINT *dst,BIPOINT *src);
+DESCRIPTION:
+  ベクトル*srcの単位ベクトルを計算して*dstに格納します。テーブルを
+  使っているので高速に計算することができますが、精度は落ちます。
+REFERENCE:
+  BiNormalize
+------------
+NAME:BiRed
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiRed;
+DESCRIPTION:
+  赤(R=255,G=0,B=0)を表します。
+------------
+NAME:BiRenderClose
+CATEGORY:関数
+DEFINITION:
+  void BiRenderClose(void);
+DESCRIPTION:
+  BiRenderOpenを使って出力を開始した画像ファイルの出力を終了します。
+REFERENCE:
+  BiEpsClose,BiEpsOpen,BiRenderOpen,BiSrfClose,BiSrfOpen,BiVrmlClose,
+  BiVrmlOpen
+------------
+NAME:BiRenderOpen
+CATEGORY:関数
+DEFINITION:
+  int BiRenderOpen(char fn[],int type,int wid,int hei);
+PARAMETER:
+  char fn[];  出力ファイル名
+  int type;   画像ファイル形式
+  int wid;    画像ファイル横方向解像度
+  int hei;    画像ファイル縦方向解像度
+DESCRIPTION:
+  Blue Impulse Libraryを使って描画する3Dオブジェクトをレンダリングして、
+  画像ファイルを生成します。Blue Impulse Libraryは、
+  BiRenderOpenをコールしてから、BiRenderCloseをコールするまでの間に
+  描画したオブジェクトを、fnで指定した画像ファイルに出力します。
+
+  typeには、次の中からひとつを選んで指定します。
+	BIRENDER_TIFF
+	BIRENDER_BMP
+	BIRENDER_PPM
+
+CAUTION:
+  なお、この関数は、現在次の関数には未対応です。
+     BiDrawMarker2
+     BiDrawString2
+     BiDrawText2
+     BiDrawEmptyCircle2
+REFERENCE:
+  BiEpsClose,BiEpsOpen,BiRenderClose,BiSrfClose,BiSrfOpen,BiVrmlClose,
+  BiVrmlOpen
+------------
+NAME:BiRightAngleVector
+CATEGORY:関数
+DEFINITION:
+  void BiRightAngleVector(BIPOINT *ret,BIPOINT *src);
+PARAMETER:
+  BIPOINT *ret;  結果格納ポインタ
+  BIPOINT *src;  ベクトル
+DESCRIPTION:
+  ベクトル*srcに直交するベクトルを計算して、*retに返します。
+REFERENCE:
+  BiAverageNormalVector
+------------
+NAME:BiRot2
+CATEGORY:関数
+DEFINITION:
+  void BiRot2(BIPOINT2 *ret,BIPOINT2 *src,long ang);
+DESCRIPTION:
+  ２次元座標*srcをangだけ回転して、*retに格納します。
+------------
+NAME:BiRotFastGtoL
+NAME:BiRotFastLtoG
+CATEGORY:マクロ
+DEFINITION:
+  void BiRotFastGtoL(BIPOINT *ret,BIPOINT *src,BITRIGON *trg);  (相当)
+  void BiRotFastLtoG(BIPOINT *ret,BIPOINT *src,BITRIGON *trg);  (相当)
+PARAMETER:
+  BIPOINT *ret;   回転結果格納ポインタ
+  BIPOINT *src;   回転元のベクトル(座標)
+  BITRIGON *trg;  回転角のsin/cos値
+DESCRIPTION:
+  ベクトル*srcを回転して、結果を*retに格納します。GtoLは、ワールド座標から
+  ローカル座標への回転で、LtoGはローカル座標からワールド座標への回転を
+  行います。*trgの作り方は、BiMakeTrigonomyを参照してください。
+REFERENCE:
+  BITRIGON,BiMakeTrigonomy,BiRotGtoL,BiRotLtoG
+------------
+NAME:BiRotGtoL
+NAME:BiRotLtoG
+CATEGORY:マクロ
+DEFINITION:
+  void BiRotGtoL(BIPOINT *ret,BIPOINT *src,BIANGLE *ang);
+  void BiRotLtoG(BIPOINT *ret,BIPOINT *src,BIANGLE *ang);
+PARAMETER:
+  BIPOINT *ret;   回転結果格納ポインタ
+  BIPOINT *src;   回転元のベクトル(座標)
+  BIANGLE *ang;   回転角
+DESCRIPTION:
+  ベクトル*srcを回転して、結果を*retに格納します。GtoLは、ワールド座標から
+  ローカル座標への回転で、LtoGはローカル座標から世界座標への回転を行います。
+  いくつものベクトルを連続して回転するときは、BiRotFastGtoL / BiRotFastLtoG
+  を使う方が高速に計算できます。
+REFERENCE:
+  BiRotFastGtoL,BiRotFastLtoG
+------------
+NAME:BiSame
+NAME:BiSamePoint
+NAME:BiSamePoint2
+CATEGORY:マクロ
+DEFINITION:
+  #define BiSame(x,y) ((BiAbs((x)-(y))<=YSEPS) ? BI_TRUE : BI_FALSE)
+  #define BiSamePoint(a,b) \
+      ((BiSame((a)->x,(b)->x)&&\
+        BiSame((a)->y,(b)->y)&&\
+        BiSame((a)->z,(b)->z)) ? BI_TRUE : BI_FALSE)
+  #define BiSamePoint2(a,b) \
+      ((BiSame((a)->x,(b)->x)&&\
+        BiSame((a)->y,(b)->y)) ? BI_TRUE : BI_FALSE)
+DESCRIPTION:
+  それぞれ順に、実数,3次元座標,2次元座標がほぼ等しいときは、BI_TRUEを、
+  等しくないときは、BI_FALSEを返します。
+------------
+NAME:BiScaleSrf
+NAME:BiScaleSrfModel
+CATEGORY:関数
+DEFINITION:
+  void BiScaleSrf(BISRF *srf,double scl);
+PARAMETER:
+  BISRF *srf;  スケーリングするポリゴンモデル
+  double scl;       倍率
+DESCRIPTION:
+  *srfの大きさをscl倍します。
+REFERENCE:
+  BISRF,BISRFMODEL,BiInsSrf,BiInsSrfDivide,BiInsSrfModel,
+  BiInsSrfModelDivide,BiLoadSrf
+------------
+NAME:BiSetAngle
+NAME:BiSetAngleDeg
+NAME:BiSetAngleRad
+CATEGORY:マクロ
+DEFINITION:
+  void BiSetAngle(BIANGLE *ret,double h,double p,double b); (相当)
+  void BiSetAngleDeg(BIANGLE *ret,double h,double p,double b); (相当)
+  void BiSetAngleRad(BIANGLE *ret,double h,double p,double b); (相当)
+PARAMETER:
+  BIANGLE *ret;  代入先ポインタ
+  double h,p,b;  角度(姿勢)
+DESCRIPTION:
+  h,p,bが表す角度(姿勢)を*retに代入します。それぞれ、
+      SetAngle     h,p,bをそのまま代入
+      SetAngleDeg  h,p,bを度(degree)とみなして代入
+      SetAngleRad  h,p,bをラジアンとみなして代入
+  します。
+REFERENCE:
+  BIANGLE,BIPNTANG,BiSetPoint,BiSetPoint2,BiSetPointS
+------------
+NAME:BiSetClickableBuffer
+CATEGORY:関数
+DEFINITION:
+  int BiSetClickableBuffer(char buf[],int nbuf);
+PARAMETER:
+  char buf[];   クリッカブルオブジェクト用バッファ
+  int nbuf;     クリッカブルオブジェクト用バッファサイズ
+RETURN:
+  BI_OK   初期化できた
+DESCRIPTION:
+  クリッカブルオブジェクトモジュールを初期化します。プログラムの先頭で呼
+  び出します。
+REFERENCE:
+  BiCheckClicked,BiCheckClickedPoint,BiCheckClickedPolyg,
+  BiClearClickable,BiInsClickable,BiInsClickablePolyg
+------------
+NAME:BiSetClipScreenFrame
+CATEGORY:関数
+DEFINITION:
+  void BiSetClipScreenFrame(BIPOINTS *l,BIPOINTS *r)
+PARAMETER:
+  BIPOINTS *l,*r;  クリップ枠(左上端,右下端)
+DESCRIPTION:
+  BiClipLineScrn,BiClipPolygScrnでクリッピングするときのクリップ枠を
+  設定します。この関数で設定したクリップ枠は、BiGetScreenFrameで
+  取得することができます。なお、この関数で設定するクリップ枠は描画
+  クリップ枠ではない点に注意してください。
+REFERENCE:
+  BiClipLineScrn,BiClipPolygScrn,BiGetClipScreenFrame
+------------
+NAME:BiSetColorRGB
+CATEGORY:マクロ
+DEFINITION:
+  void BiSetColorRGB(BICOLOR *col,int r,int g,int b); (相当)
+PARAMETER:
+  BICOLOR *col;  値をセットするカラー構造体
+  int r,g,b;     RGB値(0～255)
+DESCRIPTION:
+  カラー構造体に値をセットします。
+REFERENCE:
+  BICOLOR
+------------
+NAME:BiSetLightPosition
+CATEGORY:関数
+DEFINITION:
+  void BiSetLightPosition(BIPOINT *p);
+PARAMETER:
+  BIPOINT *p;    光源位置
+DESCRIPTION:
+  光源を設定します。
+------------
+NAME:BiSetLocalMatrix
+CATEGORY:関数
+DEFINITION:
+  void BiSetLocalMatrix(BIPOSATT *mdl);
+PARAMETER:
+  BIPOSATT *mdl;  モデル位置と姿勢
+DESCRIPTION:
+  3次元描画関数(BiOvwXXXX,BiInsXXXX)で指定する座標の原点位置と基準姿勢を
+  指定します。なお、この関数は、一段階の指定しかできませんが、BiPushMatrix
+  関数では、階層的な指定ができます。
+REFERENCE:
+  BiClearLocalMatrix,BiPopMatrix,BiPushMatrix
+------------
+NAME:BiSetOrthoDist
+CATEGORY:関数
+DEFINITION:
+  void BiSetOrthoDist(double dist);
+PARAMETER:
+  double dist;  正投影法での視点から投影面までの距離
+DESCRIPTION:
+  正投影法での視点から投影面までの距離を指定します。
+REFERENCE:
+  BiSetProjectionMode
+------------
+NAME:BiSetPoint
+CATEGORY:マクロ
+DEFINITION:
+  void BiSetPoint(BIPOINT *ret,double x,double y,double z); (相当)
+PARAMETER:
+  BIPOINT *ret;  代入先ポインタ
+  double x,y,z;  座標値
+DESCRIPTION:
+  (x,y,z)を*retに代入します。
+REFERENCE:
+  BIPNTANG,BIPOINT,BiSetAngle,BiSetAngleDeg,BiSetAngleRad,BiSetPoint2,
+  BiSetPointS
+------------
+NAME:BiSetPoint2
+CATEGORY:マクロ
+DEFINITION:
+  void BiSetPoint2(BIPOINT2 *ret,double x,double y); (相当)
+PARAMETER:
+  BIPOINT2 *ret;  代入先ポインタ
+  double x,y;     座標値
+DESCRIPTION:
+  (x,y)を*retに代入します。
+REFERENCE:
+  BIPOINT2,BiSetAngle,BiSetAngleDeg,BiSetAngleRad,BiSetPoint,
+  BiSetPointS
+------------
+NAME:BiSetPointS
+CATEGORY:マクロ
+DEFINITION:
+  #define BiSetPointS(p,xx,yy) {(p)->x=(long)(xx);(p)->y=(long)(yy);}
+PARAMETER:
+  BIPOINT *ret;  代入先ポインタ
+  long x,y;      座標値
+DESCRIPTION:
+  (x,y)を*retに代入します。
+REFERENCE:
+  BIPOINTS,BiSetAngle,BiSetAngleDeg,BiSetAngleRad,BiSetPoint,
+  BiSetPoint2
+------------
+NAME:BiSetProjection
+CATEGORY:関数
+DEFINITION:
+  void BiSetProjection(BIPROJ *prj);
+PARAMETER:
+  BIPROJ *prj;  投影情報
+DESCRIPTION:
+  投影情報をライブラリに登録します。
+REFERENCE:
+  BIPROJ,BiGetStdProjection
+------------
+NAME:BiSetProjectionMode
+CATEGORY:関数
+DEFINITION:
+  void BiSetProjectionMode(int mode);
+PARAMETER:
+  int mode;  投影モード(BIPRJ_ORTHO / BIPRJ_PERS)
+DESCRIPTION:
+  ライブラリの描画モードを指定します。
+  正投影(BIPRJ_ORTHO)または斜投影(BIPRJ_PERS)のどちらかを指定します。
+REFERENCE:
+  BIPRJ_ORTHO,BIPRJ_PERS,BiSetOrthoDist
+------------
+NAME:BiSetShadMode
+CATEGORY:関数
+DEFINITION:
+  void BiSetShadMode(int mode);
+PARAMETER:
+  int mode;  シェーディングモード(BI_ON / BI_OFF)
+DESCRIPTION:
+  シェーディングをするかしないかを指定します。
+------------
+NAME:BiSetShadowPlane
+CATEGORY:関数
+DEFINITION:
+  int BiSetShadowPlane(BIPOSATT *pos);
+DESCRIPTION:
+  影を落とす平面を設定します。
+REFERENCE:
+  BiOvwLineShadow,BiOvwPolygShadow,BiOvwSrfShadow
+------------
+NAME:BiSetWindowName
+CATEGORY:関数
+DEFINITION:
+  void BiSetWindowName(char winname[])
+PARAMETER:
+  char winname[];  ウィンドウ名
+DESCRIPTION:
+  ウィンドウのタイトルバーに表示する文字列を指定します。BiOpenWindow
+  (HtOpenWindow)の前であればどこで設定しても構いません。
+REFERENCE:
+  BiOpenWindow
+------------
+NAME:BiSgn
+CATEGORY:マクロ
+DEFINITION:
+  #define BiSgn(a) ((a)>=0 ?  1  :  -1 )
+DESCRIPTION:
+  aの符号を得ます。0以上なら1,0より小さいなら-1を返します。
+REFERENCE:
+  BiAbs,BiLarger,BiSmaller
+------------
+NAME:BiSin
+CATEGORY:関数
+DEFINITION:
+  double BiSin(long ang);
+PARAMETER:
+  long ang;  角度
+RETURN:
+  double    sin(ang)の値
+DESCRIPTION:
+  sin(ang)を求めます。
+REFERENCE:
+  BiCos,BiTan
+------------
+NAME:BiSmaller
+CATEGORY:マクロ
+DEFINITION:
+  #define BiSmaller(a,b) ((a)<(b) ? (a) : (b))
+DESCRIPTION:
+  aとbの小さい方を求めます。見ての通りで、aとbの型に依存せず使用可能です。
+REFERENCE:
+  BiAbs,BiLarger,BiSgn
+------------
+NAME:BiSrfClose
+CATEGORY:関数
+DEFINITION:
+  int BiSrfClose(void);
+DESCRIPTION:
+  BiSrfOpenで開始したSRF出力を終了します。BiSrfOpenしたら、必ず呼び出す
+  必要があります。なお、BiSrfOpenしたままBiSrfCloseしなかった場合、SRF
+  ファイルはできません。
+REFERENCE:
+  BiEpsClose,BiEpsOpen,BiRenderClose,BiRenderOpen,BiVrmlOpen,
+  BiVrmlSetOffset
+------------
+NAME:BiSrfCollision
+CATEGORY:関数
+DEFINITION:
+  int BiSrfCollision(BISRF *srf,BIPOSATT *pos,BIPOINT *p,real bump);
+PARAMETER:
+  BISRF *srf;  判定対象のポリゴンモデル
+  BIPOSATT *pos;    ポリゴンモデルデータの位置
+  BIPOINT *p;       衝突判定する座標
+  real bump;        影響範囲拡大幅
+RETURN:
+  BI_IN             *pは、*posの位置/姿勢の*srfと衝突している
+  BI_OUT            *pは、*posの位置/姿勢の*srfと衝突していない
+DESCRIPTION:
+  3次元座標*pが、*posの位置のポリゴンモデル*srfと衝突しているかを
+  判定します。なお、bumpに正の値を指定すると、*srfの
+  バウンディングボックスの大きさをbump分だけ大きく見積もって
+  衝突判定します。
+REFERENCE:
+  BI_IN,BI_OUT,BiGetFieldElevation,BiGetFieldSrfCollision,
+  BiGetFldElevation,BiGetFldSrfCollision,BiLoadSrf
+------------
+NAME:BiSrfOpen
+CATEGORY:関数
+DEFINITION:
+  int BiSrfOpen(char fn[]);
+PARAMETER:
+  char fn[];  SRFのファイル名
+DESCRIPTION:
+  SRF出力機能をオンにします。この関数の後に描画する3DオブジェクトをSRF
+  ファイルに書き出します。なお、視点の位置にかかわらず、グローバル座標系
+  での値で出力します。なお座標全体にオフセットをつけることができます。
+  (BiSrfSetOffset参照)
+REFERENCE:
+  BiEpsClose,BiEpsOpen,BiRenderClose,BiRenderOpen,BiSrfSetOffset,
+  BiVrmlClose,BiVrmlSetOffset
+------------
+NAME:BiSrfSetOffset
+CATEGORY:関数
+DEFINITION:
+  int BiSrfSetOffset(BIVECTOR *v);
+PARAMETER:
+  BIVECTOR *v;   SRF出力時のオブジェクト移動量
+DESCRIPTION:
+  SRF出力機能で出力するオブジェクトの座標に一定のオフセットを与え
+  ます。
+REFERENCE:
+  BiSrfOpen,BiVrmlClose
+------------
+NAME:BiStartBuffer
+CATEGORY:関数
+DEFINITION:
+  void BiStartBuffer(BIPOSATT *eye);
+PARAMETER:
+  BIPOSATT *eye;  視点位置と視点の姿勢
+DESCRIPTION:
+  ライブラリに視点情報を登録して、描画バッファへのオブジェクトの追加を
+  可能な状態にします。この関数をコールした段階で、
+  描画バッファとテンポラリスタックを同時に初期化します。
+REFERENCE:
+  BiClearScreen,BiFlushBuffer,BiSwapBuffers
+------------
+NAME:BiSubPoint
+CATEGORY:マクロ
+DEFINITION:
+  void BiSubPoint(BIPOINT *ret,BIPOINT *a,BIPOINT *b); (相当)
+DESCRIPTION:
+  *aから*bを引き算して結果を*retに代入します。
+REFERENCE:
+  BIPOINT,BiAddPoint,BiDivPoint,BiMulPoint
+------------
+NAME:BiSubPoint2
+CATEGORY:マクロ
+DEFINITION:
+  void BiSubPoint2(BIPOINT2 *ret,BIPOINT2 *a,BIPOINT2 *b); (相当)
+DESCRIPTION:
+  *aから*bを引き算して結果を*retに代入します。
+REFERENCE:
+  BiAddPoint2,BiDivPoint2,BiMulPoint2
+------------
+NAME:BiSwapBuffers
+CATEGORY:関数
+DEFINITION:
+  void BiSwapBuffers(void);
+DESCRIPTION:
+  描画バッファに描いた内容を画面に転送します。
+REFERENCE:
+  BiClearScreen,BiFlushBuffer,BiStartBuffer
+------------
+NAME:BiTan
+CATEGORY:関数
+DEFINITION:
+  double BiTan(long a);
+DESCRIPTION:
+  tanの値を求めます。
+REFERENCE:
+  BiCos,BiSin
+------------
+NAME:BiTerEyeVecUpVec
+NAME:BiTerrMeshEyeVecUpVec
+CATEGORY:関数
+DEFINITION:
+  int BiTerEyeVecUpVec
+    (BIPOINT *e,BIPOINT *u,real x,real z,long h,BITER *ter,BIPOSATT *pos)
+RETURN:
+  BI_IN    正常に計算できた
+  BI_OUT   (x,z)が地形オブジェクトの範囲外にあるので計算できなかった
+DESCRIPTION:
+  *posの位置/姿勢の地形オブジェクト*ter上の座標(x,z)で
+  方角hを向いているとしたときの、視線ベクトルとアップベクトルを計算します。
+REFERENCE:
+  BITER,BITERRMESH,BI_IN,BI_OUT,BiAboveTer,BiAboveTerrMesh,BiConstTer,
+  BiConstTerrMesh,BiInsTer,BiInsTerrMesh,BiLoadTer,BiLoadTerrMesh,
+  BiTerHeight,BiTerrMeshHeight
+------------
+NAME:BiTerHeight
+NAME:BiTerrMeshHeight
+CATEGORY:関数
+DEFINITION:
+  int BiTerHeight(real *y,real x,real z,BITER *ter,BIPOSATT *pos);
+RETURN:
+  BI_IN    正常に計算できた
+  BI_OUT   (x,z)が地形オブジェクトの範囲外にあるので計算できなかった
+DESCRIPTION:
+  *posの位置/姿勢の地形オブジェクト*ter上の座標(x,z)での高さを計算します。
+REFERENCE:
+  BITER,BITERRMESH,BI_IN,BI_OUT,BiAboveTer,BiAboveTerrMesh,BiConstTer,
+  BiConstTerrMesh,BiGetFieldElevation,BiGetFldElevation,BiInsTer,
+  BiInsTerrMesh,BiLoadTer,BiLoadTerrMesh,BiTerEyeVecUpVec,
+  BiTerrMeshEyeVecUpVec
+------------
+NAME:BiTwist2
+CATEGORY:関数
+DEFINITION:
+  int BiTwist2(int np,BIPOINT2 *p);
+PARAMETER:
+  int np;       頂点数
+  BIPOINT2 *p;  頂点
+RETURN:
+  int           巻き方向(BITWIST_UNKNOWN,BITWIST_RIGHT,BITWIST_LEFT)
+DESCRIPTION:
+  頂点数np,頂点p[0～np-1]の二次元ポリゴンの巻き方向を計算します。辺同志が
+  交差しているような場合は判定不能で、BITWIST_UNKNOWNを返します。
+  たまに間違うかもしれません。でも、今まで1年近く使ってきて
+  まだ間違ったことはありません。(でも間違ったらごめん。^_^;)
+REFERENCE:
+  BITWIST_LEFT,BITWIST_RIGHT,BITWIST_UNKNOWN,BiCheckConvex,
+  BiCheckConvex2,BiKillCLoop,BiKillCLoop2,BiPolyg2ToConvex,
+  BiPolyg2ToTris,BiPolygToConvex,BiPolygToTris,BiTwist3
+------------
+NAME:BiTwist3
+CATEGORY:関数
+DEFINITION:
+  int BiTwist3(int np,BIPOINT *p,BIPOINT *nom);
+PARAMETER:
+  int np;        頂点数
+  BIPOINT *p;    頂点
+  BIPOINT *nom;  法線
+RETURN:
+  int            巻き方向(BITWIST_UNKNOWN,BITWIST_RIGHT,BITWIST_LEFT)
+DESCRIPTION:
+  頂点数np,頂点p[0～np-1]で、*nomの方向を向いている面が右回りか左回りかを
+  判定します。面が極端にねじれていて、平面に投影したときに辺同志が
+  交差するような場合は判定不能でBITWIST_UNKNOWNを返します。
+  たまに間違うかもしれません。(間違ったらごめん。^_^;)
+REFERENCE:
+  BITWIST_LEFT,BITWIST_RIGHT,BITWIST_UNKNOWN,BiAverageNormalVector,
+  BiCheckConvex,BiCheckConvex2,BiKillCLoop,BiKillCLoop2,
+  BiPolyg2ToConvex,BiPolyg2ToTris,BiPolygToConvex,BiPolygToTris,
+  BiTwist2
+------------
+NAME:BiUpdateDevice
+CATEGORY:関数
+DEFINITION:
+  void BiUpdateDevice(void);
+DESCRIPTION:
+  イベントキューの情報をアップデートします。とにかく、メインループの先頭で
+  必ず１度はコールしてください。また、ひとつのメインループ内で
+  ２度コールしても問題はありませんが、なるべく避けてください。
+REFERENCE:
+  BiInkey,BiKey,BiKeyToAscii,BiMouse
+------------
+NAME:BiVecX
+CATEGORY:定義済構造体
+DEFINITION:
+  BIPOINT BiVecX;
+DESCRIPTION:
+  ベクトル(1,0,0)を表します。
+------------
+NAME:BiVecY
+CATEGORY:定義済構造体
+DEFINITION:
+  BIPOINT BiVecY;
+DESCRIPTION:
+  ベクトル(0,1,0)を表します。
+------------
+NAME:BiVecZ
+CATEGORY:定義済構造体
+DEFINITION:
+  BIPOINT BiVecZ;
+DESCRIPTION:
+  ベクトル(0,0,1)を表します。
+------------
+NAME:BiVectorToAngle
+CATEGORY:関数
+DEFINITION:
+  void BiVectorToAngle(BIANGLE *ret,BIPOINT *eye,BIPOINT *up);
+PARAMETER:
+  BIANGLE *ret;  結果格納ポインタ
+  BIPOINT *eye;  視線方向ベクトル
+  BIPOINT *up;   アップベクトル
+DESCRIPTION:
+  *eyeと*upで決まる姿勢を*retに格納します。*eyeと*upが平行でなれば
+  どんな場合でも一応求まります。
+REFERENCE:
+  BiAngleToVector,BiPitchUp,BiVectorToHeadPitch
+------------
+NAME:BiVectorToHeadPitch
+CATEGORY:関数
+DEFINITION:
+  void BiVectorToHeadPitch(BIANGLE *an,BIPOINT *vec);
+PARAMETER:
+  BIANGLE *an;   結果格納ポインタ
+  BIPOINT *vec;  ベクトル
+DESCRIPTION:
+  *vecの方向を向いた角度を計算して、*anに格納します。
+  ただし、bankは0となります。
+REFERENCE:
+  BiAngleToVector,BiPitchUp,BiVectorToAngle
+------------
+NAME:BiVrmlClose
+CATEGORY:関数
+DEFINITION:
+  int BiVrmlClose(void);
+DESCRIPTION:
+  BiVrmlOpenで開始したVRML出力を終了します。BiVrmlOpenしたら、必ず呼び出す
+  必要があります。なお、BiVrmlOpenしたままBiVrmlCloseしなかった場合、VRML
+  ファイルはできません。
+REFERENCE:
+  BiEpsClose,BiEpsOpen,BiRenderClose,BiRenderOpen,BiSrfOpen,
+  BiSrfSetOffset,BiVrmlOpen,BiVrmlSetOffset
+------------
+NAME:BiVrmlOpen
+CATEGORY:関数
+DEFINITION:
+  int BiVrmlOpen(char fn[]);
+PARAMETER:
+  char fn[];  VRMLのファイル名
+DESCRIPTION:
+  VRML出力機能をオンにします。この関数の後に描画する3DオブジェクトをVRML
+  ファイルに書き出します。なお、視点の位置にかかわらず、グローバル座標系
+  での値で出力します。なお座標全体にオフセットをつけることができます。
+  (BiVrmlSetOffset参照)
+REFERENCE:
+  BiEpsClose,BiEpsOpen,BiRenderClose,BiRenderOpen,BiSrfClose,
+  BiVrmlClose,BiVrmlSetOffset
+------------
+NAME:BiVrmlSetOffset
+CATEGORY:関数
+DEFINITION:
+  int BiVrmlSetOffset(BIVECTOR *v);
+PARAMETER:
+  BIVECTOR *v;   VRML出力時のオブジェクト移動量
+DESCRIPTION:
+  VRML出力機能で出力するオブジェクトの座標に一定のオフセットを与え
+  ます。
+REFERENCE:
+  BiSrfClose,BiSrfOpen,BiVrmlClose,BiVrmlOpen
+------------
+NAME:BiWhite
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiWhite;
+DESCRIPTION:
+  白(R=255,G=255,B=255)を表します。
+------------
+NAME:BiYellow
+CATEGORY:定義済構造体
+DEFINITION:
+  BICOLOR BiYellow;
+DESCRIPTION:
+  黄色(R=255,G=255,B=0)を表します。
+------------
+NAME:YSEPS
+CATEGORY:マクロ
+DEFINITION:
+  #define YSEPS 0.0001
+DESCRIPTION:
+  誤差範囲を表す定数です。
+------------
+NAME:YSPI
+CATEGORY:マクロ
+DEFINITION:
+  #define YSPI 3.14159265
+DESCRIPTION:
+  πの値を表す定数です。
+------------
+NAME:real
+CATEGORY:型
+DEFINITION:
+  typedef float real;
+DESCRIPTION:
+  浮動小数点型を表す型です。正体はfloatです。
+------------
