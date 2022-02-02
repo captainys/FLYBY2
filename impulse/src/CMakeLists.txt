@@ -86,9 +86,9 @@ target_link_libraries(impulse_win32ogl gdi32.lib user32.lib kernel32.lib opengl3
 target_include_directories(impulse_win32ogl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library(impulse_win32scsv ${SRCS} ${WINSCSVSRCS})
-target_link_libraries(impulse_win32scsv gdi32.lib user32.lib kernel32.lib)
+target_link_libraries(impulse_win32scsv gdi32.lib user32.lib kernel32.lib SCRNSAVE.lib)
 target_include_directories(impulse_win32scsv PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library(impulse_win32scsvogl ${SRCS} ${WINOGLSCSVSRCS})
-target_link_libraries(impulse_win32scsvogl gdi32.lib user32.lib kernel32.lib opengl32.lib glu32.lib)
+target_link_libraries(impulse_win32scsvogl gdi32.lib user32.lib kernel32.lib opengl32.lib glu32.lib SCRNSAVE.lib)
 target_include_directories(impulse_win32scsvogl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
