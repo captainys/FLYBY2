@@ -565,12 +565,7 @@ void BiOpenWindowForScreenSaver(HWND w)
 {
 	int lupX,lupY,sizX,sizY,sizeLimitX,sizeLimitY;
 	RECT WinRect;
-{
-FILE *fp;
-fp=fopen("c:\\tmp\\txt.txt","w");
-fprintf(fp,"A\n");
-fclose(fp);
-}
+
 	GetWindowRect(w,&WinRect);
 	sizX=WinRect.right-WinRect.left+1;
 	sizY=WinRect.bottom-WinRect.top+1;

@@ -434,10 +434,13 @@ real PassedTime(void)
 #ifdef CLOCKS_PER_SEC
 	static long last=0;
 	long current;
-	real pass;
+	real pass=0.0;
 
-	current=clock();
-	pass=(real)(current-last)/(real)CLOCKS_PER_SEC;
+	while(pass<0.02)
+	{
+		current=clock();
+		pass=(real)(current-last)/(real)CLOCKS_PER_SEC;
+	}
 	last=current;
 
 	return pass*TimeScale;

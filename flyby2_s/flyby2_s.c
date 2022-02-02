@@ -11,6 +11,8 @@
 
 #include <aurora.h>
 
+#include "data.h"
+
 extern int ScSvInterval(void);
 extern int ScSvMain(void);
 extern int ScSvInitialize(void);
@@ -85,7 +87,8 @@ int ScSvInitialize(void)
 
 	srand((long)time(NULL));
 
-	ReadyToGo=LoadFile();
+	// ReadyToGo=LoadFile();
+	ReadyToGo=LoadEmbeddedFile();
 	return 0;
 }
 
@@ -214,6 +217,47 @@ int LoadFile(void)
 	SkPrintf("Can't Open [flyby.inf].");
 	return BI_ERR;
 }
+
+int LoadEmbeddedFile(void)
+{
+	ArLoadFldFromString(&fld[nFld++],AIRPORT);
+
+	ArLoadSrfFromString(&air[nAir++],A6);
+	ArLoadSrfFromString(&air[nAir++],ANGELS);
+	ArLoadSrfFromString(&air[nAir++],AV8B);
+	ArLoadSrfFromString(&air[nAir++],EA6B);
+	ArLoadSrfFromString(&air[nAir++],F1);
+	ArLoadSrfFromString(&air[nAir++],F117A);
+	ArLoadSrfFromString(&air[nAir++],F14SPRD);
+	ArLoadSrfFromString(&air[nAir++],F14SWBK);
+	ArLoadSrfFromString(&air[nAir++],F15);
+	ArLoadSrfFromString(&air[nAir++],F16);
+	ArLoadSrfFromString(&air[nAir++],F18);
+	ArLoadSrfFromString(&air[nAir++],F86BLUE);
+	ArLoadSrfFromString(&air[nAir++],HANGER);
+	ArLoadSrfFromString(&air[nAir++],MIG21);
+	ArLoadSrfFromString(&air[nAir++],MIG23SPD);
+	ArLoadSrfFromString(&air[nAir++],MIG23WBK);
+	ArLoadSrfFromString(&air[nAir++],MRG2000);
+	ArLoadSrfFromString(&air[nAir++],SU27);
+	ArLoadSrfFromString(&air[nAir++],T2BLUE);
+	ArLoadSrfFromString(&air[nAir++],T400);
+	ArLoadSrfFromString(&air[nAir++],T4BLUE);
+	ArLoadSrfFromString(&air[nAir++],THUNDER);
+	ArLoadSrfFromString(&air[nAir++],TU160SPD);
+	ArLoadSrfFromString(&air[nAir++],TU160WBK);
+	ArLoadSrfFromString(&air[nAir++],VIGGEN);
+
+	// DefSmokeType=ARS_SOLIDSMOKE;
+	// DefSmokeType=ARS_WIRESMOKE;
+	// DefSmokeType=ARS_TRAILSMOKE;
+	DefSmokeType=ARS_RIBBONSMOKE;
+
+	altitude=(real)120.0;
+
+	return BI_OK;
+}
+
 
 
 /***************************************************************************/
