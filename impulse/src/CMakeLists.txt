@@ -86,9 +86,11 @@ target_link_libraries(impulse_win32ogl gdi32.lib user32.lib kernel32.lib opengl3
 target_include_directories(impulse_win32ogl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library(impulse_win32scsv ${SRCS} ${WINSCSVSRCS})
-target_link_libraries(impulse_win32scsv gdi32.lib user32.lib kernel32.lib SCRNSAVE.lib)
+target_link_libraries(impulse_win32scsv gdi32.lib user32.lib kernel32.lib SCRNSAVE.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib comctl32.lib
+)
 target_include_directories(impulse_win32scsv PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library(impulse_win32scsvogl ${SRCS} ${WINOGLSCSVSRCS})
-target_link_libraries(impulse_win32scsvogl gdi32.lib user32.lib kernel32.lib opengl32.lib glu32.lib SCRNSAVE.lib)
+target_link_libraries(impulse_win32scsvogl gdi32.lib user32.lib kernel32.lib opengl32.lib glu32.lib SCRNSAVE.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib comctl32.lib
+)
 target_include_directories(impulse_win32scsvogl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

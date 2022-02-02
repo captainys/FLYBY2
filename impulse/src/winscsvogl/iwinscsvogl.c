@@ -295,6 +295,8 @@ int started=BI_FALSE;
 int irqMask=0;  // <- To prevent infinite loop.
 unsigned prevTickCount=0;  // Currently not used
 
+HANDLE thread=NULL;
+int threadId;
 
 LRESULT CALLBACK ScreenSaverProc(HWND w,UINT msg,WPARAM wPara,LPARAM lPara)
 {
@@ -422,8 +424,19 @@ LRESULT CALLBACK ScreenSaverProc(HWND w,UINT msg,WPARAM wPara,LPARAM lPara)
 			if(irqMask==0)
 			{
 				irqMask=1;
+
 				ScSvInitialize();
-				ScSvInterval();
+
+				thread=CreateThread(NULL,0,
+				                    (LPTHREAD_START_ROUTINE)ScSvMain,
+				                    NULL,
+				                    STANDARD_RIGHTS_REQUIRED,
+				                    &threadId);
+				if(thread!=NULL)
+				{
+					SetThreadPriority(thread, THREAD_PRIORITY_BELOW_NORMAL);
+				}
+
 				irqMask=0;
 			}
 
@@ -457,55 +470,6 @@ LRESULT CALLBACK ScreenSaverProc(HWND w,UINT msg,WPARAM wPara,LPARAM lPara)
 		}
 		exit(0);
 		break;
-	case WM_TIMER:
-	case WM_APP:
-		if(BiWnd!=NULL && irqMask==0)
-		{
-			RECT rcScsv,rcOpenGl;
-
-			GetWindowRect(w,&rcScsv);
-			GetWindowRect(BiWnd,&rcOpenGl);
-			if(rcScsv.left!=rcOpenGl.left || rcScsv.top!=rcOpenGl.top)
-			{
-				long sizX,sizY,lupX,lupY;
-
-				sizX=BiWinX;  // size of rcScsv is (1,1), so must user BiWinX,BiWinY
-				sizY=BiWinY;
-
-				lupX=rcScsv.left;
-				lupY=rcScsv.top;
-
-				MoveWindow(BiWnd,lupX,lupY,sizX,sizY,TRUE);
-
-				wglMakeCurrent(BiWndDC,BiGlRC);
-				glViewport(0,0,sizX,sizY);
-
-				{ // desparate solution : Repaint parents!
-					HWND par;
-					int i;
-					par=GetParent(w);
-					for(i=0; i<4 && par!=NULL; i++)
-					{
-						InvalidateRect(par,NULL,FALSE);
-						par=GetParent(par);
-					}
-				}
-			}
-
-			irqMask=1;
-			InvalidateRect(BiWnd,NULL,FALSE);
-			wglMakeCurrent(BiWndDC,BiGlRC);
-			ScSvInterval();
-			irqMask=0;
-
-			PostMessage(w,WM_APP,0,0);
-		}
-
-		return 0L;
-	case WM_MOVE:
-		{
-		}
-		return 0L;
 	}
 	return DefScreenSaverProc(w,msg,wPara,lPara);
 }
