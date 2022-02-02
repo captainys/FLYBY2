@@ -1,0 +1,3 @@
+int EmptyFunction(void)
+{
+}

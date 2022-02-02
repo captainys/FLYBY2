@@ -74,6 +74,9 @@ ivrmfile.c
 ivrmfile.h
 )
 
+add_library(impulse_header impulse.h empty.c)
+target_include_directories(impulse_header PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
 add_library(impulse_win32 ${SRCS} ${WINDIBSRCS})
 target_link_libraries(impulse_win32 gdi32.lib user32.lib kernel32.lib)
 target_include_directories(impulse_win32 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
