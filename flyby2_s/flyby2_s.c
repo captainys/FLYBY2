@@ -11,6 +11,10 @@
 
 #include <aurora.h>
 
+extern int ScSvInterval(void);
+extern int ScSvMain(void);
+extern int ScSvInitialize(void);
+extern int ScSvTerminate(void);
 
 typedef struct {
 	int aircraft;
@@ -56,7 +60,7 @@ char BiWork3[BIWORKSIZE];
 
 int ReadyToGo=BI_ERR;
 
-void ScSvInitialize(void)
+int ScSvInitialize(void)
 {
 	BIPROJ prj;
 
@@ -82,17 +86,19 @@ void ScSvInitialize(void)
 	srand((long)time(NULL));
 
 	ReadyToGo=LoadFile();
+	return 0;
 }
 
-void ScSvMain(void)
+int ScSvMain(void)
 {
 	if(ReadyToGo==BI_OK)
 	{
 		FlyByMain();
 	}
+	return 0;
 }
 
-void ScSvTerminate(void)
+int ScSvTerminate(void)
 {
 	int i;
 	for(i=0; i<nFld; i++)
@@ -104,6 +110,7 @@ void ScSvTerminate(void)
 		ArFreeSrf(&air[i]);
 	}
 	BiCloseWindow();
+	return 0;
 }
 
 /***************************************************************************/
@@ -575,3 +582,20 @@ void Proceed(BIPOSATT *obj,real dist)
 	BiAddPoint(&obj->p,&obj->p,&vec);
 }
 
+////////////////////////////////////////////////////////////
+
+#include <windows.h>
+
+void GetSizeLimit(int *sizeLimitX,int *sizeLimitY)
+{
+	*sizeLimitX=4096;
+	*sizeLimitY=4096;
+}
+BOOL WINAPI ScreenSaverConfigureDialog(HWND w,UINT msg,WPARAM wp,LPARAM lp)
+{
+	return FALSE;
+}
+BOOL WINAPI RegisterDialogClasses(HANDLE hinst)
+{
+	return FALSE;
+}
