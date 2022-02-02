@@ -1,0 +1,19 @@
+TARGET=libaurora.a
+INCLUDE=aurora.h
+OBJ=adyna.o adynaf.o aurora.o asmoke.o apath.o apathf.o ashare.o afldfile.o
+
+CC = gcc
+CFLAGS=-I/afs/andrew.cmu.edu/usr10/soji/pub/include
+
+
+
+.IGNORE:
+
+
+
+$(TARGET) : $(OBJ)
+	ar cru $(TARGET) $(OBJ)
+	ranlib $(TARGET)
+
+.c.o:
+	$(CC) -c $(CFLAGS) $*.c

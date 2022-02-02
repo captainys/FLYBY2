@@ -1,0 +1,260 @@
+Started Log on Aug.29 1996
+
+1996/08/29
+  DNMファイルやFLDファイル等の複数本のファイルで構成するファイルを１本
+  のファイルにパックする機能を追加。Packed FLDファイルを読み込むには、
+  BiLoadFldの代わりにArLoadFldを使う。
+
+  まだ危険かもしれない(^_^;)
+
+
+1996/08/30
+  Aurora Share強化のため、以下の関数を追加。
+    int ArLoadPc2(BIPC2 *pc2,char fn[]);
+    int ArFreePc2(BIPC2 *pc2);
+    int ArLoadTer(BITER *ter,char fn[]);
+    int ArFreeTer(BITER *ter);
+  これで、BiLoadXXXの代わりにArLoadXXXを使えば自動的に同じファイル名の
+  2度読みを回避できる。また、BiLoadXXXで読み込んだものは、単純に独立フ
+  ァイルとして扱うので、ArFreeXXXにかけると正しくFreeできる。
+
+  あと、一応BiLoadXXXをAuroraに引き継ぐという意味で、以下の関数を追加。
+    int ArLoadSrfFromString(BISRF *srf,char *lst[]);
+    int ArLoadFldFromString(BIFLD *fld,char *lst[]);
+    int ArLoadPc2FromString(BIPC2 *pc2,char *lst[]);
+    int ArLoadTerFromString(BITER *ter,char *lst[]);
+    int ArLoadDnmFromString(ARDNM *dnm,char *lst[]);
+
+  それから、ArLoadFldには、まだ独自のシェアシステムが残ってるから、この
+  点は改善の余地あり。あと、BiFreeFldはそれが原因で中身まで全部消えてな
+  いからこれも改善の余地あり。単純にArLoadFld独自のシェアシステムをカッ
+  トして、ArFreeFldで全部Freeするように書き換えればいいだけのはず。
+
+  Aurora Shareでは、今のところ、DNMとMPAは中のインスタンスまで共有する
+  と困るので共有対象からはずれているが、DNMはArCopyDnmをうまく使えば共
+  有できるはず。問題は、CopyDnmは中で使ってるSRFまではコピーしないとい
+  う点と、ふたつのDNMが同じかどうかの判定が難しい点。DNMにシリアルナン
+  バーをつけて管理するという方法を今考えている。
+
+1996/08/31
+  バグ発見。ArLoadMpaで、同じファイル名の形状があったとき、最初に出て
+  きたやつを単純にコピーしているので、このままだと、DNMが全部同じ動き
+  をしてしまう。
+
+  というわけで、さんざん苦労してこの問題を解決。DNMにRootIdを持たせて、
+  同じファイル名のものを読み込んだとき、ArCopyDnmでDNMをコピーするよ
+  うに変更。なお、ArLoadDnmFromStringでも、読み込んだ記録を残して、
+  ArCopyDnmで複製ができた場合、ArFreeDnmで中のSRFとか必要なものをFree
+  しすぎないように対応。だけど、プログラム中で作ったDNMだとゴミがメモ
+  リに残ってしまう問題はまだ残る。
+
+  あと、ArFreeFldでもゴミが残る問題は深刻。ArLoadXXXで読み込んだもの
+  はOKだけど、ArLoadXXXFromPackで読み込んだものは深刻。LoadXXXFromPack
+  で読み込んだものも記録を取って対応することが可能かどうか検討する。
+
+1996/09/09
+  バグ発見。ArCopyDnm でSTATUSをコピーしてなかった。だから、flyby3で、
+  2機目以降の機が車輪を出し入れしないとかそういう問題が発生した。でも、
+  解決。
+
+1996/09/18
+  adyna.c : BIPNTANGを全部BIPOSATTに置き換え。
+            ArSetDnmStatus,ArInBetweenDnmStatusで部品IDを-1にすると、
+            全部の部品のstatusを変更するように修正。
+  apath.c : adyna.cの書き換えに従って、DNM Statusの設定を変更。
+
+1996/10/16
+  ArGetPathObjPositionSmooth@apath.c を追加。
+  MPA再生ルーチンで、オブジェクトの移動がスムーズになるように修正。
+
+1996/10/16
+  ArGetCurrentSmokeColor@asmoke.c
+  色の計算が変だったから修正
+
+1996/10/17
+  apath.c
+  移動の種類に ARMP_ACCEL を追加。
+
+1996/10/23
+  apath.c
+  int ArGetMpaObjPosition(BIPOSATT *p,ARMPA *mpa,int id,real t);追加
+
+1996/11/02
+  apath.c
+  int ArGetMpaObjShapeType(int *type,ARMPA *mpa,int id);
+  int ArGetMpaNumObj(int *nObj,ARMPA *mpa);
+  Solo Aerobaticでインストラクションをつけるため。
+
+1996/11/03
+  ashare.c
+  ArFreeDnmでバグの発生。PackedMpaから読み込んだDNMをfreeするとき。SRF
+  はPackedObjectだったんで、Shareの対象外であった。ところが、PackedObject
+  をロードするとき、同じ名前のSRFを読み込むとき、単純にコピーしていたか
+  らさあ大変。Shareの対象外なのに、複数のSRFがメモリを共有することにな
+  った。結果、ArFreeDnmでは、Share対象外のSRFだからと思ってどんどん
+  BiFreeSrfにかけていったから、共有してたSRFのふたつ目でダウン。
+
+  と、いうわけで、ArLoad???FromPackのファイルを、データファイル単位で
+  Shareの対象にして解決。
+
+    typedef struct ArPackedObject {
+        struct ArPackedObject *next;
+        char fn[256];
+        int nl;
+        char **l,*buf;
+
+        int oType;
+        ARPACKEDUNI uni;
+
+        ARSHAREDOBJ *shared;   ←ここがポイント
+    } ARPACKED;
+
+
+1996/11/09
+  VC++4.0のfloor関数のバグにやられて2時間も無駄な時間を浪費。apath.cの
+  ArGetPathObjPositionSmoothを次のように書き換えて解決。
+
+  (書き換え前)
+	real t;
+	BIPOSATT p1,p2;
+
+	t=ct/mpa->clk;
+
+	if(ArGetPathObjPosition(&p1,mpa,id,((long)t)  )==BI_OK &&
+	   ArGetPathObjPosition(&p2,mpa,id,((long)t)+1)==BI_OK)
+	{
+		t=(t-(real)floor(t));
+
+  (書き換え後)
+	long idx;
+	real t;
+	BIPOSATT p1,p2;
+
+	t=ct/mpa->clk;
+	idx=(long)t;
+
+	if(ArGetPathObjPosition(&p1,mpa,id,idx  )==BI_OK &&
+	   ArGetPathObjPosition(&p2,mpa,id,idx+1)==BI_OK)
+	{
+		t=(t-(real)idx);
+
+1996/12/07
+  ashare.c
+    C++のコメント // を使ってたらSGIのccに文句を言われたので、Traditional
+    な /* */ に修正。
+
+1996/02/02
+  apathf.c,ashare.c
+    HtMessageBoxを不使用に変更。ImpulseOcxから利用するため。
+
+
+1996/02/21
+  apathf.c ashare.c
+    CCNのccが//コメントを嫌ったので/* */に修正。
+
+
+1996/09/10
+  apath.c apathf.c
+    移動モードに CONSTANT ENERGY を追加(ARMP_CONSTENERGY)。
+    これにより、ループがよりリアルに表現できる。(Acoredit対応予定)
+
+
+1997/09/13
+  apath.c apathf.c
+    CONSTANT ENERGY Modeで、実は質量は関係ないということに気付いた
+    ので、そのように修正。
+
+
+1997/09/14
+  apathf.c
+    ArSetNodeENG。変数mを使ってないのに値を設定しようとしてたのを
+    削除。
+
+
+1997/09/20
+  apath.c,apathf.c
+    Static Camera機能を追加
+    (STC x y z h p b)
+
+
+1997/09/25
+  apath.c,apathf.c
+    前後のノードとスムーズにつながる回転(Smooth rotation)を追加。
+    (RSB)
+
+    懸案のスムーズなループのチェイス機を実現するために移動の種類に
+    CHASE(CHS)を追加。現在試行錯誤中。
+
+1997/09/26
+  apath.c,apathf.c
+    移動の種類CHASEを実装。Smooth Rotationを組み合わせると結構いい。
+
+
+1997/10/04
+  afldfile.c
+    "LOD"の追加(Blue Impulseのupdate.txtを参照)に合わせて修正。
+
+
+1997/10/26
+  X-Window用makefileを修正
+    プラットフォームを指定すると、かってに/home/ys11/pub/libの下に
+    そのプラットフォーム用の名前をつけてインストールするようにした。
+    あと、前に別のプラットフォームでmakeしていた場合はそれに自動的
+    に.oを消してmakeしなおすようにした。
+
+
+1997/01/07
+  asmoke.c
+    スモークががたがた震える現象を抑える実験。Ribbon Smokeに現在
+    実験的に実装。
+
+
+1997/01/14
+  asmoke.c
+    Solid Smokeにも振動防止を実装。
+
+
+1998/10/31
+  apath.c
+    原因不明のバグが出た。調べた結果 Visual C++ で Optimize Option を
+    Disable することで回避できると判明。しかたないから makefile の
+    /O2 (最速) を /Od (オプティマイズしない)に変更。
+
+
+1998/12/07
+  サンプルにrotor.cppを追加。
+
+
+1998/12/09
+  MOTIONPATH の移動タイプに RAW を追加。これでフライトシミュレータで
+  飛んだ軌跡を保存できるぞ♪
+
+  調子にのって MOVETOABS も追加。
+
+
+1998/12/10
+  adyna.c
+    DNMのPolygon,LineのShadowに色がついてたので修正。
+  apath.c
+    DNMのStatusをArPlayMpaの中でセットするように修正。
+  ashare.c
+    DNMをfreeするとき、ArFreeSharedObjを呼んでなかったので修正。よく
+    今までバグらなかったな....
+
+
+1998/12/11
+  aurora.h
+    ARP_MAX_NUM_SMOKE  8個なんてケチなこと言わずに64個に増強した。
+
+
+
+1999/01/18
+  adyna.c
+    ArCopyDnm  classIdをコピーし忘れていたので、修正。これはプロペラ
+    まわすまで気づかなかった....
+
+
+1999/12/20
+  adynaf.c
+    FIL指定がないSRFが来たときのために、新しいオブジェクトを作った
+    あとでnv,np,v,pを初期化するようにした。

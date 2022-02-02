@@ -1,0 +1,306 @@
+------------------------------------------------------------------------------
+NAME:ArInitDnm
+CATEGORY:関数
+DEFINITION:
+  int ArInitDnm(ARDNM *d);
+PARAMETER:
+  ARDNM *d;    ダイナミックオブジェクト
+RETURN:
+  BI_OK        成功
+  BI_ERR       失敗
+DESCRIPTION:
+  ダイナミックオブジェクトを初期化します。プログラム中でダイナミック
+  オブジェクトを生成する場合は、部品オブジェクトを結合する前にこの
+  関数を使ってダイナミックオブジェクトを初期化する必要があります。
+  ライブラリ関数のArLoadDnm,ArLoadDnmFromString,ArCopyDnmを使って
+  ダイナミックオブジェクトを生成する場合は必要ありません。
+REFERENCE:
+  ArAddDnmSrf,ArAddDnmPolyg,ArAddDnmLine,ArCopyDnm,ArFreeDnm,
+  ArAddDnmSrf,ArAddDnmPolyg,ArAddDnmLine,ArLoadDnm,ArLoadDnmFromString
+------------------------------------------------------------------------------
+NAME:ArAddDnmSrf
+CATEGORY:関数
+DEFINITION:
+  int ArAddDnmSrf(int *id,ARDNM *d,BISRF *s,int pid,BIPOSATT *par,BIPOINT *cld);PARAMETER:
+  int *id;        追加してできる部品オブジェクトのIDの格納先
+  ARDNM *d;       ダイナミックオブジェクト
+  BISRF *s;       子オブジェクトの形状
+  int pid;        親オブジェクトID
+  BIPOSATT *par;  親オブジェクト座標系での結合位置と姿勢
+  BIPOINT *cld;   子オブジェクト座標系での回転中心点
+RETURN:
+  BI_OK        成功
+  BI_ERR       失敗
+DESCRIPTION:
+  ダイナミックオブジェクトに部品オブジェクトを結合します。
+REFERENCE:
+  ArAddDnmSrf,ArAddDnmPolyg,ArAddDnmLine,ArCopyDnm,ArFreeDnm,
+  ArAddDnmSrf,ArAddDnmPolyg,ArAddDnmLine
+------------------------------------------------------------------------------
+NAME:ArAddDnmPolyg
+CATEGORY:関数
+DEFINITION:
+  int ArAddDnmPolyg
+     (int *id,ARDNM *d,
+      BIPOLYGON *plg,BICOLOR *col,int pid,BIPOSATT *par,BIPOINT *cld);
+PARAMETER:
+  int *id;        追加してできる部品オブジェクトのIDの格納先
+  ARDNM *d;       ダイナミックオブジェクト
+  BIPOLYGON *plg; ポリゴン
+  BICOLOR *col;   ポリゴンの色
+  int pid;        親オブジェクトID
+  BIPOSATT *par;  親オブジェクト座標系での結合位置と姿勢
+  BIPOINT *cld;   子オブジェクト座標系での回転中心点
+RETURN:
+  BI_OK        成功
+  BI_ERR       失敗
+DESCRIPTION:
+  ダイナミックオブジェクトに部品オブジェクトを結合します。
+REFERENCE:
+  ArAddDnmSrf,ArAddDnmPolyg,ArAddDnmLine,ArCopyDnm,ArFreeDnm,
+  ArAddDnmSrf,ArAddDnmPolyg,ArAddDnmLine
+------------------------------------------------------------------------------
+NAME:ArAddDnmLine
+CATEGORY:関数
+DEFINITION:
+  int ArAddDnmLine
+     (int *id,ARDNM *d,
+      BILIMLINE *lin,BICOLOR *col,int pid,BIPOSATT *par,BIPOINT *cld);
+PARAMETER:
+  int *id;        追加してできる部品オブジェクトのIDの格納先
+  ARDNM *d;       ダイナミックオブジェクト
+  BILIMLINE *lin; ワイヤーの両端点の座標
+  BICOLOR *col;   ワイヤーの色
+  int pid;        親オブジェクトID
+  BIPOSATT *par;  親オブジェクト座標系での結合位置と姿勢
+  BIPOINT *cld;   子オブジェクト座標系での回転中心点
+RETURN:
+  BI_OK        成功
+  BI_ERR       失敗
+DESCRIPTION:
+  ダイナミックオブジェクトに部品オブジェクトを結合します。
+REFERENCE:
+  ArAddDnmSrf,ArAddDnmPolyg,ArAddDnmLine,ArCopyDnm,ArFreeDnm,
+  ArAddDnmSrf,ArAddDnmPolyg,ArAddDnmLine
+------------------------------------------------------------------------------
+NAME:ArSetDnmRelation
+CATEGORY:関数
+DEFINITION:
+  int ArSetDnmRelation(ARDNM *d,int id,int rel);
+PARAMETER:
+  ARDNM *d;  ダイナミックオブジェクト
+  int id;    部品オブジェクトのID
+  int rel;   親オブジェクトとの関係
+RETURN:
+  BI_OK        成功
+  BI_ERR       失敗
+DESCRIPTION:
+  ダイナミックオブジェクトの部品オブジェクトに親オブジェクトとの関係を
+  設定します。親オブジェクトの関係は、次の中から選択することができます。
+
+    ARM_DEPENDENT
+      一段上の親オブジェクトに合わせて位置、姿勢が変化します。
+    ARM_INDEPENDENT
+      位置は一段上のオブジェクトに合わせて変化しますが、姿勢は独立して
+      動きます。
+    ARM_DEPENDONTOP
+      位置は一段上のオブジェクトに合わせて変化しますが、姿勢はダイナミ
+      ックオブジェクトの一番上の階層のオブジェクトに依存して変化します。
+REFERENCE:
+  ArSetDnmRelativePosition,ArSetDnmConnectingPosition,
+  ArSetDnmRelativeAttitude,ArSetDnmDrawSwitch,
+  ArSetDnmClassId
+------------------------------------------------------------------------------
+NAME:ArCopyDnm
+CATEGORY:関数
+DEFINITION:
+  int ArCopyDnm(ARDNM *neo,ARDNM *org);
+PARAMETER:
+  ARDNM *neo;  コピー先ダイナミックオブジェクト
+  ARDNM *org;  コピー元ダイナミックオブジェクト
+RETURN:
+  BI_OK        成功
+  BI_ERR       失敗
+DESCRIPTION:
+  ダイナミックオブジェクトをコピーします。
+REFERENCE:
+  ArLoadDnm,ArLoadDnmFromString,ArFreeDnm
+------------------------------------------------------------------------------
+NAME:ArSetDnmRelativePosition
+CATEGORY:関数
+DEFINITION:
+  int ArSetDnmRelativePosition(ARDNM *mdl,int id,BIPOSATT *pos);
+PARAMETER:
+  ARDNM *mdl;     ダイナミックオブジェクト
+  int id;         部品オブジェクトID
+  BIPOSATT *pos;  相対位置
+RETURN:
+  BI_OK        成功
+  BI_ERR       失敗
+DESCRIPTION:
+  ダイナミックオブジェクトの部品オブジェクトの相対位置を設定します。
+REFERENCE:
+  ArGetDnmRelativePosition,ArSetDnmRelation
+------------------------------------------------------------------------------
+NAME:ArGetDnmRelativePosition
+CATEGORY:関数
+DEFINITION:
+  int ArGetDnmRelativePosition(BIPOSATT *pos,ARDNM *mdl,int id);
+PARAMETER:
+  BIPOSATT *pos;  相対位置の格納先
+  ARDNM *mdl;     ダイナミックオブジェクト
+  int id;         部品オブジェクトID
+RETURN:
+  BI_OK        成功
+  BI_ERR       失敗
+DESCRIPTION:
+  ダイナミックオブジェクトの相対位置を取得します。
+REFERENCE:
+  ArSetDnmRelativePosition,ArSetDnmRelation
+------------------------------------------------------------------------------
+NAME:ArSetDnmConnectingPosition
+CATEGORY:関数
+DEFINITION:
+  int ArSetDnmConnectingPosition(ARDNM *mdl,int id,BIPOSATT *pos);
+PARAMETER:
+  ARDNM *mdl;     ダイナミックオブジェクト
+  int id;         部品オブジェクトID
+  BIPOSATT *pos;  親オブジェクト上の接続点
+RETURN:
+  BI_OK        成功
+  BI_ERR       失敗
+DESCRIPTION:
+  ダイナミックオブジェクトの部品オブジェクトの、親オブジェクトの座標系
+  での接続位置と接続角を設定します。
+REFERENCE:
+  ArGetDnmConnectingPosition,ArSetDnmRelation
+------------------------------------------------------------------------------
+int ArGetDnmConnectingePosition(BIPOSATT *pos,ARDNM *mdl,int id);
+------------------------------------------------------------------------------
+int ArSetDnmRelativeAttitude(ARDNM *mdl,int id,BIANGLE *att);
+------------------------------------------------------------------------------
+int ArGetDnmRelativeAttitude(BIANGLE *att,ARDNM *mdl,int id);
+------------------------------------------------------------------------------
+int ArSetDnmDrawSwitch(ARDNM *mdl,int id,int disp);
+------------------------------------------------------------------------------
+int ArGetDnmDrawSwitch(int *disp,ARDNM *mdl,int id);
+------------------------------------------------------------------------------
+int ArSetDnmClassId(ARDNM *mdl,int id,int classId);
+------------------------------------------------------------------------------
+int ArGetDnmClassId(int *classId,ARDNM *mdl,int id);
+------------------------------------------------------------------------------
+int ArCalcDnmAbsPosition(ARDNM *neo,BIPOSATT *pos);
+------------------------------------------------------------------------------
+int ArGetDnmAbsPosition(BIPOSATT *pos,ARDNM *mdl,int id);
+------------------------------------------------------------------------------
+int ArInsDnm(ARDNM *neo,BIPOSATT *pos);
+------------------------------------------------------------------------------
+int ArInsDnmDivide(ARDNM *neo,BIPOSATT *pos);
+------------------------------------------------------------------------------
+int ArOvwDnmShadow(ARDNM *neo,BIPOSATT *pos);
+------------------------------------------------------------------------------
+int ArGetDnmNumObj(int *nObj,ARDNM *mdl);
+------------------------------------------------------------------------------
+int ArAddDnmStatus(int *stId,ARDNM *mdl,int id,int disp,BIPOSATT *pos);
+------------------------------------------------------------------------------
+int ArGetDnmStatus(int *disp,BIPOSATT *pos,ARDNM *mdl,int id,int stId);
+------------------------------------------------------------------------------
+int ArSetDnmStatus(ARDNM *mdl,int id,int stId);
+------------------------------------------------------------------------------
+int ArInBetweenDnmStatus(ARDNM *mdl,int id,int st1,int st2,real t);
+------------------------------------------------------------------------------
+int ArInitSmokeClass(ARSMOKECLASS *s);
+------------------------------------------------------------------------------
+int ArSetSmokeBoundingBox(ARSMOKECLASS *s,int stp[3],BIPOINT bbx[2]);
+------------------------------------------------------------------------------
+int ArSetSmokeType(ARSMOKECLASS *s,int attr);
+------------------------------------------------------------------------------
+int ArGetSmokeType(int *attr,ARSMOKECLASS *s);
+------------------------------------------------------------------------------
+int ArSetSmokeLife(ARSMOKECLASS *s,int type,real t0,real t1);
+------------------------------------------------------------------------------
+int ArSetSmokeWidth(ARSMOKECLASS *s,int type,real w0,real w1,real dw);
+------------------------------------------------------------------------------
+int ArSetSmokeColor(ARSMOKECLASS *s,int type,BICOLOR *c0,BICOLOR *c1,real t);
+------------------------------------------------------------------------------
+int ArInitSmokeInstance(ARSMOKEINST *i,int nNode,int nDelWhenOverflow);
+------------------------------------------------------------------------------
+int ArBeginAppendSmokeNode(ARSMOKEINST *i);
+------------------------------------------------------------------------------
+int ArAppendSmokeNode(ARSMOKEINST *i,BIPOSATT *pos,real t);
+------------------------------------------------------------------------------
+int ArEndAppendSmokeNode(ARSMOKEINST *i);
+------------------------------------------------------------------------------
+int ArClearSmokeInstance(ARSMOKEINST *inst);
+------------------------------------------------------------------------------
+int ArFreeSmokeInstance(ARSMOKEINST *inst);
+------------------------------------------------------------------------------
+int ArInsSmoke(ARSMOKECLASS *cla,ARSMOKEINST *inst,real ctim,BIPOSATT *eye);
+------------------------------------------------------------------------------
+int ArLoadMpa(ARMPA *mpa,BIFLD *fld,char fn[]);/* fld can be NULL */
+	fldが読めたかどうかはArGetMpaHasField
+------------------------------------------------------------------------------
+int ArLoadMpaFromString(ARMPA *mpa,BIFIELD *fld,char *lst[]);
+------------------------------------------------------------------------------
+int ArFreeMpa(ARMPA *mpa);
+------------------------------------------------------------------------------
+int ArCalcCompletePath(ARMPA *mpa);
+------------------------------------------------------------------------------
+int ArEraseCompletePath(ARMPA *mpa);
+------------------------------------------------------------------------------
+int ArInitPlayMpa(ARMPA *mpa,int SmokeLength,int SmokeNumDelete);
+------------------------------------------------------------------------------
+int ArEndPlayMpa(ARMPA *mpa);
+------------------------------------------------------------------------------
+int ArRewindMpa(ARMPA *mpa);
+------------------------------------------------------------------------------
+int ArPlayMpa(ARMPA *mpa,real CurrentTime);
+------------------------------------------------------------------------------
+int ArGetMpaCamera(BIPOSATT *cam,ARMPA *mpa,int cId);
+------------------------------------------------------------------------------
+int ArGetMpaLight(BIPOINT *lig,ARMPA *mpa);
+------------------------------------------------------------------------------
+int ArInsMpa(ARMPA *mpa,int detail);
+------------------------------------------------------------------------------
+int ArInsMpaSmoke(ARMPA *mpa,BIPOSATT *eye);
+------------------------------------------------------------------------------
+int ArOvwMpaShadow(ARMPA *mpa);
+------------------------------------------------------------------------------
+int ArGetMpaName(char nam[],ARMPA *mpa);
+------------------------------------------------------------------------------
+int ArGetMpaMagnification(real *mx,real *my,ARMPA *mpa,int cId);
+------------------------------------------------------------------------------
+int ArGetMpaActualTime(real *t0,real *t1,ARMPA *mpa);
+------------------------------------------------------------------------------
+int ArGetMpaHasField(ARMPA *mpa);
+------------------------------------------------------------------------------
+int ArLoadSrf(BISRF *srf,char fn[]);
+------------------------------------------------------------------------------
+int ArLoadSrfFromString(BISRF *srf,char *lst[]);
+------------------------------------------------------------------------------
+int ArFreeSrf(BISRF *srf);
+------------------------------------------------------------------------------
+int ArLoadFld(BIFLD *fld,char fn[]);
+------------------------------------------------------------------------------
+int ArLoadFldFromString(BIFLD *fld,char *lst[]);
+------------------------------------------------------------------------------
+int ArFreeFld(BIFLD *fld);
+------------------------------------------------------------------------------
+int ArLoadPc2(BIPC2 *pc2,char fn[]);
+------------------------------------------------------------------------------
+int ArLoadPc2FromString(BIPC2 *pc2,char *lst[]);
+------------------------------------------------------------------------------
+int ArFreePc2(BIPC2 *pc2);
+------------------------------------------------------------------------------
+int ArLoadTer(BITER *ter,char fn[]);
+------------------------------------------------------------------------------
+int ArLoadTerFromString(BITER *ter,char *lst[]);
+------------------------------------------------------------------------------
+int ArFreeTer(BITER *ter);
+------------------------------------------------------------------------------
+int ArLoadDnm(ARDNM *dnm,char fn[]);
+------------------------------------------------------------------------------
+int ArLoadDnmFromString(ARDNM *dnm,char *lst[]);
+------------------------------------------------------------------------------
+int ArFreeDnm(ARDNM *dnm);
+------------------------------------------------------------------------------

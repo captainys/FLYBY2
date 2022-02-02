@@ -1,0 +1,114 @@
+
+ARMP_CHASE 実装試行錯誤
+あんまり手を変え品を変えだから、いちいち記録することにした。
+
+速度、加速度作戦。わけがわかんなくなって没。
+
+	int parId;
+	ARMPOBJECT *obj,*par;
+	ARMPNODE *nod;
+
+	obj=&mpa->obj[id];
+	nod=&obj->nod[n];
+	parId=nod->mot.mot.chs.id;
+	par=&mpa->obj[parId];
+
+	if(obj->t0<=t-2 && par->t0<=t-2)
+	{
+		BIPOSATT paro,par0,par1,part;
+		BIPOSATT relo,rel0,rel1;
+		BIAXIS paxo,pax0,pax1,paxt;
+		BIVECTOR v,a;
+		real dt;
+
+		ArGetPathObjPosition(&paro,mpa,parId,nod->t0);
+		ArGetPathObjPosition(&par0,mpa,parId,t-2);
+		ArGetPathObjPosition(&par1,mpa,parId,t-1);
+		ArGetPathObjPosition(&part,mpa,parId,t);
+		BiMakeAxis(&paxo,&paro);
+		BiMakeAxis(&pax0,&par0);
+		BiMakeAxis(&pax1,&par1);
+		BiMakeAxis(&paxt,&part);
+
+		ArGetPathObjPosition(&relo,mpa,id,nod->t0);
+		ArGetPathObjPosition(&rel0,mpa,id,t-2);
+		ArGetPathObjPosition(&rel1,mpa,id,t-1);
+		BiConvGtoL(&relo.p,&relo.p,&paxo);
+		BiConvGtoL(&rel0.p,&rel0.p,&pax0);
+		BiConvGtoL(&rel1.p,&rel1.p,&pax1);
+
+		BiSubPoint(&v,&part.p,&par1.p);
+		BiRotFastGtoL(&v,&v,&paxt.t);
+		dt=20.0F;
+		a.x=2.0F*(relo.p.x-v.x*dt-rel1.p.x)/(dt*dt);
+		a.y=2.0F*(relo.p.y-v.y*dt-rel1.p.y)/(dt*dt);
+		a.z=2.0F*(relo.p.z-v.z*dt-rel1.p.z)/(dt*dt);
+		BiAddPoint(&v,&v,&a);
+
+		BiAddPoint(&p->p,&rel1.p,&v);
+		BiConvLtoG(&p->p,&p->p,&paxt);
+	}
+	else
+	{
+		BIPOSATT parSt,parTm;
+		BIPOINT rel;
+		BIAXIS parStAxs,parTmAxs;
+
+		ArGetPathObjPosition(&parSt,mpa,parId,nod->t0);
+		BiMakeAxis(&parStAxs,&parSt);
+		BiConvGtoL(&rel,&nod->iniP.p,&parStAxs);
+
+		ArGetPathObjPosition(&parTm,mpa,parId,t);
+		BiMakeAxis(&parTmAxs,&parTm);
+		BiConvLtoG(&p->p,&rel,&parTmAxs);
+	}
+
+
+20ステップディレイ作戦  Wingmanが後ろにじゅうぶん離れている場合有効
+
+	int parId;
+	long dt;
+	ARMPOBJECT *obj,*par;
+	ARMPNODE *nod;
+
+	obj=&mpa->obj[id];
+	nod=&obj->nod[n];
+	parId=nod->mot.mot.chs.id;
+	par=&mpa->obj[parId];
+
+	dt=20;
+	if(obj->t0<=t-dt-1 && par->t0<=t-dt-1)
+	{
+		BIPOSATT paro,part;
+		BIPOSATT relo;
+		BIAXIS paxo,paxt;
+		BIPOINT rel;
+
+		ArGetPathObjPosition(&paro,mpa,parId,t-dt-1);
+		ArGetPathObjPosition(&part,mpa,parId,t-dt);
+		BiMakeAxis(&paxo,&paro);
+		BiMakeAxis(&paxt,&part);
+
+		ArGetPathObjPosition(&relo,mpa,id,t-1);
+
+		BiConvGtoL(&rel,&relo.p,&paxo);
+		BiConvLtoG(&rel,&rel,&paxt);
+
+		p->p=rel;
+	}
+	else
+	{
+		BIPOSATT parSt,parTm;
+		BIPOINT rel;
+		BIAXIS parStAxs,parTmAxs;
+
+		ArGetPathObjPosition(&parSt,mpa,parId,nod->t0);
+		BiMakeAxis(&parStAxs,&parSt);
+		BiConvGtoL(&rel,&nod->iniP.p,&parStAxs);
+
+		ArGetPathObjPosition(&parTm,mpa,parId,t);
+		BiMakeAxis(&parTmAxs,&parTm);
+		BiConvLtoG(&p->p,&rel,&parTmAxs);
+	}
+
+
