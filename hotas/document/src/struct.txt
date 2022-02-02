@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------
+NAME:HTMOUSE
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      int mx,my;
+      int lbt,mbt,rbt;
+  } HTMOUSE;
+DESCTIPTION:
+  マウスカーソル位置、左ボタン、中ボタン、右ボタン状態を表します。
+REFERENCE:
+  HtSetOnDragFunc,HtSetOnLeftButtonFunc,HtSetOnMiddleButtonFunc,
+  HtSetOnRightButtonFunc,HT_ON,HT_OFF
+------------------------------------------------------------------------------
+NAME:HTSHIFT
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      int shift,ctrl;
+  } HTSHIFT;
+DESCTIPTION:
+  シフトキー,コントロールキー状態を表します。
+REFERENCE:
+  HtGetShift,HT_ON,HT_OFF
+------------------------------------------------------------------------------
+

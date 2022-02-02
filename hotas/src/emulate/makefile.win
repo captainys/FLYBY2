@@ -1,0 +1,36 @@
+# Makefile for "Blue Impulse Library for Win95"
+
+LIB = lib.exe
+LIBFLAGS = /NOLOGO /OUT:"HOTAS32e.lib"
+
+CC = cl.exe
+CFLAGS=/nologo /W3 /GX /YX /Z7 /O2 /D "WIN32" /D "_WINDOWS" /c
+LISTFILE = nul
+
+CP = copy
+USERINCDIR = C:\"Program Files"\DevStudio\vc\include
+USERLIBDIR = C:\"Program Files"\DevStudio\vc\lib
+
+
+OBJ = htdlgs.obj hotas.obj
+
+
+REALTARGET = $(USERLIBDIR)/hotas32.lib
+TARGET = hotas32e.lib
+TARGETH = hotas.h
+
+$(REALTARGET) : $(TARGET)
+		$(CP) $(TARGET) $(USERLIBDIR)
+		$(CP) $(TARGETH) $(USERINCDIR)
+
+
+$(TARGET) : $(OBJ)
+		$(LIB) @<<
+	$(LIBFLAGS) $(OBJ)
+<<
+
+
+
+.c.obj:
+	$(CC) $(CFLAGS) $*.c
+

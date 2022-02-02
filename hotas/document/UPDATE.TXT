@@ -1,0 +1,197 @@
+Update  begin recording on  Sep 1st 1996
+
+1996/09/01
+  Windows版、ListBoxとかLineInputが起動時にアクティブになるように改良
+  にチャレンジ。
+
+  ListBox (WM_INITDIALOGが来たときに実行)
+    SendMessage(lbx,WM_SETFOCUS,0,0);  失敗
+    SetForgroundWindow(lbx);           失敗
+    SetActiveWindow(lbx);              失敗
+    SetFocus(lbx);                     大成功◎◎◎◎
+
+  現行のウィンドウシステムの複雑さを端的にあらわしている。同じような
+  名前の関数がたくさんあってどれを使っていいやらわからない。
+
+  ついでに、
+
+		SendMessage(lbx,LB_SETCURSEL,0,0);
+
+  というのを入れて、デフォルトで0番目のアイテムが選択状態になることに
+  する。また、マルチセレクトのときは、
+
+        SendMessage(lbx,LB_SETSEL,TRUE,-1);
+
+  で全選択になるそうだ。
+
+  ちなみに、HtLInputProc@htlinput.cに
+
+           :
+		return FALSE;
+	case WM_CREATE:
+		HtOnCreateLInput(dlg);
+	case WM_INITDIALOG:
+		HtOnInitLInput(dlg);
+           :
+
+  というところを発見。果たしてbreak;を意図的に抜いたんだか忘れたんだか
+  わからないので、とりあえずマーフィーの法則「動いているなら変更するな」
+  に従って放っておくことにする。
+
+  と、思ったがやっぱしやばそうなので、break;を入れることにする。ちなみ
+  に、HtLineInputにはSetFocus大作戦は通用しなかった。果たしてどうやる
+  のやら。
+
+    SetFocus(edt);                                失敗
+    SetActiveWindow(edt);                         失敗
+	SetForegroundWindow(edt);                     失敗
+	SendMessage(edt,EM_SETSEL,0,strlen(coke)-1);  失敗
+	SendMessage(edt,EM_SETSEL,0,-1);              失敗
+
+	{EnableWindow(edt,TRUE);
+	SetFocus(edt);
+	SendMessage(edt,EM_SETSEL,0,-1); }            失敗
+
+	SetFocus(edt);                                成功
+	SendMessage(edt,EM_SETSEL,0,-1);
+    で、WM_INITDIALOG を受け取ったときのreturn valueを0にする
+
+  どうやら、最初のSetFocusで正しくて、単に、親ウィンドウのWM_INITDIALOG
+  メッセージに対して TRUE を返していたのが悪かったらしい。0(FALSE)を
+  返す必要があったらしい。
+
+  そういえば、何かのとき、SetFocusするときは WM_INITDIALOG に対して
+  0を返す必要があるというのとちらっと見たような気がしたんで、どこで見た
+  んだったか探したが、発見できなかった。SetFocusに書け。SetFocusに。
+
+
+
+1996/09/26
+  Mac版 CW9 でListBoxが爆発するバグが発生。ListBoxの呼び出しループを次
+  のような関数に分けることで解決。
+
+    static short HtListBoxLoop(DialogPtr dlog)
+    {
+        short item;
+        ModalFilterUPP HtCallBackFunc;
+        item=0;
+        HtCallBackFunc=NewModalFilterProc(HtMacListBoxCallBack);
+        while(item!=1 && item!=2)
+        {
+            SetPort(dlog);
+            ModalDialog(HtCallBackFunc,&item);
+        }
+        sreturn item;
+    }
+
+  ポイントは、HtCallBackFunc=NewModalFilterProc(HtMacListBoxCallBack);
+  前までは、ModalDialog((ModalFilterUPP)HtMacListBoxCallBack,&item);と、
+  強引に関数をキャストしていた。
+
+
+
+1996/10/13
+  HtSaveFileDialog@src\win32\htfdlg.c
+  文字数制限が128文字になってたから256文字に拡張。
+
+
+1996/11/12
+  HtSave/LoadFileDialog
+  Windows版、ファイル選択とともにパスが変化しちゃっては困るので、パス
+  が変わらないように修正。
+
+
+1996/12/01
+  HOTAS & IMPULSE 統合推進プロジェクト始動。富修君によるとMac版はかなり
+  統合できちゃってるらしいので、Windows版に着手。まず、OpenWindowで同じ
+  処理をかなりやってるので、共通のコードは共通に使うように修正。あと、
+  コールバック関数もHOTAS独自の処理以外はBiWindowFunc()にパラメータをパ
+  スするように修正。共有処理のためのバイパス関数 BiWinResize(),
+  BiWinGenerateDrawBuffer()その他を廃止。代わって、BiWinCreateWindow()
+  を導入。
+
+
+1996/12/23
+  FM-TOWNS版、なんと、起動時HtRepaintFuncを初期化するのを忘れていたのを
+  修正。なんで今まで動いてたんだろう(^_^;)
+
+
+1996/12/27
+  弘前に出発前にこんなん作業するとは思わなんだ。しかもthrustで。
+  hotasrc.rc
+    日本語リソースなんかになってやがるから、VC++2.0英語版で使えなかった。
+    日本語関係の記述を削除。
+
+
+1997/02/21
+  src/emulate/hotas.c
+    HtSetOnMiddleButtonFuncとHtSetOnRightButtonFuncで、逆のボタンを登録
+    してしまっていた障害を修正。なんで今まで気が付かなかったんだろ....
+
+
+1997/04/11
+  src/mac/hotashac.c
+    Blue Impulseの方でウィンドウの左上位置を指定できるようにしたのに対
+    応して、BiMacOpenWindowのプロトタイプと呼び出しを変更。
+
+
+1997/08/27
+  Windows版
+    BiCInstを廃止。GetModuleHandle(NULL);に置き換え。WinMainの呪縛から
+    解放。ついでに、Window管理を完全にBlue Impulseがわに移管。これによ
+    り、Windows版は(多分Mac版も)、メニューを効かせたまま、リアルタイム
+    プログラムを走らすことができるようになったはず。MS-Flight5みたいの
+    ができる。
+
+
+1997/08/29
+  Windows版
+    WM_PAINTメッセージに対してHtRepaintFuncを呼んだとき、HtWindowFunc
+    がBI_OKを返すように修正。こうしておくと、Blue Impulse側で二重に
+    SwapBuffersしない(はず)。
+
+
+1997/09/10
+  Windows版
+    HOTASがわのWindow Callback Functionで、WM_SIZEを奪ってしまっていたの
+    で、修正。また、WM_PAINTを処理した後で、DefWindowProcを呼び出すよう
+    に修正。
+
+
+1997/10/26
+  X-Window用makefileを修正
+    プラットフォームを指定すると、かってに/home/ys11/pub/libの下に
+    そのプラットフォーム用の名前をつけてインストールするようにした。
+    あと、前に別のプラットフォームでmakeしていた場合はそれに自動的
+    に.oを消してmakeしなおすようにした。
+
+
+1997/12/31
+  Windows用
+    PeekMessageで全Windowのメッセージを取るのをやめた。と、思ったが、
+    そしたらWindowにWM_PAINTメッセージがうまく来なくなったからやめた。
+
+    あと、Interval Funcを設定してなかったら、PeekMessageをやめて、
+    GetMessageを使うように修正した。これにより、背景にあるときとか
+    無駄にシステム時間を食わない。
+
+
+1997/01/08
+  HOTASMAC.RC
+    BinHex形式のファイルも持っておくことにした。hotasmac.hqx
+
+
+1998/12/10
+  Windows98のFile Dialog改悪に対抗。ファイルダイアログのデフォルトに
+  "" を指定すると、勝手に My Documents を見に行くので、"" じゃなく
+  "*.*" を指定するようにした。
+
+
+1998/12/11
+  HtInputAngle3 (win32)
+    内部的にfloatでやるようにした。多分なんぼかまし。
+
+
+1999/02/01
+  BiWinRegisterDialogに対応。
+

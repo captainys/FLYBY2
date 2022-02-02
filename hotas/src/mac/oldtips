@@ -1,0 +1,295 @@
+------------------------------------------------------------- func.c
+// ListBoxFunctions  -- 95.10.29 shuhei@sfc.wide.ad.jp
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <Lists.h>	//Macintoshのリストボックスを扱うため
+
+//以下2行はHoTasライブラリに組み込んだ後は必要なくなる(値が間違っていたらごめん^^;)
+#define HT_YES 1
+#define HT_NO 0
+
+//ResEditに定義されているDLOGのリソース番号
+#define rHtMacListDialog		4000
+
+//このソース内で使用する宣言
+#define HTMAC_MODE_SINGLE 0
+#define HTMAC_MODE_MULTI 1
+//#define HTMAC_MAXSTRINGLEN 256
+
+// どうしても使用するグローバル
+ListHandle _ht_mac_theList;			//リスト用ハンドル
+short _ht_mac_listbox_mode;			//複数選択可能か？ 
+Rect _ht_mac_listbox_rect;			//表示しているリストボックスを囲むRect
+
+// 呼び出される関数 (以下2つ)
+int HtListBox(int *, char *str[],char *,char *,char *);
+int HtListBoxPl(int *, int [],char *str[],char *,char *,char *);
+// 内部的に呼び出される関数
+int HtMac_ListBox(int ,   int , int [],char *itemstr[],char *,char *,char *);
+pascal Boolean HtMac_ListBoxCallBack(DialogPtr, EventRecord *,short *);
+
+//一つの項目しか選択できないダイアログボックスの処理
+int HtListBox(int *n,char *str[],char *msg,char *yes,char *no)
+{
+	int itemhit[1024];//1024個以上のリストボックス項目があると困る
+	int i;
+	int num;
+	int ret;
+	num = *n;
+	ret = HtMac_ListBox( HTMAC_MODE_SINGLE, num , itemhit , str , msg , yes , no);
+	for( i = 0 ; i < num ; i++){
+		if(itemhit[i] != HT_NO){*n = i;return HT_YES;}
+	}
+	return HT_NO;
+}
+int HtListBoxPl(int *nm,int n[],char *str[],char *msg,char *yes,char *no)
+{
+	int i;
+	int num;
+	int ret;
+	num = *nm;
+	ret = HtMac_ListBox(HTMAC_MODE_MULTI,num, n, str , msg , yes, no);
+
+	*nm = 0;	
+	for(i = 0 ; i < num ; i++){
+		if(n[i] != HT_NO){(*nm)++;}
+	}
+	return ret;
+}
+
+// リストボックスを生成し、Ok,Cancelが押されるまでイベントを監視する
+// modeの設定によって{一つの項目しか選択できない,複数校目の選択可}の
+// 区別をする
+int HtMac_ListBox(int mode , int itemnum , int itemhit[] , char *itemstr[],char *msg,char *yes,char *no)
+{
+	DialogPtr dlog;				//ダイアログへのポインタ
+	Cell ce;					//セル選択用
+	short px,py;				//描画座標用
+	short pw,ph;				//リストボックスの縦横幅
+	Rect	r , list_rect,r1,r2 ,r3 , r4;					//雑用矩形用
+	Point pt;
+	Boolean finish = 0;
+	Boolean isEvent;
+	EventRecord	event;
+	int i;
+	int ret;
+	short item;
+	Handle IH1,IH2,IH3,IH4;
+	short iT1,iT2,iT3,iT4;
+	unsigned char tmp[255];
+	
+	px = 8;
+	py = 8;
+//ウインドウのy方向への大きさは、
+//		リストが開始される場所
+//		リスト部分
+//		ボタン部分
+//ウインドウのx方向への大きさは、
+//		リストが開始される場所
+//		リスト部分の大きさ
+//		スクロールバーの大きさ
+
+	_ht_mac_listbox_mode = mode;
+
+	dlog = GetNewDialog(rHtMacListDialog,0L,(WindowPtr) -1L);
+	GetDItem(dlog,1,&iT1,&IH1,&r1);
+	GetDItem(dlog,2,&iT2,&IH2,&r2);
+	GetDItem(dlog,3,&iT3,&IH3,&r3);
+	GetDItem(dlog,4,&iT4,&IH4,&r4);
+//dlogへの描画を開始する
+	SetPort(dlog);
+//yesに文字列が設定されていれば、
+	if(strlen(yes) > 0){
+		InsetRect(&r1,2,2);
+		TextBox(yes,strlen((char *)yes),&r1,1);//1は中央揃えを意味する
+		InsetRect(&r1,-2,-2);
+	}
+//noに文字列が設定されていれば、
+	if(strlen(no) > 0){
+		InsetRect(&r2,2,2);
+		TextBox(no,strlen((char *)no),&r2,1);//1は中央揃えを意味する
+		InsetRect(&r2,-2,-2);
+	}
+//msgに文字列が設定されていれば、
+	if(strlen(msg) > 0){
+		strcpy((char *)tmp,msg);
+		CtoPstr((char *)tmp);
+		SetIText(IH3 , tmp);
+	}
+//Listを作る
+	InsetRect(&r4,1,1);
+	FrameRect(&r4);
+	InsetRect(&r4,1,1);
+//リストボックスの表示部分(スクロールバーを含む)のRectを設定	
+	_ht_mac_listbox_rect.left = r4.left;
+	_ht_mac_listbox_rect.right = r4.right+16;
+	_ht_mac_listbox_rect.top = r4.top;
+	_ht_mac_listbox_rect.bottom = r4.bottom;
+	
+	SetRect(&list_rect, 0, 0, 1, itemnum);
+	SetPt(&pt,(r4.right - r4.left),16);// 縦幅は 14ptくらいが適当だ
+	TextSize(12);
+	_ht_mac_theList = LNew(&r4,&list_rect,pt,0,dlog,true,false,false,true);
+	if(_ht_mac_theList == 0){return(-1);}//リストボックスの確保失敗
+	
+	HLock((Handle)_ht_mac_theList);
+	if(mode == HTMAC_MODE_SINGLE){
+		(**_ht_mac_theList).selFlags  =-128;//同時に選択できるのは一つだけ
+	}
+	for( i = 0 ; i < itemnum ; i++){
+		SetPt(&ce,0, i);
+		LSetCell(itemstr[i],strlen(itemstr[i]),ce,_ht_mac_theList);
+	}
+	HUnlock((Handle)_ht_mac_theList);
+	LUpdate( (**_ht_mac_theList).port->visRgn,_ht_mac_theList);
+
+	item = 0;
+
+	InsetRect(&r1,-4,-4);	PenSize(3,3);	FrameRoundRect(&r1,16,16);
+
+	while(item!=1 && item!=2){
+		SetPort(dlog);
+		ModalDialog(HtMac_ListBoxCallBack,&item);
+	}
+	ret = HT_NO;
+	if(item ==1){
+		ret = HT_YES;
+//選択されているリストボックスの項目を選び出す
+		for( i = 0 ; i < itemnum ; i++){
+			SetPt(&ce,0, i);
+			if(LGetSelect(false,&ce,_ht_mac_theList)==true){
+				itemhit[i] = HT_YES;				
+			}
+			else{
+				itemhit[i] = HT_NO;
+			}	
+		}	
+	}
+	LDispose(_ht_mac_theList);
+	DisposeDialog(dlog);
+	return ret;
+}
+pascal Boolean
+HtMac_ListBoxCallBack(DialogPtr dlog , EventRecord *event,short *itemHit)
+{
+	Point pt;
+
+	if (event->what == keyDown || event->what == autoKey)
+	{
+		// Command + "." (ピリオド)の場合はキャンセルだった
+		if( (event->modifiers & cmdKey)!=0){
+			if( (event->message & keyCodeMask) == 0x2F00){
+				*itemHit = 2;
+				return true;
+			}
+		}
+		// escの場合は Cancel
+		if( (event->message & keyCodeMask)>>8  == 0x35){
+			*itemHit = 2;
+			return true;
+		}
+		// returnもしくはenterの場合は OK
+		if( (event->message & keyCodeMask) == 0x4C00 ||
+			(event->message & keyCodeMask) == 0x2400){
+			*itemHit =  1;
+			return true;
+		}
+		return false;
+	}
+	if(event->what == mouseDown)
+	{
+		SetPt(&pt,event->where.h,event->where.v);
+//リストボックス内でマウスが押されたかの判断
+		GlobalToLocal(&pt);
+		if( PtInRect(pt,&_ht_mac_listbox_rect)==false){
+			return false;
+		}
+		if(_ht_mac_listbox_mode == HTMAC_MODE_SINGLE){
+			event->modifiers &= 0xfeff;
+		}
+		else{
+			event->modifiers |= 0x0100;
+		}
+		LClick(pt,event->modifiers,_ht_mac_theList);
+		LUpdate( (**_ht_mac_theList).port->visRgn,_ht_mac_theList);
+		*itemHit = 3;
+		return true;
+	}
+	return false;		
+}
+
+------------------------------------------------------------- init.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <AppleEvents.h>
+
+void InitToolbox(void);
+
+// 関数実体
+void InitToolbox()
+{
+//
+	Ptr p;
+	p = GetApplLimit();
+	p -= 64000;
+	SetApplLimit(p);
+	MaxApplZone();
+	MoreMasters();MoreMasters();MoreMasters();
+	InitGraf((Ptr) &qd.thePort);
+	InitFonts();
+	InitWindows();
+	InitMenus();
+	InitDialogs(0L);
+	InitCursor();
+	TEInit();
+	//システム7以上かどうかを調べる必要もあるようだ
+	FlushEvents(everyEvent,0);
+}
+
+------------------------------------------------------------- test.c
+// test.c
+// Test Program of ListBoxFunction  -- 95.10.29 shuhei@sfc.wide.ad.jp
+#include <stdio.h>
+
+//以下2行はHoTasライブラリに組み込んだ後は必要なくなる(値が間違っていたらごめん^^;)
+#define HT_YES 1
+#define HT_NO 0
+
+extern int HtListBox(int *, char *str[],char *,char *,char *);
+extern int HtListBoxPl(int *,int n[],char *str[],char *,char *,char *);
+
+main()
+{
+	int i,i2;
+	int ret,ret2;
+	FILE *fp;
+	int answer[100];
+	char *s[] = { "aaa","bbb","ccc","ddd","eee","fff","ggg","hhh","iii","jjj","kkk","lll"};
+	//Toolboxの初期化を呼び出す
+	InitToolbox();
+	
+	i = 11;
+	ret = HtListBox(&i,s , "Message","YES","NO");
+//printfによる出力を管理するSIOUXとToolboxｂの共存が怪しいのでファイルに書き出す
+	i2 = 11;
+	ret2 = HtListBoxPl(&i2,answer,s,"MessagePl","yes","no");
+	
+	fp = fopen("tmp.out","w");
+	fprintf(fp,"-------result1--------\n");
+	fprintf(fp,"    HtListBox() \n");
+	fprintf(fp, "ret = %d , selected item = %d\n",ret , i);
+	fprintf(fp,"-------result2--------\n");
+	fprintf(fp,"    HtListBox() \n");
+	fprintf(fp, "ret = %d , selected item number = %d\n",ret2 , i2);
+	for(i = 0 ; i < 11 ; i++){
+		if( answer[i] == HT_YES){
+			fprintf(fp,"selected %s\n",s[i]);
+		}
+	}
+	fclose(fp);
+	
+	ExitToShell();
+}

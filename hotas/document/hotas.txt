@@ -1,0 +1,620 @@
+・HOTAS Library Reference (改定  8th Feb. 1996)
+  このリファレンスは次の3セクションに別れています。
+  ・定数
+  ・構造体
+  ・関数
+
+
+・定数
+----------
+NAME:HT_FALSE
+NAME:HT_TRUE
+CATEGORY:定数
+DEFINITION:
+  enum {
+      HT_FALSE,
+      HT_TRUE
+  };
+DESCTIPTION:
+  真偽をあらわす定数です。
+----------
+NAME:HT_NO
+NAME:HT_YES
+CATEGORY:定数
+DEFINITION:
+  enum {
+      HT_NO,
+      HT_YES
+  };
+DESCTIPTION:
+  肯定/否定をあらわす定数です。
+----------
+NAME:HT_OFF
+NAME:HT_ON
+CATEGORY:定数
+定義
+  enum {
+      HT_OFF,
+      HT_ON
+  };
+DESCTIPTION:
+  オン/オフをあらわす定数です。
+----------
+
+
+
+
+
+・構造体
+----------
+NAME:HTMOUSE
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      int mx,my;
+      int lbt,mbt,rbt;
+  } HTMOUSE;
+DESCTIPTION:
+  マウスカーソル位置、左ボタン、中ボタン、右ボタン状態を表します。
+REFERENCE:
+  HtSetOnDragFunc,HtSetOnLeftButtonFunc,HtSetOnMiddleButtonFunc,
+  HtSetOnRightButtonFunc,HT_ON,HT_OFF
+----------
+NAME:HTSHIFT
+CATEGORY:構造体
+DEFINITION:
+  typedef struct {
+      int shift,ctrl;
+  } HTSHIFT;
+DESCTIPTION:
+  シフトキー,コントロールキー状態を表します。
+REFERENCE:
+  HtGetShift,HT_ON,HT_OFF
+----------
+
+
+
+
+
+・関数
+----------
+NAME:HtColorDialog
+CATEGORY:関数
+DEFINITION:
+  int HtColorDialog(BICOLOR *col,BICOLOR *df,char *msg);
+PARAMETER:
+  BICOLOR *col;    入力結果格納先ポインタ
+  BICOLOR *df;     デフォルト色(NULL可)
+  char *msg;       表示メッセージ
+DESCTIPTION:
+  カラー入力ダイアログを表示して、色を選びます。ユーザの入力があった場合は、
+  HT_YESを、入力を取り消したときは、HT_NOを返します。
+----------
+NAME:HtEndSetMenu
+CATEGORY:関数
+DEFINITION:
+  void HtEndSetMenu(void);
+DESCTIPTION:
+  HtStartSetMenuで始まるメニュー定義ブロックの終わりに呼び出す関数です。
+REFERENCE:
+  HtStartSetMenu
+----------
+NAME:HtEndSetShortCut
+CATEGORY:関数
+DEFINITION:
+  void HtEndSetShortCut(void);
+DESCTIPTION:
+  HtStartSetShortCutで始まるショートカットキー定義ブロックの終わりに呼び
+  出す関数です。
+REFERENCE:
+  HtStartSetShortCut
+----------
+NAME:HtEventLoop
+CATEGORY:関数
+DEFINITION:
+  void HtEventLoop(void);
+DESCTIPTION:
+  イベントループに入ります。イベントループに入る前に、メニューやショート
+  カット等の定義を済ませておく必要があります。この関数を呼び出すと、他の
+  コールバック関数がHtQuitProgramを呼び出すまで戻ってきません。
+REFERENCE:
+  HtQuitProgram
+----------
+NAME:HtGetShift
+CATEGORY:関数
+DEFINITION:
+  void HtGetShift(HTSHIFT *sft);
+DESCTIPTION:
+  シフトキーとコントロールキー状態を読み取る関数です。
+REFERENCE:
+  HTSHIFT
+----------
+NAME:HtInitialize
+CATEGORY:関数
+DEFINITION:
+   void HtInitialize(void);
+DESCTIPTION:
+  HOTAS-Libraryを初期化します。Blue Impulse Libraryの初期化に続けて呼び出す
+  必要があります。
+----------
+NAME:HtInputAngle3
+CATEGORY:関数
+DEFINITION:
+  int HtInputAngle3(BIANGLE *a,BIANGLE *df,char *msg,char *y,char *n);
+PARAMETER:
+  BIANGLE *a;   入力結果格納先
+  BIANGLE *df;  デフォルト(NULL可)
+  char *msg;    表示メッセージ
+  char *y;      確定ボタンに表示するメッセージ(NULL可)
+  char *n;      取消ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  オイラー角(Heading,Pitching,Bank)を入力します。入力があった場合は、HT_YES
+  を、取り消したときはHT_NOを返します。
+REFERENCE:
+  HtInputAngle3,HtInputInteger,HtInputNumber,HtInputPoint2,
+  HtInputPoint2i,HtInputPoint3,HtInputPoint3i
+----------
+NAME:HtInputInteger
+CATEGORY:関数
+DEFINITION:
+  int HtInputInteger(int *n,int dflt,char *msg,char *yes,char *no);
+PARAMETER:
+  int *n;       入力結果格納先
+  int dflt;     デフォルト値
+  char *msg;    表示メッセージ
+  char *yes;    確定ボタンに表示するメッセージ(NULL可)
+  char *no;     取消ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  整数を入力します。入力があった場合は、HT_YESを、取り消したときは、HT_NOを
+  返します。
+REFERENCE:
+  HtInputAngle3,HtInputInteger,HtInputNumber,HtInputPoint2,
+  HtInputPoint2i,HtInputPoint3,HtInputPoint3i
+----------
+NAME:HtInputNumber
+CATEGORY:関数
+DEFINITION:
+  int HtInputNumber(real *n,real dflt,char *msg,char *yes,char *no);
+PARAMETER:
+  real *n;      入力結果格納先
+  real dflt;    デフォルト値
+  char *msg;    表示メッセージ
+  char *yes;    確定ボタンに表示するメッセージ(NULL可)
+  char *no;     取消ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  実数を入力します。入力があった場合はHT_YESを、取り消したときはHT_NOを
+  返します。
+REFERENCE:
+  HtInputAngle3,HtInputInteger,HtInputNumber,HtInputPoint2,
+  HtInputPoint2i,HtInputPoint3,HtInputPoint3i
+----------
+NAME:HtInputPoint2
+CATEGORY:関数
+DEFINITION:
+  int HtInputPoint2(BIPOINT2 *p,BIPOINT2 *df,char *msg,char *y,char *n);
+PARAMETER:
+  BIPOINT2 *p;   入力結果格納先
+  BIPOINT2 *df;  デフォルト値(NULL可)
+  char *msg;     表示メッセージ
+  char *y;       確定ボタンに表示するメッセージ(NULL可)
+  char *n;       取消ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  2D座標値を入力します。入力があった場合はHT_YESを、取り消したときはHT_NO
+  を返します。
+REFERENCE:
+  HtInputAngle3,HtInputInteger,HtInputNumber,HtInputPoint2,
+  HtInputPoint2i,HtInputPoint3,HtInputPoint3i
+----------
+NAME:HtInputPoint2i
+CATEGORY:関数
+DEFINITION:
+  int HtInputPoint2i(int p[2],int df[2],char *msg,char *y,char *n);
+PARAMETER:
+  int p[2];      入力結果格納先
+  int df[2];     デフォルト値(NULL可)
+  char *msg;     表示メッセージ
+  char *y;       確定ボタンに表示するメッセージ(NULL可)
+  char *n;       取消ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  整数をふたつ入力します。入力があった場合はHT_YESを、取り消したときはHT_NO
+  を返します。
+REFERENCE:
+  HtInputAngle3,HtInputInteger,HtInputNumber,HtInputPoint2,
+  HtInputPoint2i,HtInputPoint3,HtInputPoint3i
+----------
+NAME:HtInputPoint3
+CATEGORY:関数
+DEFINITION:
+  int HtInputPoint3(BIPOINT *p,BIPOINT *df,char *msg,char *y,char *n);
+PARAMETER:
+  BIPOINT *p;    入力結果格納先
+  BIPOINT *df;   デフォルト値(NULL可)
+  char *msg;     表示メッセージ
+  char *y;       確定ボタンに表示するメッセージ(NULL可)
+  char *n;       取消ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  3D座標を入力します。入力があった場合はHT_YESを、取り消したときはHT_NO
+  を返します。
+REFERENCE:
+  HtInputAngle3,HtInputInteger,HtInputNumber,HtInputPoint2,
+  HtInputPoint2i,HtInputPoint3,HtInputPoint3i
+----------
+NAME:HtInputPoint3i
+CATEGORY:関数
+DEFINITION:
+  int HtInputPoint3i(int p[3],int df[3],char *msg,char *y,char *n);
+PARAMETER:
+  int p[3];      入力結果格納先
+  int df[3];     デフォルト値(NULL可)
+  char *msg;     表示メッセージ
+  char *y;       確定ボタンに表示するメッセージ(NULL可)
+  char *n;       取消ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  整数を3個入力します。入力があった場合はHT_YESを、取り消したときはHT_NO
+  を返します。
+REFERENCE:
+  HtInputAngle3,HtInputInteger,HtInputNumber,HtInputPoint2,
+  HtInputPoint2i,HtInputPoint3,HtInputPoint3i
+----------
+NAME:HtLineInput
+CATEGORY:関数
+DEFINITION:
+  int HtLineInput(char *str,char *msg,char *def);
+PARAMETER:
+  char *str;    入力結果格納先
+  char *msg;    表示メッセージ
+  char *def;    デフォルト値(NULL可)
+DESCTIPTION:
+  1行の文字列を入力します。入力があった場合はHT_YESを、取り消したときはHT_NO
+  を返します。
+----------
+NAME:HtListBox
+CATEGORY:関数
+DEFINITION:
+  int HtListBox(int *n,char *str[],char *msg,char *yes,char *no);
+PARAMETER:
+  int *n;         選択結果格納先
+  char *str[];    選択項目  (項目の最後にNULL:下の例参照)
+  char *msg;      表示メッセージ
+  char *yes;      確定ボタンに表示するメッセージ(NULL可)
+  char *no;       取消ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  選択項目の中からひとつの項目を選択して、選んだ番号を*nに格納します。入力
+  があったときはHT_YESを、取り消したときはHT_NOを返します。
+REFERENCE:
+  HtListBoxPl
+例:
+	int choice;
+    char *itm[]={"BLUE","RED","PURPLE","GREEN","CYAN","YELLOW","WHITE",NULL};
+
+	if(HtListBox(&choice,str,"Choose Color",NULL,NULL)==HT_YES)
+	{
+		HtMessageBox(str[choice],NULL);
+	}
+----------
+NAME:HtListBoxPl
+CATEGORY:関数
+DEFINITION:
+  int HtListBoxPl(int *nm,int n[],char *str[],char *msg,char *yes,char *no);
+PARAMETER:
+  int *nm;       選択した個数
+  int n[];       選択結果の配列
+  char *str[];   選択項目  (項目の最後にNULL:下の例参照)
+  char *msg;     表示メッセージ
+  char *yes;     確定ボタンに表示するメッセージ(NULL可)
+  char *no;      取消ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  選択項目の中から複数の項目を選択して、選んだ個数を*nmに、選んだ項目番号を
+  n[0]～n[*nm-1]に格納します。入力  があったときはHT_YESを、取り消したとき
+  はHT_NOを返します。なお、配列nの大きさをいくつにすればいいのかという問題
+  ですが、絶対選択項目の個数よりも多くを選ぶことはあり得ないので、選択項目
+  の個数(または最大値)だけ確保しておけば安全です。
+REFERENCE:
+  HtListBox
+例:
+	int nChoice,i;
+    char *itm[]={"BLUE","RED","PURPLE","GREEN","CYAN","YELLOW","WHITE",NULL};
+	int choice[7];
+
+	if(HtListBoxPl(&nChoice,choice,str,"Choose Color",NULL,NULL)==HT_YES)
+	{
+		for(i=0; i<nChoice; i++)
+		{
+			HtMessageBox(str[choice[i]],NULL);
+		}
+	}
+----------
+NAME:HtLoadFileDialog
+CATEGORY:関数
+DEFINITION:
+  int HtLoadFileDialog(char *fn,char *msg,char *df,char *ext);
+PARAMETER:
+  char *fn;   入力結果格納先
+  char *msg;  表示メッセージ
+  char *df;   デフォルト値(NULL可)
+  char *ext;  拡張子
+DESCTIPTION:
+  読み込むファイルを選択するファイルセレクタを表示して、ファイルを選択します。
+  入力があったときはHT_YESを、取り消したときはHT_NOを返します。
+REFERENCE:
+  HtSaveFileDialg
+----------
+NAME:HtMessageBox
+CATEGORY:関数
+DEFINITION:
+  void HtMessageBox(char *msg,char *btn);
+PARAMETER:
+  char *msg;  表示メッセージ
+  char *btn;  確認ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  確認のためのメッセージボックスを表示します。
+REFERENCE:
+  HtMessageBox,HtMessageBox3,HtYesNo,HtYesNo3
+----------
+NAME:HtMessageBox3
+CATEGORY:関数
+DEFINITION:
+  void HtMessageBox3(char *msg[3],char *btn);
+PARAMETER:
+  char *msg[3];    表示メッセージ(msg[0],msg[1],msg[2]の中身にはNULL可)
+  char *btn;       確認ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  3行のメッセージを表示してユーザが確認ボタンを押すまで待ちます。
+  msg[0～3]のうち、不要なものにNULLをセットすることによって、2行メッセージ
+  にすることも可能です。
+REFERENCE:
+  HtMessageBox,HtMessageBox3,HtYesNo,HtYesNo3
+----------
+NAME:HtOpenWindow
+CATEGORY:関数
+DEFINITION:
+  void HtOpenWindow(long sizx,long sizy);
+PARAMETER:
+  long sizx;    ウィンドウの横ピクセル数要求値
+  long sizy;    ウィンドウの縦ピクセル数要求値
+DESCTIPTION:
+  ウィンドウを開きます。ただし、実際に開いたウィンドウの大きさは、
+  BiGetWindowSizeで取得します。
+REFERENCE:
+  BiGetWindowSize(impulse.doc)
+----------
+NAME:HtQuitProgram
+CATEGORY:関数
+DEFINITION:
+  void HtQuitProgram(void);
+DESCTIPTION:
+  この関数を呼び出した後でイベントループに処理を戻すと、イベントループを
+  終了します。この関数を呼び出さない限り、HtEventLoopから抜けることはあり
+  ません。
+REFERENCE:
+  HtEventLoop
+----------
+NAME:HtResetOnDragFunc
+CATEGORY:関数
+DEFINITION:
+  void HtResetOnDragFunc(void);
+DESCTIPTION:
+  HtSetOnDragFuncで設定したマウスドラッグに対応するコールバック関数をクリアし
+  ます。
+REFERENCE:
+  HtResetOnDragFunc,HtResetOnLeftButtonFunc,HtResetOnMiddleButtonFunc,
+  HtResetOnRightButtonFunc,HtSetOnDragFunc,HtSetOnLeftButtonFunc,
+  HtSetOnMiddleButtonFunc,HtSetOnRightButtonFunc
+----------
+NAME:HtResetOnLeftButtonFunc
+CATEGORY:関数
+DEFINITION:
+  void HtResetOnLeftButtonFunc(void);
+DESCTIPTION:
+  HtSetOnLeftButtonFuncで設定した左ボタン押し下げに対するコールバック関数を
+  クリアします。
+REFERENCE:
+  HtResetOnDragFunc,HtResetOnLeftButtonFunc,HtResetOnMiddleButtonFunc,
+  HtResetOnRightButtonFunc,HtSetOnDragFunc,HtSetOnLeftButtonFunc,
+  HtSetOnMiddleButtonFunc,HtSetOnRightButtonFunc
+----------
+NAME:HtResetOnMiddleButtonFunc
+CATEGORY:関数
+DEFINITION:
+  void HtResetOnMiddleButtonFunc(void);
+DESCTIPTION:
+  HtSetOnMiddleButtonFuncで設定した中ボタン押し下げに対するコールバック関数
+  をクリアします。
+REFERENCE:
+  HtResetOnDragFunc,HtResetOnLeftButtonFunc,HtResetOnMiddleButtonFunc,
+  HtResetOnRightButtonFunc,HtSetOnDragFunc,HtSetOnLeftButtonFunc,
+  HtSetOnMiddleButtonFunc,HtSetOnRightButtonFunc
+----------
+NAME:HtResetOnRightButtonFunc
+CATEGORY:関数
+DEFINITION:
+  void HtResetOnRightButtonFunc(void);
+DESCTIPTION:
+  HtSetOnRightButtonFuncで設定した右ボタン押し下げに対するコールバック関数
+  をクリアします。
+REFERENCE:
+  HtResetOnDragFunc,HtResetOnLeftButtonFunc,HtResetOnMiddleButtonFunc,
+  HtResetOnRightButtonFunc,HtSetOnDragFunc,HtSetOnLeftButtonFunc,
+  HtSetOnMiddleButtonFunc,HtSetOnRightButtonFunc
+----------
+NAME:HtSaveFileDialog
+CATEGORY:関数
+DEFINITION:
+  int HtSaveFileDialog(char *fn,char *msg,char *df,char *ext);
+PARAMETER:
+  char *fn;   入力結果格納先
+  char *msg;  表示メッセージ
+  char *df;   デフォルト値(NULL可)
+  char *ext;  拡張子
+DESCTIPTION:
+  書き込むファイルを選択するファイルセレクタを表示して、ファイルを選択します。
+  入力があったときはHT_YESを、取り消したときはHT_NOを返します。
+REFERENCE:
+  HtLoadFileDialg
+----------
+NAME:HtSetMenuItem
+CATEGORY:関数
+DEFINITION:
+  void HtSetMenuItem(int n,char *str,char key,void (*f)(void));
+PARAMETER:
+  int n;            登録プルダウンメニューの番号(一番左が1)
+  char *str;        メニュー文字列
+  char key;         ショートカットキー
+  void (*f)(void);  コールバック関数
+DESCTIPTION:
+  プルダウンメニューの項目を登録します。この関数は、HtStartSetMenu～
+  HtEndSetMenuの間以外で呼び出すことはできません。
+REFERENCE:
+  HtStartSetMenu,HtEndSetMenu
+例:
+  extern void CallBackFunc(void);
+
+  HtStartSetMenu(1,"Test",'a',CallBackFunc);
+----------
+NAME:HtSetOnDragFunc
+CATEGORY:関数
+DEFINITION:
+  void HtSetOnDragFunc(void (*f)(HTMOUSE *mos));
+PARAMETER:
+  void (*f)(HTMOUSE *mos);  ドラッグに対応するコールバック関数
+DESCTIPTION:
+  ドラッグイベントに対応するコールバック関数を設定します。コールバック
+  関数には引数として、ドラッグイベントが発生したときのボタン状態とカー
+  ソル位置を通知します。
+REFERENCE:
+  HtResetOnDragFunc,HtResetOnLeftButtonFunc,HtResetOnMiddleButtonFunc,
+  HtResetOnRightButtonFunc,HtSetOnDragFunc,HtSetOnLeftButtonFunc,
+  HtSetOnMiddleButtonFunc,HtSetOnRightButtonFunc
+例:
+  extern void DragCallBackFunc(HTMOUSE *mos);
+
+  HtSetOnDragFunc(DragCallBackFunc);
+----------
+NAME:HtSetOnLeftButtonFunc
+CATEGORY:関数
+DEFINITION:
+  void HtSetOnLeftButtonFunc(void (*f)(int trig,HTMOUSE *mos));
+PARAMETER:
+  void (*f)(int trig,HTMOUSE *mos);  左ボタンに対応するコールバック関数
+DESCTIPTION:
+  左ボタン押下/解放イベントに対応するコールバック関数を設定します。コール
+  バック関数の引数trigは、押下のときHT_ON、解放のときHT_OFFになります。
+  コールバック関数の引数*mosは、左ボタンイベントが発生したときのマウス状
+  態が入ります。
+REFERENCE:
+  HtResetOnDragFunc,HtResetOnLeftButtonFunc,HtResetOnMiddleButtonFunc,
+  HtResetOnRightButtonFunc,HtSetOnDragFunc,HtSetOnLeftButtonFunc,
+  HtSetOnMiddleButtonFunc,HtSetOnRightButtonFunc
+----------
+NAME:HtSetOnMiddleButtonFunc
+CATEGORY:関数
+DEFINITION:
+  void HtSetOnMiddleButtonFunc(void (*f)(int trig,HTMOUSE *mos));
+PARAMETER:
+  void (*f)(int trig,HTMOUSE *mos);  中ボタンに対応するコールバック関数
+DESCTIPTION:
+  中ボタン押下/解放イベントに対応するコールバック関数を設定します。コール
+  バック関数の引数trigは、押下のときHT_ON、解放のときHT_OFFになります。
+  コールバック関数の引数*mosは、中ボタンイベントが発生したときのマウス状
+  態が入ります。
+REFERENCE:
+  HtResetOnDragFunc,HtResetOnLeftButtonFunc,HtResetOnMiddleButtonFunc,
+  HtResetOnRightButtonFunc,HtSetOnDragFunc,HtSetOnLeftButtonFunc,
+  HtSetOnMiddleButtonFunc,HtSetOnRightButtonFunc
+----------
+NAME:HtSetOnRightButtonFunc
+CATEGORY:関数
+DEFINITION:
+  void HtSetOnRightButtonFunc(void (*f)(int trig,HTMOUSE *mos));
+PARAMETER:
+  void (*f)(int trig,HTMOUSE *mos);  右ボタンに対応するコールバック関数
+DESCTIPTION:
+  右ボタン押下/解放イベントに対応するコールバック関数を設定します。コール
+  バック関数の引数trigは、押下のときHT_ON、解放のときHT_OFFになります。
+  コールバック関数の引数*mosは、右ボタンイベントが発生したときのマウス状
+  態が入ります。
+REFERENCE:
+  HtResetOnDragFunc,HtResetOnLeftButtonFunc,HtResetOnMiddleButtonFunc,
+  HtResetOnRightButtonFunc,HtSetOnDragFunc,HtSetOnLeftButtonFunc,
+  HtSetOnMiddleButtonFunc,HtSetOnRightButtonFunc
+----------
+NAME:HtSetRepaintFunc
+CATEGORY:関数
+DEFINITION:
+  void HtSetRepaintFunc(void (*f)(void));
+PARAMETER:
+  void (*f)(void)    画面再描画関数
+DESCRIPTION:
+  画面再描画関数を登録します。
+----------
+NAME:HtSetShortCut
+CATEGORY:関数
+DEFINITION:
+  void HtSetShortCut(int key,void (*func)(void));
+PARAMETER:
+  int key;               ショートカットキー(Blue Impulse Library Key-Code)
+  void (*func)(void);    対応するコールバック関数
+DESCTIPTION:
+  ショートカットキーとそれに対応するコールバック関数を設定します。この関数
+  は、HtStartSetShortCut～HtEndSetShortCutの間に呼び出してください。
+REFERENCE:
+例:
+    void CallBackFunc(void);
+
+    HtSetShortCut(BIKEY_SPACE,CallBackFunc);
+----------
+NAME:HtStartSetMenu
+CATEGORY:関数
+DEFINITION:
+  void HtStartSetMenu(char *tit[]);
+PARAMETER:
+  char *tit[];    プルダウンメニューの項目
+DESCTIPTION:
+  プルダウンメニューの設定を開始します。この関数を呼び出した後、HtEndSetMenu
+  を呼び出すまでの間にHtSetMenuを使ってプルダウンメニューを設定します。
+REFERENCE:
+  HtSetMenu,HtEndSetMenu
+例:
+    char *tit[]={"File","Edit","Option",NULL};
+
+    HtStartSetMenu(tit);
+----------
+NAME:HtStartSetShortCut
+CATEGORY:関数
+DEFINITION:
+  void HtStartSetShortCut(void);
+DESCTIPTION:
+  ショートカットキーの設定を開始します。この関数を呼び出した後、
+  HtEndSetShortCutを呼び出すまでの間にHtSetShortCutを使ってショートカット
+  キーを設定します。
+REFERENCE:
+  HtSetShortCut,HtEndSetShortCut
+----------
+NAME:HtYesNo
+CATEGORY:関数
+DEFINITION:
+  int HtYesNo(char *msg,char *yes,char *no);
+PARAMETER:
+  char *msg;     表示メッセージ
+  char *yes;     確定ボタンに表示するメッセージ(NULL可)
+  char *no;      取消ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  メッセージを表示して、確認または取消を選択します。確認を選択した場合、
+  HT_YESを、取消を選択した場合HT_NOを返します。
+REFERENCE:
+  HtMessageBox,HtMessageBox3,HtYesNo,HtYesNo3
+----------
+NAME:HtYesNo3
+CATEGORY:関数
+DEFINITION:
+  int HtYesNo3(char *msg[3],char *yes,char *no);
+PARAMETER:
+  char *msg[3];  表示メッセージ(msg[0～3]の中身にはNULL可)
+  char *yes;     確定ボタンに表示するメッセージ(NULL可)
+  char *no;      取消ボタンに表示するメッセージ(NULL可)
+DESCTIPTION:
+  3行メッセージを表示して、確認または取消を選択します。確認を選択した場合
+  HT_YESを、取消を選択した場合HT_NOを返します。
+REFERENCE:
+  HtMessageBox,HtMessageBox3,HtYesNo,HtYesNo3
+----------

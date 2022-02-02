@@ -1,0 +1,149 @@
+-----------------------------
+NAME:SkRelativePath
+CATEGORY:関数
+DEFINITION:
+  int SkRelativePath(char dst[],char src[],char org[]);
+RETURN:
+  SK_OK    ←いつもこれ
+DESCRIPTION:
+  フルパスのファイル名src[]をディレクトリorg[]に対する相対パスの
+  ファイル名に変換してdst[]に格納します。dst[]には十分な大きさを
+  確保してください。
+-----------------------------
+NAME:SkArguments
+CATEGORY:関数
+DEFINITION:
+  int SkArguments(int *ac,char *av[],int mxac,char src[]);
+RETURN:
+  SK_OK    ←いつもこれ
+PARAMETER:
+  int *ac;     検出した単語個数
+  char *av[];  検出した単語のポインタを格納する配列
+  int macac;   avに用意した配列の大きさ-1
+  char src[];  元の文字列
+DESCRIPTION:
+  文字列src[]を空白またはTABで区切った単語単位に分割してav[0]～に
+  そのポインタを格納します。この関数は、src[]の中身は保存しません。
+  また、ダブルクオート(")があると認識して、次のダブルクオートまでの間を
+  ひとつの単語として検出します。
+EXAMPLE:
+  int ac;
+  char *av[16],src[128];
+
+  fgets(src,128,fp);
+  SkArguments(&ac,av,15,src);
+-----------------------------
+NAME:SkCommandNumber
+CATEGORY:関数
+DEFINITION:
+  int SkCommandNumber(int *cmd,char *in,char *lst[]);
+RETURN:
+  SK_OK   該当する文字列があった
+  SK_ERR  該当する文字列が無かった
+PARAMETER:
+  int *cmd;     検出したコマンド番号の格納先ポインタ
+  char in[];    コマンドの単語
+  char *lst[];  コマンド表
+DESCRIPTION:
+  文字列lst[0]～lst[n](lst[n+1]==NULL)と文字列inの値を比較して、
+  一致するものがあれば、nの値を*cmdに格納してSK_OKを返します。
+  そうでない場合はSK_ERRを返します。
+-----------------------------
+NAME:SkSetPrintFunc
+CATEGORY:関数
+DEFINITION:
+  void SkSetPrintFunc(int (*f)(char *));
+PARAMETER:
+  int (*f)(char *);  文字列表示関数
+DESCRIPTION:
+  printf代替関数SkPrintfが最終的に出力した文字列を画面に表示する関数を
+  登録します。これを利用すると、printfの使えない環境でも、SkPrintfを
+  使うことによってprintfモドキの機能が使えます。
+REFERENCE:
+  SkPrintf,SkResetPrintFunc
+-----------------------------
+NAME:SkResetPrintFunc
+CATEGORY:関数
+DEFINITION:
+  void SkResetPrintFunc(void);
+DESCRIPTION:
+  SkSetPrintFuncで登録した関数を取り消します。
+REFERENCE:
+  SkSetPrintFunc
+-----------------------------
+NAME:SkPrintf
+CATEGORY:関数
+DEFINITION:
+  int SkPrintf(char *fmt,...);
+PARAMETER:
+  printfと同じ
+DESCRIPTION:
+  printfと同じ引数を受け取って、SkSetPrintFuncで登録した関数によって
+  画面に出力します。Windows,Macintosh,FM-TOWNSといった
+  コンソールが利用できない環境では重宝します。
+REFERENCE:
+  SkSetPrintFunc
+EXAMPLE:
+  {
+          :
+      SkSetPrintFunc(PrintFunc);
+          :
+          :
+      SkPrintf("%d %d",1,2);
+  }
+
+  static int PrintFunc(char *str)
+  {
+      HtMessageBox(str,NULL);
+  }
+-----------------------------
+NAME:SkPutExt
+CATEGORY:関数
+DEFINITION:
+  void SkPutExt(char fname[],char ext[]);
+DESCRIPTION:
+  ファイル名fnameに拡張子extを追加します。
+-----------------------------
+NAME:SkFileSize
+CATEGORY:関数
+DEFINITION:
+  unsigned long SkFileSize(char fname[]);
+DESCRIPTION:
+  ファイルfnameの大きさを求めます。なお、この関数を呼び出すとき、
+  ファイルfnameをオープンしていてはいけません。
+-----------------------------
+NAME:SkFileExist
+CATEGORY:関数
+DEFINITION:
+  int SkFileExist(char fn[]);
+RETURN:
+  SK_YES  ファイルがあった
+  SK_NO   ファイルは無かった
+DESCRIPTION:
+  ファイルfnが存在するかを調べます。
+-----------------------------
+NAME:SkSeparatePathFile
+CATEGORY:関数
+DEFINITION:
+  int SkSeparatePathFile(char pth[],char fil[],char org[]);
+PARAMETER:
+  char pth[]  パス名格納先ポインタ
+  char fil[]  ファイル名格納先ポインタ
+  char org[]  元のファイル名
+DESCRIPTION:
+  フルパスファイル名orgをパス名とファイル名に分割してpth,filに格納します。
+-----------------------------
+NAME:SkStringHead
+CATEGORY:関数
+DEFINITION:
+  void SkStringHead(char **str);
+DESCRIPTION:
+  文字列*strの先頭に制御コードまたはスペースがある場合、
+  制御コードと空白をスキップした位置まで*strを進めます。
+-----------------------------
+NAME:SkStringTail
+CATEGORY:関数
+DEFINITION:
+  void SkStringTail(char str[]);
+DESCRIPTION:
+  文字列strの末尾の制御コードと空白を除去します。

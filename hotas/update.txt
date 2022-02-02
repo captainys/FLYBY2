@@ -1,0 +1,5 @@
+1995/06/18
+EHtFileDialog‚ğ”p~
+  HtLoadFileDialog
+  HtSaveFileDialog
+

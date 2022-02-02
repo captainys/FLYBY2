@@ -1,0 +1,548 @@
+HOTAS.LIB
+
+    TUTRIAL  written by YS11
+
+
+[Abstract]
+  これは、HOTAS LibraryのTUTRIALです。が、Blue Impulse LibraryのTUTRIALと
+同様、インストール～コンパイル方法まで懇切丁寧に書いてるには人海が不足して
+るので、インストール、コンパイル方法やこまかい関数の説明は、HOTAS.DOCを参
+照してください。
+
+
+
+
+<< generic.c >>
+  generic.cは、HOTASライブラリを使ってプログラムを書くときのスケルトンにな
+るリストです。FileメニューのExitを選ぶ、または、キーボードの'Q'キーを押す
+まで終わらない、というだけのプログラムです。
+
+ 1:#include <stdio.h>   ┐
+ 2:#include <string.h>  │
+ 3:#include <stdlib.h>  │最低必要なヘッダ
+ 4:#include <stddef.h>  │
+ 5:                     │
+ 6:#include <impulse.h> │
+ 7:#include <hotas.h>   ┘
+ 8:
+ 9:/* include application header here. */    →アプリケーションのヘッダはここ
+10:
+11:char *MenuString[]={"File",NULL};         →プルダウンメニューの項目
+12:
+13:#define BIWORKSIZE 0xf000  ┐
+14:char BiWork[BIWORKSIZE];   │Blue Impulse Library用ワークエリア
+15:char BiWork2[BIWORKSIZE];  │
+16:char BiWork3[BIWORKSIZE];  ┘
+17:
+18:BIAPPENTRY                 →main()じゃなくBIAPPENTRYではじまる
+19:{
+20:    BIPROJ prj;
+21:
+22:    BIAPPINIT;                              ┐
+23:    BiMemoryInitialize();                   │
+24:    BiCalcInitialize();                     │最初にBlue Impulse Library
+25:    BiGraphInitialize(BiWork,BIWORKSIZE);   │の初期化
+26:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);  │
+27:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);  │
+28:    BiDeviceInitialize();                   │
+29:    BiSetShadMode(BI_ON);                   ┘
+30:
+31:    HtInitialize();          →HOTAS Libraryの初期化
+32:
+33:    HtStartSetMenu(MenuString);               ┐プルダウンメニューの中身
+34:    HtSetMenuItem(1,"Quit",'Q',HtQuitProgram);│を設定
+35:    HtEndSetMenu();                           ┘
+36:
+37:    HtStartSetShortCut();                    ┐
+38:    HtSetShortCut(BIKEY_Q,HtQuitProgram);    │ショートカットキーを設定
+39:    HtEndSetShortCut();                      ┘
+40:
+41:    HtOpenWindow(640,480);   →Windowをオープン
+42:
+43:    BiGetStdProjection(&prj);  ┐投影情報をセットしておく
+44:    BiSetProjection(&prj);     ┘
+45:
+46:    /* Call Application Initializer Here */  →アプリケーションの初期化
+47:
+48:    HtEventLoop();           →GUIのイベントループに突入
+49:
+50:    return 0;
+51:}
+
+1～7行
+  HOTAS.LIBは、Blue Impulse Libraryが存在することを前提としているので、Blue
+Impulse Libraryで最低限必要なヘッダはすべてincludeしてあります。それに加え
+て、HOTAS.LIBを使うには、hotas.hをincludeします。
+
+9行
+  アプリケーションが独自にヘッダファイルを持っている場合は、ここに記述しま
+す。
+
+11行
+  プルダウンメニューのメニュー項目を記述します。項目の指定は、char型ポイン
+タの配列を使って、
+
+    char *MenuString[]={"Menu1","Menu2","Menu3", .... ,NULL};
+
+のように、メニュー項目名を列挙して、末尾にNULLを指定します。このNULLが無い
+と、まず間違いなくプログラムが落ちますので、忘れないでください。
+
+33～35行
+  33～35行で、プルダウンメニューのアイテムをセットします。メニューアイテム
+の設定は、HtStartSetMenu～HtEndSetMenuの間でなくてはなりません。
+
+  34行のHtSetMenuItem関数が、メニューアイテムを設定する関数です。意味は、次
+の通りです。
+
+    HtSetMenuItem( 1,"Quit",'Q',HtQuitProgram);
+                  │   │   │  └→これを選んだらHtQuitProgramを呼び出す
+                  │   │   │
+                  │   │   └→ショートカット'Q'
+                  │   │
+                  │   └→メニューアイテム名 "Quit"
+                  │
+                  └→1番目のプルダウンメニュー(File)内のアイテムである
+
+  HtQuitProgram関数は、HOTAS.LIB内部の関数で、プログラムを終了するとき呼び
+出す関数です。このプログラムでは、プルダウンメニューのFileからQuitを選ぶと
+プログラムを終了します。
+
+  なお、ここでのショートカットは、プラットフォームによって意味が若干違いま
+す。例えば、Macの場合、Apple+Qになり、Windowsの場合、Alt+F→Qです。また、
+TOWNS-OSでは、CTRL+SHIFT+Qです。常時有効で、どのマシンも共通なショートカッ
+トをセットするには、次の37～39行のように記述します。
+
+37～39行
+  37～39行ではショートカットキーを設定します。ショートカットキーの設定は、
+HtStartSetShortCut～HtEndShortCutの間に記述しなくてはなりません。ショート
+カットの設定の意味は次の通りです。
+
+    HtSetShortCut(BIKEY_Q,HtQuitProgram);
+                     │        └→このキー押したらHtQuitProgramを呼び出す
+                     │
+                     └→ショートカット'Q'
+
+41行
+  HOTAS.LIBでは、Windowをオープンするために、BiOpenWindowではなくHtOpenWindow
+を使います。
+
+43～44行
+  Windowを開いた後で、投影情報を登録しておきます。
+
+48行
+  GUIのイベントループに突入します。イベントループに入ると、どこかで
+HtQuitProgramをコールするか、あるいはバグがあってプログラム自体が死んでし
+まうまで抜けません。
+
+
+
+
+
+
+<< graph.c >>
+  graph.cは、HOTAS.LIBのアプリケーションでBlue Impulse Libraryの描画関数を
+使うサンプルです。実行して、DrawメニューからLatticeを選ぶと格子模様を描画
+します。Cキーを押すと画面をクリアします。FileメニューからQuitを選ぶと終了
+します。
+
+ 1:#include <stdio.h>
+ 2:#include <string.h>
+ 3:#include <stdlib.h>
+ 4:#include <stddef.h>
+ 5:
+ 6:#include <impulse.h>
+ 7:#include <hotas.h>
+ 8:
+ 9:void DrawLattice(void);    ┐コールバック関数のプロトタイプ
+10:void ClearGraphic(void);   ┘(ヘッダの代わり)
+11:
+12:char *MenuString[]={"File","Draw",NULL};   →プルダウンメニューの項目
+13:
+14:#define BIWORKSIZE 0xf000
+15:char BiWork[BIWORKSIZE];
+16:char BiWork2[BIWORKSIZE];
+17:char BiWork3[BIWORKSIZE];
+18:
+19:BIAPPENTRY
+20:{
+21:    BIPROJ prj;
+22:
+23:    BIAPPINIT;
+24:    BiMemoryInitialize();
+25:    BiCalcInitialize();
+26:    BiGraphInitialize(BiWork,BIWORKSIZE);
+27:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+28:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+29:    BiDeviceInitialize();
+30:    BiSetShadMode(BI_ON);
+31:
+32:    HtInitialize();
+33:
+34:    HtStartSetMenu(MenuString);
+35:    HtSetMenuItem(1,"Quit",'Q',HtQuitProgram);
+36:    HtSetMenuItem(2,"Lattice",0,DrawLattice);  →メニューLatticeを登録
+37:    HtEndSetMenu();
+38:
+39:    HtStartSetShortCut();
+40:    HtSetShortCut(BIKEY_C,ClearGraphic);  →ショートカットCを登録
+41:    HtEndSetShortCut();
+42:
+43:    HtOpenWindow(640,480);
+44:
+45:    BiGetStdProjection(&prj);
+46:    BiSetProjection(&prj);
+47:
+48:    HtEventLoop();
+49:
+50:    return 0;
+51:}
+52:
+53:void DrawLattice(void)              ┐DrawLattice
+54:{                                   │プルダウンメニューDraw→Lattice
+55:    long x,y,wx,wy;                 │に対応するコールバック関数
+56:    BIPOINTS s1,s2;                 │
+57:    BICOLOR col;                    │ウィンドウサイズを見て、それに
+58:    BiGetWindowSize(&wx,&wy);       │合わせて格子模様を描く。
+59:    BiClearScreen();                │
+60:    BiSetColorRGB(&col,0,0,255);    │各関数の意味は、Blue Impulse
+61:    for(x=0; x<wx; x+=50)           │Libraryのドキュメントを参照
+62:    {                               │
+63:        BiSetPointS(&s1,x,0);       │
+64:        BiSetPointS(&s2,x,wy);      │
+65:        BiDrawLine2(&s1,&s2,&col);  │
+66:    }                               │
+67:    for(y=0; y<wy; y+=50)           │
+68:    {                               │
+69:        BiSetPointS(&s1,0,y);       │
+70:        BiSetPointS(&s2,wx,y);      │
+71:        BiDrawLine2(&s1,&s2,&col);  │
+72:    }                               │
+73:    BiSwapBuffers();                ┘
+74:}
+75:
+76:void ClearGraphic(void)             ┐ClearGraphic
+77:{                                   │ショートカットキーC(BIKEY_C)に
+78:    BiClearScreen();                │対応するコールバック関数
+79:    BiSwapBuffers();                │
+80:}                                   ┘画面を消す。
+
+9～10行
+  コールバック関数のプロトタイプ宣言。大きなアプリケーションになると、ここ
+で直接プロトタイプ宣言するのではなく、アプリケーション用のヘッダファイルに
+プロトタイプを記述して、includeするのがよいでしょう。
+
+36行
+  プルダウンメニュー2番"Draw"に、メニューアイテム"Lattice"を追加します。
+ショートカットキーは0なので無し、コールバック関数はDrawLatticeです。
+
+40行
+  ショートカットキーCに対してコールバック関数ClearGraphicを登録します。
+
+53～74行
+  DrawLatticeは、36行で登録した、DrawメニューのLatticeに対応するコールバック
+関数です。ウィンドウの大きさを見て、50ピクセル間隔の格子を描きます。
+
+76行
+  ClearGraphicsは、40行で登録したCキーに対するコールバック関数です。画面をク
+リアします。
+
+
+  このプログラムを見るとわかりますが、アプリケーションは、DrawLattice,
+ClearGraphics関数を直接呼び出すことはしません。どちらも、何が起きたときに呼
+び出すのかをHOTAS.LIBに登録しておいて、呼出しはHOTAS.LIBがおこないます。こ
+のような関数をコールバック関数と言います。
+
+
+
+
+
+
+<< drag.c >>
+  drag.cは、マウスイベント処理のサンプルです。マウスカーソルをウィンドウ上
+に移動して、ドラッグすると、カーソルの移動した経路に線を描きます。
+
+  1:#include <stdio.h>
+  2:#include <string.h>
+  3:#include <stdlib.h>
+  4:#include <stddef.h>
+  5:
+  6:#include <impulse.h>
+  7:#include <hotas.h>
+  8:
+  9:void InitializeDraw(void);                 ┐
+ 10:void ButtonCallBack(int trig,HTMOUSE *mos);│コールバック関数等の
+ 11:void DragCallBack(HTMOUSE *mos);           │プロトタイプ
+ 12:void RefreshScreen(void);                  ┘
+ 13:
+ 14:char *MenuString[]={"File",NULL};
+ 15:
+ 16:#define BIWORKSIZE 0xf000
+ 17:char BiWork[BIWORKSIZE];
+ 18:char BiWork2[BIWORKSIZE];
+ 19:char BiWork3[BIWORKSIZE];
+ 20:
+ 21:BIAPPENTRY
+ 22:{
+ 23:    BIPROJ prj;
+ 24:
+ 25:    BIAPPINIT;
+ 26:    BiMemoryInitialize();
+ 27:    BiCalcInitialize();
+ 28:    BiGraphInitialize(BiWork,BIWORKSIZE);
+ 29:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+ 30:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+ 31:    BiDeviceInitialize();
+ 32:    BiSetShadMode(BI_ON);
+ 33:
+ 34:    HtInitialize();
+ 35:
+ 36:    HtStartSetMenu(MenuString);
+ 37:    HtSetMenuItem(1,"Quit",'Q',HtQuitProgram);
+ 38:    HtEndSetMenu();
+ 39:
+ 40:    HtStartSetShortCut();
+ 41:    HtSetShortCut(BIKEY_Q,HtQuitProgram);
+ 42:    HtEndSetShortCut();
+ 43:
+ 44:    HtOpenWindow(640,480);
+ 45:
+ 46:    BiGetStdProjection(&prj);
+ 47:    BiSetProjection(&prj);
+ 48:
+ 49:    HtSetOnLeftButtonFunc(ButtonCallBack); ┐マウスイベントのコールバック
+ 50:    HtSetOnDragFunc(DragCallBack);         ┘関数を設定
+ 51:
+ 52:    InitializeDraw();    →アプリケーションの初期化
+ 53:
+ 54:    HtEventLoop();
+ 55:
+ 56:    return 0;
+ 57:}
+ 58:
+ 59:#define MAX_N_VTX 256             ┐
+ 60:static int nVtx;                  │ドラッグで描画する連続線分
+ 61:static BIPOINTS vtx[MAX_N_VTX];   │
+ 62:static BICOLOR col;               ┘
+ 63:
+ 64:void InitializeDraw(void)         ┐
+ 65:{                                 │初期化
+ 66:    nVtx=0;                       │最初は頂点数を0にする
+ 67:}                                 ┘
+ 68:
+ 69:void ButtonCallBack(int trig,HTMOUSE *mos)┐ButtonCallBack
+ 70:{                                         │左ボタン押下/解放に対応する
+ 71:    switch(trig)                          │コールバック関数
+ 72:    {                                     │
+ 73:    case HT_ON:                           │ボタン押下の時
+ 74:        BiSetColorRGB(&col,0,255,0);      │・描画する線の色をグリーンに
+ 75:        nVtx=0;                           │・頂点数0
+ 76:        RefreshScreen();                  │・画面をリフレッシュ(クリア)
+ 77:        break;                            │
+ 78:    case HT_OFF:                          │ボタン解放のとき
+ 79:        BiSetColorRGB(&col,255,255,255);  │・描画する線の色を白に
+ 80:        RefreshScreen();                  │・画面をリフレッシュ
+ 81:        break;                            │
+ 82:    }                                     │
+ 83:}                                         ┘
+ 84:
+ 85:void DragCallBack(HTMOUSE *mos)                 ┐DragCallBack
+ 86:{                                               │ドラッグイベントに対応
+ 87:    if(nVtx<MAX_N_VTX)                          │するコールバック関数
+ 88:    {                                           │
+ 89:        BiSetPointS(&vtx[nVtx],mos->mx,mos->my);│・マウスカーソル位置を
+ 90:        nVtx++;                                 │  連続線分の配列に追加
+ 91:        RefreshScreen();                        │・画面をリフレッシュ
+ 92:    }                                           │
+ 93:}                                               ┘
+ 94:
+ 95:void RefreshScreen(void)            ┐
+ 96:{                                   │
+ 97:    BiClearScreen();                │
+ 98:    BiDrawPolyline2(nVtx,vtx,&col); │画面をリフレッシュ(再描画)する
+ 99:    BiSwapBuffers();                │
+100:}                                   ┘
+
+49～50行
+  左ボタンの押下/解放に対するコールバック関数と、ドラッグに対するコールバ
+ック関数をセットします。
+
+73～77行
+  左ボタンを押したとき、線の色をグリーンにして、頂点数を0にします。頂点数
+が変化するので、RefreshScreenをコールして、画面を再描画しています。ただ、
+頂点数は0なので、実質的に画面のクリアになります。
+
+78～81行
+  左ボタンを解放したとき、線の色を白にして、画面を再描画します。左ボタンを
+押したときというのはドラッグの開始、放したときはドラッグの終了と見ることが
+できるので、ドラッグ中は線の色が緑で、ドラッグを終えると白になるように見え
+ます。
+
+85～93行
+  ドラッグイベントに対するコールバック関数です。イベントが発生した時点のマ
+ウスカーソル位置(mos->mx,mos->my)を連続線分の配列に追加して、画面を再描画
+します。
+
+95～100行
+  画面を再描画します。HOTAS.LIBのアプリケーションでは、このように、画面再
+描画関数を独立して作ることが望ましいスタイルです。
+
+
+
+
+
+
+<< srfview.c >>
+  srfview.cは、簡単な.SRF形式ファイルのビューアです。
+
+  1:#include <stdio.h>
+  2:#include <string.h>
+  3:#include <stdlib.h>
+  4:#include <stddef.h>
+  5:
+  6:#include <impulse.h>
+  7:#include <hotas.h>
+  8:
+  9:void InitData(void);                    ┐
+ 10:void LoadSrf(void);                     │コールバック関数等の
+ 11:void ButtonFunc(int trig,HTMOUSE *mos); │プロトタイプ
+ 12:void DragFunc(HTMOUSE *mos);            │
+ 13:void RotateSrf(long mx,long my);        │
+ 14:void RefreshScreen(void);               ┘
+ 15:
+ 16:char *MenuString[]={"File",NULL};
+ 17:
+ 18:#define BIWORKSIZE 0xf000
+ 19:char BiWork[BIWORKSIZE];
+ 20:char BiWork2[BIWORKSIZE];
+ 21:char BiWork3[BIWORKSIZE];
+ 22:
+ 23:BIAPPENTRY
+ 24:{
+ 25:    BIPROJ prj;
+ 26:
+ 27:    BIAPPINIT;
+ 28:    BiMemoryInitialize();
+ 29:    BiCalcInitialize();
+ 30:    BiGraphInitialize(BiWork,BIWORKSIZE);
+ 31:    BiGraphSetBuffer2(BiWork2,BIWORKSIZE);
+ 32:    BiGraphSetBuffer3(BiWork3,BIWORKSIZE);
+ 33:    BiDeviceInitialize();
+ 34:    BiSetShadMode(BI_ON);
+ 35:
+ 36:    HtInitialize();
+ 37:
+ 38:    HtStartSetMenu(MenuString);
+ 39:    HtSetMenuItem(1,"Quit",'Q',HtQuitProgram);
+ 40:    HtSetMenuItem(1,"Load",'L',LoadSrf);       →FileメニューにLoadを追加
+ 41:    HtEndSetMenu();
+ 42:
+ 43:    HtStartSetShortCut();
+ 44:    HtSetShortCut(BIKEY_Q,HtQuitProgram);
+ 45:    HtEndSetShortCut();
+ 46:
+ 47:    HtOpenWindow(640,480);
+ 48:
+ 49:    BiGetStdProjection(&prj);
+ 50:    BiSetProjection(&prj);
+ 51:
+ 52:    HtSetOnLeftButtonFunc(ButtonFunc);  ┐オブジェクトを回転するために
+ 53:    HtSetOnDragFunc(DragFunc);          ┘マウスイベント関数を登録
+ 54:
+ 55:    InitData();       →アプリケーションの初期化
+ 56:
+ 57:    HtEventLoop();
+ 58:
+ 59:    return 0;
+ 60:}
+ 61:
+ 62:int srfAlive;      →何も読み込んでいない状態ではHT_OFF
+ 63:BISRFMODEL srf;    →表示する.SRFデータ
+ 64:BIPNTANG pos;      →.SRFデータを表示する位置/姿勢
+ 65:long prvMx,prvMy;  →Free Axis Rotationのために直前のマウス位置を保持する
+ 66:
+ 67:void InitData(void)                ┐
+ 68:{                                  │アプリケーションの初期化
+ 69:    srfAlive=HT_OFF;               │・初期状態では.SRF無し
+ 70:    BiSetPoint(&pos.p,0,0,0);      │・表示位置=原点
+ 71:    BiSetAngleDeg(&pos.a,180,0,0); │・姿勢=視点の方を向く
+ 72:}                                  ┘
+ 73:
+ 74:void LoadSrf(void)    →FileメニューのLoadに対応するコールバック関数
+ 75:{
+ 76:    char fn[128];
+ 77:    BISRFMODEL tmp;             ↓ファイルセレクタでファイルを選ぶ
+ 78:    if(HtLoadFileDialog(fn,"Load File Name",NULL,"*.srf")==HT_YES)
+ 79:    {
+ 80:        if(BiLoadSrf(&tmp,fn)==BI_OK)  ┐
+ 81:        {                              │読み込みに成功したら、既に
+ 82:            if(srfAlive==HT_ON)        │持ってるデータを解放して、
+ 83:            {                          │データを新しいやつに置き換
+ 84:                BiFreeSrfModel(&srf);  │える。
+ 85:            }                          │
+ 86:            srf=tmp;                   │
+ 87:            srfAlive=HT_ON;            │
+ 88:        }                              ┘
+ 89:        else
+ 90:        {                                             ┐
+ 91:            HtMessageBox("Failed To Load File.",NULL);│読み込み失敗のと
+ 92:            srfAlive=HT_OFF;                          │きのメッセージ
+ 93:        }                                             ┘
+ 94:        RefreshScreen();              →画面をリフレッシュ
+ 95:    }
+ 96:}
+ 97:
+ 98:void ButtonFunc(int trig,HTMOUSE *mos)   ┐ButtonFunc
+ 99:{                                        │マウスのボタン押下/解放に
+100:    if(trig==HT_ON)                      │対応するコールバック関数
+101:    {                                    │
+102:        prvMx=mos->mx;                   │ボタン押下のときは、回転
+103:        prvMy=mos->my;                   │に備えてマウス位置を保存
+104:    }                                    │する。
+105:}                                        ┘
+106:
+107:void DragFunc(HTMOUSE *mos)              ┐DragFunc
+108:{                                        │マウスのドラッグイベントに
+109:    long dx,dy;                          │対応するコールバック関数
+110:    dx=mos->mx-prvMx;                    │
+111:    dy=mos->my-prvMy;                    │マウスカーソルの前回位置か
+112:    RotateSrf(dx,dy);                    │らの移動距離に応じて表示し
+113:    RefreshScreen();                     │ているモデルを回転する
+114:    prvMx=mos->mx;                       │
+115:    prvMy=mos->my;                       │
+116:}                                        ┘
+117:
+118:void RotateSrf(long dx,long dy)          ┐RotateSrf
+119:{                                        │DragFuncの中から呼び出して
+120:    BIPOINT ev,uv;                       │モデルを回転する計算を実際
+121:    BIANGLE rot;                         │に行っている関数。
+122:                                         │
+123:    BiSetAngle(&rot,dx*100,dy*100,0);    │何をやってるか知りたい人は、
+124:                                         │Blue Impulse Library TUTRIAL
+125:    BiAngleToVector(&ev,&uv,&pos.a);     │のfreeaxis.cを参照
+126:    BiRotLtoG(&ev,&ev,&rot);             │
+127:    BiRotLtoG(&uv,&uv,&rot);             │
+128:    BiVectorToAngle(&pos.a,&ev,&uv);     │
+129:}                                        ┘
+130:
+131:void RefreshScreen(void)             →画面をリフレッシュ(再描画)する関数
+132:{
+133:    real dist;              →dist:SRFモデルまでの距離を計算するために使う
+134:    BIPNTANG eye;           →eye:視点を登録するために使う
+135:
+136:    BiSetPoint(&eye.p,0,0,0);  ┐視点:原点でZのプラス方向を見ている
+137:    BiSetAngle(&eye.a,0,0,0);  ┘
+138:
+139:    BiClearScreen();        →フレームバッファクリア
+140:    if(srfAlive==HT_ON)               ┐SRFモデルを読み込んだ後だったら、
+141:    {                                 │
+142:        BiGetSrfRadius(&dist,&srf);   │SRFモデルの大きさ(半径)を見て、
+143:        BiSetPoint(&pos.p,0,0,dist*2);│視点からその2倍の距離放した位
+144:        BiStartBuffer(&eye);          │置に、
+145:        BiInsSrfModel(&srf,&pos);     │
+146:        BiFlushBuffer();              │SRFモデルを表示する。
+147:    }                                 ┘
+148:    BiSwapBuffers();        →フレームバッファを表示画面に転送
+149:}
+150:
+
+  説明は、コメントを死ぬほど入れたので省略。

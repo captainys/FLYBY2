@@ -1,0 +1,14 @@
+-lib e:/hc386/userlib/impulse.lib
+-lib e:/hc386/userlib/concorde.lib
+-lib e:/hc386/userlib/hotas.lib
+-lib e:/hc386/small/file_dlg.lib
+-lib e:/hc386/small/guidbg.lib
+-lib e:/hc386/small/snd.lib
+-lib e:/hc386/small/tbios.lib
+-lib e:/hc386/small/gui.lib
+-lib e:/hc386/small/fmcfrb.sdl
+-lib e:/hc386/small/xld_exg.lib
+-lib e:/hc386/small/t_os.sdl
+-lib e:/hc386/small/vectcg_h.lib
+-lib e:/hc386/small/hcc.lib
+

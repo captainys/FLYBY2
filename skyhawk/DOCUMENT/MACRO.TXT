@@ -1,0 +1,22 @@
+-----------------------------
+NAME:SK_ERR
+NAME:SK_OK
+CATEGORY:定数
+DEFINITION:
+  enum {
+      SK_ERR,
+      SK_OK
+  };
+DESCRIPTION:
+  エラー終了と正常終了を表す定数です。BI_OK/BI_ERRと互換性があります。
+-----------------------------
+NAME:SK_NO
+NAME:SK_YES
+CATEGORY:定数
+DEFINITION:
+  enum {
+      SK_NO,
+      SK_YES
+  };
+DESCTIPTION:
+  真偽を表す定数です。BI_TRUE/BI_FALSEと互換性があります。
