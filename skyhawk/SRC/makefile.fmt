@@ -1,25 +1,22 @@
-CC = 386 -c HCD386P
+CC = run386 HCD386P
 LIB = 386lib
-LIBFILE = libfile.lib
+LIBFILE = lib.lbc
 CFLAGS =
 
 TARGET = skyhawk.lib
 HEADER = skyhawk.h
-USERINCDIR = E:\hc386\inc
-USERLIBDIR = E:\hc386\small
+USERINCDIR = ..\..\include
+USERLIBDIR = ..\..\lib
 
 OBJ = args.obj exprintf.obj filename.obj reldir.obj string.obj
 
 
 $(TARGET) : $(OBJ)
 	del $(TARGET)
-	$(LIB) @<<$(LIBFILE)
-		$(TARGET) -create $(OBJ)
-<<
-	cp $(TARGET) $(USERLIBDIR)
-	cp $(HEADER) $(USERINCDIR)
+	$(LIB) @$(LIBFILE)
+	copy $(TARGET) $(USERLIBDIR)
+	copy $(HEADER) $(USERINCDIR)
 
 .c.obj :
 	$(CC) $*.c $(CFLAGS)
 
-

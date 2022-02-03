@@ -1,0 +1,3 @@
+skyhawk.lib
+-create
+args.obj exprintf.obj filename.obj reldir.obj string.obj
