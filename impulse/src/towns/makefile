@@ -2,7 +2,7 @@ LIB = 386lib.exe
 LIBFILE = lib.lbc
 CC = run386 HCD386P
 #CFLAGS = -off Floating_Point
-CFLAGS =
+CFLAGS = -on Floating_Point
 
 USERINCDIR = ..\..\..\INCLUDE
 USERLIBDIR = ..\..\..\LIB
