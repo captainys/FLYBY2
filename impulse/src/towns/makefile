@@ -1,13 +1,13 @@
 LIB = 386lib.exe
 LIBFILE = lib.lbc
-CC = 386 -c HCD386P
+CC = run386 HCD386P
 #CFLAGS = -off Floating_Point
 CFLAGS =
 
-USERINCDIR = E:/HC386/INC
-USERLIBDIR = E:/HC386/SMALL
+USERINCDIR = ..\..\..\INCLUDE
+USERLIBDIR = ..\..\..\LIB
 RM = del
-CP = cp
+CP = copy
 
 
 OBJ = itowns.obj \
@@ -49,13 +49,12 @@ OBJ = itowns.obj \
 
 TARGET = impulse.lib
 
-$(TARGET) : $(OBJ)
+$(TARGET) : $(OBJ) $(LIBFILE)
 	$(RM) $(TARGET)
-	$(LIB) @<<$(LIBFILE)
-		$(TARGET) -create $(OBJ) accel.bin
-<<
+	$(LIB) @$(LIBFILE)
 	$(CP) $(TARGET) $(USERLIBDIR)
-	$(CP) ../impulse.h $(USERINCDIR)
+	$(CP) ..\impulse.h $(USERINCDIR)
+
 
 
 i2dg.obj : ../i2dg.c

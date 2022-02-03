@@ -20,7 +20,7 @@
 #include <file_dlg.h>
 
 #include <math.h>
-#include "impulse.h"
+#include "../impulse.h"
 
 
 
