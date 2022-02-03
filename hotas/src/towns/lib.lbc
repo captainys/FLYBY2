@@ -1,0 +1,17 @@
+HOTAS.LIB
+-create
+hotas.obj 
+htclgus.obj 
+htclprg.obj 
+htfdlgpr.obj 
+htfmtdlg.obj 
+htlinpgs.obj 
+htlinppr.obj 
+htmbgus.obj 
+htmbprg.obj 
+htnbgus.obj 
+htnbprg.obj 
+htrepain.obj 
+htwnd.obj 
+htlboxpr.obj 
+htlboxgs.obj
